@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'Cst.dart';
 import 'TextInput.dart';
 import 'MainScreen.dart';
+import 'UserInfo.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,23 +19,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget _passwordInput;
   bool initialized = false;
   bool invalidPassPrinted = false;
-
-  submittedUsername(String submission) {
-    username = submission;
-  }
-
-  submittedPassword(String submission) {
-    password = submission;
-  }
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   connexion() {
+    username = _usernameController.text;
+    password = _passwordController.text;
     bool checkPassword = true; //TODO check if password is correct
     setState(() {
       if (checkPassword) {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen()),
+              builder: (context) => MainScreen(UserInfo(username))),
         );
       } else if (!invalidPassPrinted) {
         _listViewContent += <Widget>[
@@ -55,13 +52,13 @@ class _LoginPageState extends State<LoginPage> {
     _usernameInput = TextInput(
       messageToUser: 'Identifiant',
       color: _backgroundColor,
-      onSubmitted: submittedUsername,
+      controller: _usernameController,
     );
 
     _passwordInput = TextInput(
       messageToUser: 'Mot de passe',
       color: _backgroundColor,
-      onSubmitted: submittedPassword,
+      controller: _passwordController,
       obscureText: true,
     );
 

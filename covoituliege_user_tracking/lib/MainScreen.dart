@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 
 import 'Cst.dart';
+import 'UserInfo.dart';
 
 class MainScreen extends StatefulWidget {
+  final UserInfo user;
+  MainScreen(this.user);
   @override
   _MainScreenState createState() => new _MainScreenState();
 }
@@ -16,13 +22,43 @@ class _MainScreenState extends State<MainScreen> {
   Function _onPressed;
   IconData _icon;
   final Geolocator locator = Geolocator();
+  UserInfo user;
 
-  static const test = 'a';
+  Future<String> get _localPath async
+  {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/data.txt');
+  }
+  Future<File> writeInFile(String jsonString) async {
+    final file = await _localFile;
+    return file.writeAsString('$jsonString');
+  }
+  Future<String> readFile() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      String contents = await file.readAsString();
+
+      return contents;
+    } catch (e) {
+      print("Error reading file!");
+      return "Error";
+    }
+  }
 
   _capturePos(i) {
     //TODO capture position
-    if (_stopped) {
-      Future.delayed(Duration(seconds: 0), () {
+    user.addData("myPos");
+    String jSon = json.encode(user);
+    writeInFile(jSon);
+
+    if (!_stopped) {
+      Future.delayed(Duration(seconds: 1), () {
         _capturePos(i + 1);
       });
     }
@@ -54,6 +90,7 @@ class _MainScreenState extends State<MainScreen> {
   _stop() {
     _stopped = true;
     setState(() {
+      readFile().then((s) => print(s));
       _onPressed = _start;
       _icon = Icons.play_arrow;
     });
@@ -62,6 +99,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    user = widget.user;
     _givenConsent = false; //TODO ask to server if consent were already given
     _hasRefused = false;
     _onPressed = _start;
