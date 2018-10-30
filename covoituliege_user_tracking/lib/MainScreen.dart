@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'dart:io';
@@ -21,7 +22,6 @@ class _MainScreenState extends State<MainScreen> {
   bool _stopped;
   Function _onPressed;
   IconData _icon;
-  final Geolocator locator = Geolocator();
   UserInfo user;
 
   Future<String> get _localPath async
@@ -51,13 +51,25 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  _capturePos(i) {
-    //TODO capture position
-    user.addData("myPos");
+  Future<void> newPos() async {
+    Map<String, double> currentLocation = <String, double>{};
+    var location = new Location();
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      currentLocation = await location.getLocation();
+    } on PlatformException {
+      currentLocation = null;
+    }
+    double latitude = currentLocation['latitude'];
+    double longitude = currentLocation['longitude'];
+    user.addData("latitude: " + latitude.toString() + ", longitude: " + longitude.toString());
     String jSon = json.encode(user);
     writeInFile(jSon);
+  }
 
+  _capturePos(i) {
     if (!_stopped) {
+      newPos();
       Future.delayed(Duration(seconds: 1), () {
         _capturePos(i + 1);
       });
@@ -78,7 +90,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _start() {
-    //TODO launch background function to capture position
     _stopped = false;
     _capturePos(0);
     setState(() {
