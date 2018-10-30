@@ -70,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
   _capturePos(i) {
     if (!_stopped) {
       newPos();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(Duration(minutes: 2, seconds: 30), () {
         _capturePos(i + 1);
       });
     }
