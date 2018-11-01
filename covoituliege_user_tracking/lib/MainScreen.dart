@@ -23,20 +23,23 @@ class _MainScreenState extends State<MainScreen> {
   Function _onPressed;
   IconData _icon;
   UserInfo user;
+  Text _data;
 
-  Future<String> get _localPath async
-  {
+  Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
+
   Future<File> get _localFile async {
     final path = await _localPath;
     return File('$path/data.txt');
   }
+
   Future<File> writeInFile(String jsonString) async {
     final file = await _localFile;
     return file.writeAsString('$jsonString');
   }
+
   Future<String> readFile() async {
     try {
       final file = await _localFile;
@@ -62,16 +65,19 @@ class _MainScreenState extends State<MainScreen> {
     }
     double latitude = currentLocation['latitude'];
     double longitude = currentLocation['longitude'];
-    user.addData("latitude: " + latitude.toString() + ", longitude: " + longitude.toString());
+    user.addData("Latitude= " +
+        latitude.toString() +
+        "; Longitude= " +
+        longitude.toString());
     String jSon = json.encode(user);
     writeInFile(jSon);
   }
 
-  _capturePos(i) {
+  _capturePos() {
     if (!_stopped) {
       newPos();
       Future.delayed(Duration(minutes: 2, seconds: 30), () {
-        _capturePos(i + 1);
+        _capturePos();
       });
     }
   }
@@ -91,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
 
   _start() {
     _stopped = false;
-    _capturePos(0);
+    _capturePos();
     setState(() {
       _onPressed = _stop;
       _icon = Icons.stop;
@@ -107,6 +113,32 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  _printData() async {
+    String data = await readFile();
+    StringBuffer toPrint = StringBuffer("(click again to reload)\n");
+    data = data.replaceAll("{", "").replaceAll("}", "").replaceAll('"', "").replaceFirst("Data:", "");
+    List<String> splittedAtComma = data.split(",");
+    toPrint.writeln(splittedAtComma[0]);
+
+    List<String> timeAndPos;
+    List<String> dayAndTime;
+    for (int i = 1; i < splittedAtComma.length; i++) {
+      timeAndPos = splittedAtComma[i].split(":");
+      dayAndTime = timeAndPos[0].split(" ");
+      toPrint.writeln("\nPoint number " + i.toString() + ":");
+      toPrint.writeln("Date: " + dayAndTime[0]);
+      toPrint.writeln("Time: " + dayAndTime[1]);
+      toPrint.writeln(timeAndPos[1].replaceAll("; ", "\n"));
+    }
+
+    setState(() {
+      _data = Text(
+        toPrint.toString(),
+        style: textStyle,
+      );
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -115,6 +147,10 @@ class _MainScreenState extends State<MainScreen> {
     _hasRefused = false;
     _onPressed = _start;
     _icon = Icons.play_arrow;
+    _data = Text(
+      'print data',
+      style: textStyle,
+    );
   }
 
   @override
@@ -139,10 +175,19 @@ class _MainScreenState extends State<MainScreen> {
         body: Container(
           color: Colors.green,
           child: Center(
-            child: IconButton(
-              icon: Icon(_icon),
-              onPressed: _onPressed,
-              iconSize: 120.0,
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(_icon),
+                  onPressed: _onPressed,
+                  iconSize: 120.0,
+                ),
+                RaisedButton(
+                  child: _data,
+                  onPressed: _printData,
+                ),
+              ],
             ),
           ),
         ),

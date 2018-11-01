@@ -8,7 +8,9 @@ class UserInfo
   {
     if (data ==null)
       data = new Map<String,String>();
-    data[DateTime.now().toString()] = pos;
+    String dateTime = DateTime.now().toString().replaceFirst(":", "h").replaceFirst(":", "m").replaceFirst(".", "s");
+    dateTime = dateTime.substring(0, dateTime.indexOf("s") + 1);
+    data[dateTime] = pos;
   }
   void printUser()
   {
