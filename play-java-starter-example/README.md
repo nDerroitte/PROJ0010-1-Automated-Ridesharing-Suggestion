@@ -14,6 +14,12 @@ sbt run
 
 And then go to http://localhost:9000 to see the running web application.
 
+## testing (cedric)
+
+To run a test tape testOnly MyTests
+
+ POST / will write the body content in a local file
+
 ## Controllers
 
 There are several demonstration files available in this template.
