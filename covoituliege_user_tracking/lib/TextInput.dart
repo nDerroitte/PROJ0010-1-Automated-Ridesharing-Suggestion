@@ -6,17 +6,17 @@ class TextInput extends StatelessWidget {
 
   final String messageToUser;
   final Color color;
-  final Function onSubmitted;
+  final TextEditingController controller;
   final obscureText;
 
   const TextInput({
     @required this.messageToUser,
     @required this.color,
-    @required this.onSubmitted,
+    @required this.controller,
     this.obscureText = false,
   })  : assert(messageToUser != null),
         assert(color != null),
-        assert(onSubmitted != null);
+        assert(controller != null);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class TextInput extends StatelessWidget {
                   obscureText: this.obscureText,
                   keyboardType: TextInputType.text,
                   style: textStyle,
-                  onSubmitted: onSubmitted,
+                  controller: controller,
                 ),
               ),
             ),

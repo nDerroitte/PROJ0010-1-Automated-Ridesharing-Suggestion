@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 
 import 'Cst.dart';
+import 'UserInfo.dart';
 
 class MainScreen extends StatefulWidget {
+  final UserInfo user;
+  MainScreen(this.user);
   @override
   _MainScreenState createState() => new _MainScreenState();
 }
@@ -15,15 +22,62 @@ class _MainScreenState extends State<MainScreen> {
   bool _stopped;
   Function _onPressed;
   IconData _icon;
-  final Geolocator locator = Geolocator();
+  UserInfo user;
+  Text _data;
 
-  static const test = 'a';
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
 
-  _capturePos(i) {
-    //TODO capture position
-    if (_stopped) {
-      Future.delayed(Duration(seconds: 0), () {
-        _capturePos(i + 1);
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/data.json');
+  }
+
+  Future<File> writeInFile(String jsonString) async {
+    final file = await _localFile;
+    return file.writeAsString('$jsonString');
+  }
+
+  Future<String> readFile() async {
+    try {
+      final file = await _localFile;
+
+      // Read the file
+      String contents = await file.readAsString();
+
+      return contents;
+    } catch (e) {
+      print("Error reading file!");
+      return "Error";
+    }
+  }
+
+  Future<void> newPos() async {
+    Map<String, double> currentLocation = <String, double>{};
+    var location = new Location();
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      currentLocation = await location.getLocation();
+    } on PlatformException {
+      currentLocation = null;
+    }
+    double latitude = currentLocation['latitude'];
+    double longitude = currentLocation['longitude'];
+    user.addData("Latitude= " +
+        latitude.toString() +
+        "; Longitude= " +
+        longitude.toString());
+    String jSon = json.encode(user);
+    writeInFile(jSon);
+  }
+
+  _capturePos() {
+    if (!_stopped) {
+      newPos();
+      Future.delayed(Duration(minutes: 2, seconds: 30), () {
+        _capturePos();
       });
     }
   }
@@ -42,9 +96,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _start() {
-    //TODO launch background function to capture position
     _stopped = false;
-    _capturePos(0);
+    _capturePos();
     setState(() {
       _onPressed = _stop;
       _icon = Icons.stop;
@@ -59,13 +112,44 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  _printData() async {
+    String data = await readFile();
+    StringBuffer toPrint = StringBuffer("(click again to reload)\n");
+    data = data.replaceAll("{", "").replaceAll("}", "").replaceAll('"', "").replaceFirst("Data:", "");
+    List<String> splittedAtComma = data.split(",");
+    toPrint.writeln(splittedAtComma[0]);
+
+    List<String> timeAndPos;
+    List<String> dayAndTime;
+    for (int i = 1; i < splittedAtComma.length; i++) {
+      timeAndPos = splittedAtComma[i].split(":");
+      dayAndTime = timeAndPos[0].split(" ");
+      toPrint.writeln("\nPoint number " + i.toString() + ":");
+      toPrint.writeln("Date: " + dayAndTime[0]);
+      toPrint.writeln("Time: " + dayAndTime[1]);
+      toPrint.writeln(timeAndPos[1].replaceAll("; ", "\n"));
+    }
+
+    setState(() {
+      _data = Text(
+        toPrint.toString(),
+        style: textStyle,
+      );
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    user = widget.user;
     _givenConsent = false; //TODO ask to server if consent were already given
     _hasRefused = false;
     _onPressed = _start;
     _icon = Icons.play_arrow;
+    _data = Text(
+      'print data',
+      style: textStyle,
+    );
   }
 
   @override
@@ -90,10 +174,19 @@ class _MainScreenState extends State<MainScreen> {
         body: Container(
           color: Colors.green,
           child: Center(
-            child: IconButton(
-              icon: Icon(_icon),
-              onPressed: _onPressed,
-              iconSize: 120.0,
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(_icon),
+                  onPressed: _onPressed,
+                  iconSize: 120.0,
+                ),
+                RaisedButton(
+                  child: _data,
+                  onPressed: _printData,
+                ),
+              ],
             ),
           ),
         ),
