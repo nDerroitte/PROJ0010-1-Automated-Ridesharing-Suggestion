@@ -26,7 +26,8 @@ final rgpdText = Padding(
         "la position de ses utilisateurs, régulièrement, en vue d'analyse.\n\n" +
         "Les données recueillies dans ce formulaire (la localisation de l'appareil, " +
         "étant conservées en particulier la latitude et la longitude, ainsi que la seconde associée) " +
-        "sont enregistrées dans un fichier informatisé par TBD de l'Université de Liège afin de " + //TODO find who is the [responsable interne du traitement - Préciser ici le nom du service de l’ULiège qui est responsable de la collecte et du traitement (y compris conservation, mise à jour et effacement) des données recueillies.]
+        "sont enregistrées dans un fichier informatisé par l'équipe de développement de CovoitULiège " +
+        "de l'Université de Liège afin de " +
         "les analyser, d'en déduire premièrement les trajets parcourus par l'utilisateur et dans un second temps " +
         "les trajets qu'il est probable de parcourir prochainement. Ces données seront conservées " +
         "jusqu'à ce que des données plus récentes puissent les remplacer, avec un maximum de 2 mois " +
@@ -38,7 +39,7 @@ final rgpdText = Padding(
         "à l'égard des traitements de données à caractère personnel, " +
         "vous pouvez exercer vos droits relatifs à ces données à caractère personnel " +
         "(droit d’accès, de rectification, d’effacement, à la limitation, d’opposition et de retrait du consentement) " +
-        "en contactant TBD ou, à défaut, le Délégué à la Protection des Données de l’ULiège " + //TODO find who is the service en charge du maintien du fichier informatique contenant ces données.
+        "en contactant Covoituliege@uliege.be ou, à défaut, le Délégué à la Protection des Données de l’ULiège " +
         "(dpo@uliege.be – Monsieur le Délégué à la Protection des Données, Bât. B9 Cellule « GDPR », Quartier Village 3, " +
         "Boulevard de Colonster 2, 4000 Liège, Belgique). Vous disposez également du droit d’introduire une réclamation " +
         "auprès de l’Autorité de protection des données (https://www.autoriteprotectiondonnees.be, contact@apd-gba.be).",
