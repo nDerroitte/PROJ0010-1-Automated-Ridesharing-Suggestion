@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
+import 'FileHandler.dart';
 
 class MainScreen extends StatefulWidget {
   final UserInfo user;
@@ -20,62 +19,58 @@ class _MainScreenState extends State<MainScreen> {
   bool _givenConsent;
   bool _hasRefused;
   bool _stopped;
-  Function _onPressed;
-  IconData _icon;
-  UserInfo user;
+  Function _pressedOnOff;
+  IconData _onOffIcon;
+  UserInfo _user;
+  StringBuffer _bufferedData;
   Text _data;
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+  Future<String> _readFile() async {
+    String data = await readFile();
+    data = data
+        .replaceAll("{", "")
+        .replaceAll("}", "")
+        .replaceAll('"', "")
+        .replaceFirst("Data:", "");
+    StringBuffer formatted = StringBuffer();
+
+    List<String> splittedAtComma = data.split(",");
+    formatted.writeln(splittedAtComma[0]); // splittedAtComma[0] is the username
+    formatted.write(splittedAtComma[1]);
+
+    return formatted.toString();
   }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/data.json');
-  }
-
-  Future<File> writeInFile(String jsonString) async {
-    final file = await _localFile;
-    return file.writeAsString('$jsonString');
-  }
-
-  Future<String> readFile() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      String contents = await file.readAsString();
-
-      return contents;
-    } catch (e) {
-      print("Error reading file!");
-      return "Error reading file";
-    }
-  }
-
-  Future<void> newPos() async {
+  Future<void> _newPos() async {
     Map<String, double> currentLocation = <String, double>{};
     var location = new Location();
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       currentLocation = await location.getLocation();
     } on PlatformException {
-      currentLocation = null;
+      /// We only skip one point, it doesn't hurt as long as this is rare
+      _bufferedData.writeln("-1: A PlatformException occured");
+      return;
     }
     double latitude = currentLocation['latitude'];
     double longitude = currentLocation['longitude'];
-    user.addData("Latitude= " +
-        latitude.toString() +
-        "; Longitude= " +
-        longitude.toString());
-    String jSon = json.encode(user);
-    writeInFile(jSon);
+    String dateTime = DateTime.now()
+        .toString()
+        .replaceFirst(":", "h")
+        .replaceFirst(":", "m")
+        .replaceFirst(".", "s");
+    dateTime = dateTime.substring(0, dateTime.indexOf("s") + 1);
+    List<String> dateAndTime = dateTime.split(" ");
+    _bufferedData.writeln("\nPoint:");
+    _bufferedData.writeln("Date = " + dateAndTime[0]);
+    _bufferedData.writeln("Time = " + dateAndTime[1]);
+    _bufferedData.writeln("Latitude = " + latitude.toString());
+    _bufferedData.writeln("Longitude = " + longitude.toString());
   }
 
   _capturePos() {
     if (!_stopped) {
-      newPos();
+      _newPos();
       Future.delayed(Duration(minutes: 2, seconds: 30), () {
         _capturePos();
       });
@@ -97,42 +92,30 @@ class _MainScreenState extends State<MainScreen> {
 
   _start() {
     _stopped = false;
+    _bufferedData.clear();
     _capturePos();
     setState(() {
-      _onPressed = _stop;
-      _icon = Icons.stop;
+      _pressedOnOff = _stop;
+      _onOffIcon = Icons.stop;
     });
   }
 
   _stop() {
     _stopped = true;
+    _user.addData(_bufferedData.toString());
+    String jSon = json.encode(_user);
+    writeInFile(jSon);
     setState(() {
-      _onPressed = _start;
-      _icon = Icons.play_arrow;
+      _pressedOnOff = _start;
+      _onOffIcon = Icons.play_arrow;
     });
   }
 
   _printData() async {
-    String data = await readFile();
-    StringBuffer toPrint = StringBuffer("(click again to reload)\n");
-    data = data.replaceAll("{", "").replaceAll("}", "").replaceAll('"', "").replaceFirst("Data:", "");
-    List<String> splittedAtComma = data.split(",");
-    toPrint.writeln(splittedAtComma[0]);
-
-    List<String> timeAndPos;
-    List<String> dayAndTime;
-    for (int i = 1; i < splittedAtComma.length; i++) {
-      timeAndPos = splittedAtComma[i].split(":");
-      dayAndTime = timeAndPos[0].split(" ");
-      toPrint.writeln("\nPoint number " + i.toString() + ":");
-      toPrint.writeln("Date: " + dayAndTime[0]);
-      toPrint.writeln("Time: " + dayAndTime[1]);
-      toPrint.writeln(timeAndPos[1].replaceAll("; ", "\n"));
-    }
-
+    String data = await _readFile();
     setState(() {
       _data = Text(
-        toPrint.toString(),
+        data.replaceAll("\\n", "\n"),
         style: textStyle,
       );
     });
@@ -141,11 +124,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    user = widget.user;
+    _user = widget.user;
     _givenConsent = false; //TODO ask to server if consent were already given
     _hasRefused = false;
-    _onPressed = _start;
-    _icon = Icons.play_arrow;
+    _pressedOnOff = _start;
+    _onOffIcon = Icons.play_arrow;
+    _bufferedData = StringBuffer();
     _data = Text(
       'print data',
       style: textStyle,
@@ -178,8 +162,8 @@ class _MainScreenState extends State<MainScreen> {
               shrinkWrap: true,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(_icon),
-                  onPressed: _onPressed,
+                  icon: Icon(_onOffIcon),
+                  onPressed: _pressedOnOff,
                   iconSize: 120.0,
                 ),
                 RaisedButton(
