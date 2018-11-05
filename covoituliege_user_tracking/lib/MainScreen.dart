@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
       return contents;
     } catch (e) {
       print("Error reading file!");
-      return "Error";
+      return "Error reading file";
     }
   }
 
