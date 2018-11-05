@@ -107,7 +107,6 @@ class _MainScreenState extends State<MainScreen> {
   _stop() {
     _stopped = true;
     setState(() {
-      readFile().then((s) => print(s));
       _onPressed = _start;
       _icon = Icons.play_arrow;
     });
