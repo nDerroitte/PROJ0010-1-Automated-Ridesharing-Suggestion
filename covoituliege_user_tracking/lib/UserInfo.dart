@@ -1,30 +1,22 @@
-class UserInfo
-{
+class UserInfo {
   var _name;
-  Map<String,String> data;
+  String _data;
   UserInfo(this._name);
 
-  void addData(String pos)
-  {
-    if (data ==null)
-      data = new Map<String,String>();
-    String dateTime = DateTime.now().toString().replaceFirst(":", "h").replaceFirst(":", "m").replaceFirst(".", "s");
-    dateTime = dateTime.substring(0, dateTime.indexOf("s") + 1);
-    data[dateTime] = pos;
-  }
-  void printUser()
-  {
-    print("Nom: $_name\nData : $data ");
+  void addData(String data) {
+    if (_data == null)
+      _data = data;
+    else
+      _data = _data + data;
   }
 
-  UserInfo.fromJson(Map<String, dynamic> json) :
-        _name = json['userName'],
-        data = json['Data'];
+  void printUser() {
+    print("Nom: $_name\nData : $_data ");
+  }
 
+  UserInfo.fromJson(Map<String, dynamic> json)
+      : _name = json['userName'],
+        _data = json['Data'];
 
-  Map<String, dynamic> toJson() =>
-      {
-        'UserName': _name,
-        'Data': data
-      };
+  Map<String, dynamic> toJson() => {'UserName': _name, 'Data': _data};
 }

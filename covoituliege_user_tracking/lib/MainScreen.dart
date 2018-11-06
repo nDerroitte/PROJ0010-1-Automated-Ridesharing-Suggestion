@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
+import 'FileHandler.dart';
+import 'RGPDScreen.dart';
 
 class MainScreen extends StatefulWidget {
   final UserInfo user;
@@ -20,72 +21,114 @@ class _MainScreenState extends State<MainScreen> {
   bool _givenConsent;
   bool _hasRefused;
   bool _stopped;
-  Function _onPressed;
-  IconData _icon;
-  UserInfo user;
+  Function _pressedOnOff;
+  Function _pressedDataButton;
+  IconData _onOffIcon;
+  UserInfo _user;
+  StringBuffer _bufferedData;
   Text _data;
+  RichText _bottomNavigationBar;
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+  Future<String> _readFile() async {
+    String data = await readFile();
+    data = data
+        .replaceAll("{", "")
+        .replaceAll("}", "")
+        .replaceAll('"', "")
+        .replaceFirst("Data:", "");
+    StringBuffer formatted = StringBuffer();
+
+    List<String> splittedAtComma = data.split(",");
+    formatted.writeln(splittedAtComma[0]); // splittedAtComma[0] is the username
+    formatted.write(splittedAtComma[1]);
+
+    return formatted.toString();
   }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/data.json');
-  }
-
-  Future<File> writeInFile(String jsonString) async {
-    final file = await _localFile;
-    return file.writeAsString('$jsonString');
-  }
-
-  Future<String> readFile() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      String contents = await file.readAsString();
-
-      return contents;
-    } catch (e) {
-      print("Error reading file!");
-      return "Error";
-    }
-  }
-
-  Future<void> newPos() async {
+  Future<void> _newPos() async {
     Map<String, double> currentLocation = <String, double>{};
     var location = new Location();
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       currentLocation = await location.getLocation();
     } on PlatformException {
-      currentLocation = null;
+      /// We only skip one point, it doesn't hurt as long as this is rare
+      _bufferedData.writeln("-1: A PlatformException occured");
+      return;
     }
     double latitude = currentLocation['latitude'];
     double longitude = currentLocation['longitude'];
-    user.addData("Latitude= " +
-        latitude.toString() +
-        "; Longitude= " +
-        longitude.toString());
-    String jSon = json.encode(user);
-    writeInFile(jSon);
+    String dateTime = DateTime.now()
+        .toString()
+        .replaceFirst(":", "h")
+        .replaceFirst(":", "m")
+        .replaceFirst(".", "s");
+    dateTime = dateTime.substring(0, dateTime.indexOf("s") + 1);
+    List<String> dateAndTime = dateTime.split(" ");
+    _bufferedData.writeln("\nPoint:");
+    _bufferedData.writeln("Date = " + dateAndTime[0]);
+    _bufferedData.writeln("Time = " + dateAndTime[1]);
+    _bufferedData.writeln("Latitude = " + latitude.toString());
+    _bufferedData.writeln("Longitude = " + longitude.toString());
   }
 
   _capturePos() {
     if (!_stopped) {
-      newPos();
+      _newPos();
       Future.delayed(Duration(minutes: 2, seconds: 30), () {
         _capturePos();
       });
     }
   }
 
+  _start() {
+    _stopped = false;
+    _bufferedData.clear();
+    _capturePos();
+    setState(() {
+      _pressedOnOff = _stop;
+      _onOffIcon = Icons.stop;
+    });
+  }
+
+  _stop() {
+    _stopped = true;
+    _user.addData(_bufferedData.toString());
+    String jSon = json.encode(_user);
+    writeInFile(jSon);
+    setState(() {
+      _pressedOnOff = _start;
+      _onOffIcon = Icons.play_arrow;
+    });
+  }
+
+  _printData() async {
+    String data = await _readFile();
+    setState(() {
+      _data = Text(
+        "(tap again to reload)\n" + data.replaceAll("\\n", "\n"),
+        style: textStyle,
+      );
+    });
+  }
+
+  _activateButtons() {
+    _bottomNavigationBar = null;
+    _pressedOnOff = _start;
+    _pressedDataButton = _printData;
+  }
+
+  _printRGPD() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RGPDScreen()),
+    );
+  }
+
   _accepted() {
     //TODO: tell to server consent has been given
     setState(() {
-      _givenConsent = true;
+      _activateButtons();
     });
   }
 
@@ -95,66 +138,77 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  _start() {
-    _stopped = false;
-    _capturePos();
-    setState(() {
-      _onPressed = _stop;
-      _icon = Icons.stop;
-    });
-  }
-
-  _stop() {
-    _stopped = true;
-    setState(() {
-      _onPressed = _start;
-      _icon = Icons.play_arrow;
-    });
-  }
-
-  _printData() async {
-    String data = await readFile();
-    StringBuffer toPrint = StringBuffer("(click again to reload)\n");
-    data = data.replaceAll("{", "").replaceAll("}", "").replaceAll('"', "").replaceFirst("Data:", "");
-    List<String> splittedAtComma = data.split(",");
-    toPrint.writeln(splittedAtComma[0]);
-
-    List<String> timeAndPos;
-    List<String> dayAndTime;
-    for (int i = 1; i < splittedAtComma.length; i++) {
-      timeAndPos = splittedAtComma[i].split(":");
-      dayAndTime = timeAndPos[0].split(" ");
-      toPrint.writeln("\nPoint number " + i.toString() + ":");
-      toPrint.writeln("Date: " + dayAndTime[0]);
-      toPrint.writeln("Time: " + dayAndTime[1]);
-      toPrint.writeln(timeAndPos[1].replaceAll("; ", "\n"));
-    }
-
-    setState(() {
-      _data = Text(
-        toPrint.toString(),
-        style: textStyle,
-      );
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    user = widget.user;
+    _user = widget.user;
     _givenConsent = false; //TODO ask to server if consent were already given
     _hasRefused = false;
-    _onPressed = _start;
-    _icon = Icons.play_arrow;
+    _onOffIcon = Icons.play_arrow;
+    _bufferedData = StringBuffer();
     _data = Text(
       'print data',
       style: textStyle,
     );
+
+    if (_givenConsent) {
+      _activateButtons();
+    } else {
+      _bottomNavigationBar = RichText(
+        text: TextSpan(
+          text:
+              'Cette application utilise vos données, en particulier votre localisation. En cliquant sur ',
+          style: textStyle,
+          children: <TextSpan>[
+            TextSpan(
+              text: 'j\'accepte',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()..onTap = _accepted,
+            ),
+            TextSpan(
+              text: ', vous marquez votre accord avec notre ',
+              style: textStyle,
+            ),
+            TextSpan(
+              text: 'politique de confidentialité.',
+              style: linkStyle,
+              recognizer: TapGestureRecognizer()..onTap = _printRGPD,
+            ),
+          ],
+        ),
+      );
+      _pressedOnOff = null;
+      _pressedDataButton = null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_hasRefused) {
+    // TODO Location().hasPermission().then((b) => print(b.toString()));
+    return Scaffold(
+      appBar: appBar,
+      body: Container(
+        color: Colors.green,
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(_onOffIcon),
+                onPressed: _pressedOnOff,
+                iconSize: 120.0,
+              ),
+              RaisedButton(
+                child: _data,
+                onPressed: _pressedDataButton,
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: _bottomNavigationBar,
+    );
+    /*if (_hasRefused) {
       return Scaffold(
         appBar: appBar,
         body: Container(
@@ -178,8 +232,8 @@ class _MainScreenState extends State<MainScreen> {
               shrinkWrap: true,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(_icon),
-                  onPressed: _onPressed,
+                  icon: Icon(_onOffIcon),
+                  onPressed: _pressedOnOff,
                   iconSize: 120.0,
                 ),
                 RaisedButton(
@@ -190,6 +244,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
+        bottomNavigationBar: null,
       );
     } else {
       return Scaffold(
@@ -197,39 +252,53 @@ class _MainScreenState extends State<MainScreen> {
         body: Container(
           color: Colors.green,
           child: Center(
-              child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              Center(
-                child: Text(
-                  'TODO: consent text',
-                  style: textStyle,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 75.0),
-                child: RaisedButton(
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Center(
                   child: Text(
-                    'J\'accepte',
+                    'TODO: consent text',
                     style: textStyle,
                   ),
-                  onPressed: _accepted,
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 75.0),
-                child: RaisedButton(
-                  child: Text(
-                    'Je refuse',
-                    style: textStyle,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 75.0),
+                  child: RaisedButton(
+                    child: Text(
+                      'J\'accepte',
+                      style: textStyle,
+                    ),
+                    onPressed: _accepted,
                   ),
-                  onPressed: _refused,
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 75.0),
+                  child: RaisedButton(
+                    child: Text(
+                      'Je refuse',
+                      style: textStyle,
+                    ),
+                    onPressed: _refused,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: RichText(
+          text: TextSpan(
+            text: 'This ',
+            style: textStyle,
+            children: <TextSpan>[
+              TextSpan(
+                text: 'is',
+                style: linkStyle,
+                recognizer: TapGestureRecognizer()..onTap = _printRGPD,
+              )
             ],
-          )),
+          ),
         ),
       );
-    }
+    }*/
   }
 }
