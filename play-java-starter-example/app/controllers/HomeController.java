@@ -21,17 +21,25 @@ public class HomeController extends Controller {
     }
 	
 	public Result write(){
-		String path = "C:\test_play";
+		String path = "texte.txt";
 		RequestBody body = request().body();
 		String textBody = body.asText();
 		File file = new File(path);
-        try {
-            FileWriter fr = new FileWriter(file);
-            fr.write(textBody);
+
+        try {		
+			file.createNewFile();
+            FileWriter fr = new FileWriter(file,true);
+			BufferedWriter bw = new BufferedWriter(fr);
+			bw.write(textBody);
+			bw.newLine();
+			bw.close();
         } catch (IOException e) {
             e.printStackTrace();
 			return internalServerError("Io exception occured");
         }
+		catch (SecurityException e){
+        e.printStackTrace();
+		}
 		return ok("successful write in file");
     }		
 }

@@ -28,6 +28,9 @@ dependencies {
 
     playTest "org.assertj:assertj-core:3.6.2"
     playTest "org.awaitility:awaitility:2.0.0"
+    compile 'org.mongodb:mongodb-driver-sync:3.8.2'
+  
+
 }
 
 repositories {
