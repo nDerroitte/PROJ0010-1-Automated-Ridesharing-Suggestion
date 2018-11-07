@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
 
 const _fontSize = 24.0;
+const _smallSize = 18.0;
+
 const textStyle = TextStyle(fontSize: _fontSize, color: Colors.black);
 const warningStyle = TextStyle(fontSize: _fontSize, color: Colors.red);
 const linkStyle = TextStyle(fontSize: _fontSize, color: Colors.lightBlue);
+const underlinedStyle = TextStyle(fontSize: _fontSize, color: Colors.black, decoration: TextDecoration.underline);
+const smallInfoStyle = TextStyle(fontSize: _smallSize, color: Colors.black);
+const smallWarningStyle = TextStyle(fontSize: _smallSize, color: Colors.red);
+const confirmationStyle = TextStyle(fontSize: _fontSize, color: Colors.lightGreenAccent);
+
+const serverURL = "http://10.0.2.2:8002/";
+const serverError = 'Erreur serveur, veuillez réessayer. Si le problème persiste, merci de contacter le service technique.';
+
+const httpError = -1;
+const invalidUsername = 0;
+const invalidPassword = 1;
+const passwordOK = 2;
+
+const signUpOK = 3;
+const invalidEmail = 4;
+
+const newPasswordOK = 5;
 
 final _appBarColor = Colors.green;
 

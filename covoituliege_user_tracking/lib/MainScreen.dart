@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:async';
 import 'dart:convert';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
 import 'FileHandler.dart';
-import 'RGPDScreen.dart';
 
 class MainScreen extends StatefulWidget {
   final UserInfo user;
@@ -18,16 +17,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool _givenConsent;
-  bool _hasRefused;
   bool _stopped;
   Function _pressedOnOff;
   Function _pressedDataButton;
   IconData _onOffIcon;
+  int _capturePosIndex;
   UserInfo _user;
   StringBuffer _bufferedData;
   Text _data;
-  RichText _bottomNavigationBar;
 
   Future<String> _readFile() async {
     String data = await readFile();
@@ -39,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     StringBuffer formatted = StringBuffer();
 
     List<String> splittedAtComma = data.split(",");
-    formatted.writeln(splittedAtComma[0]); // splittedAtComma[0] is the username
+    formatted.writeln(splittedAtComma[0]); // username
     formatted.write(splittedAtComma[1]);
 
     return formatted.toString();
@@ -72,11 +69,11 @@ class _MainScreenState extends State<MainScreen> {
     _bufferedData.writeln("Longitude = " + longitude.toString());
   }
 
-  _capturePos() {
-    if (!_stopped) {
+  _capturePos(index) {
+    if (!_stopped && index == _capturePosIndex) {
       _newPos();
       Future.delayed(Duration(minutes: 2, seconds: 30), () {
-        _capturePos();
+        _capturePos(index);
       });
     }
   }
@@ -84,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
   _start() {
     _stopped = false;
     _bufferedData.clear();
-    _capturePos();
+    _capturePos(_capturePosIndex);
     setState(() {
       _pressedOnOff = _stop;
       _onOffIcon = Icons.stop;
@@ -93,6 +90,7 @@ class _MainScreenState extends State<MainScreen> {
 
   _stop() {
     _stopped = true;
+    _capturePosIndex += 1;
     _user.addData(_bufferedData.toString());
     String jSon = json.encode(_user);
     writeInFile(jSon);
@@ -112,79 +110,23 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  _activateButtons() {
-    _bottomNavigationBar = null;
-    _pressedOnOff = _start;
-    _pressedDataButton = _printData;
-  }
-
-  _printRGPD() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RGPDScreen()),
-    );
-  }
-
-  _accepted() {
-    //TODO: tell to server consent has been given
-    setState(() {
-      _activateButtons();
-    });
-  }
-
-  _refused() {
-    setState(() {
-      _hasRefused = true;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     _user = widget.user;
-    _givenConsent = false; //TODO ask to server if consent were already given
-    _hasRefused = false;
+    _pressedOnOff = _start;
+    _pressedDataButton = _printData;
     _onOffIcon = Icons.play_arrow;
+    _capturePosIndex = 0;
     _bufferedData = StringBuffer();
     _data = Text(
       'print data',
       style: textStyle,
     );
-
-    if (_givenConsent) {
-      _activateButtons();
-    } else {
-      _bottomNavigationBar = RichText(
-        text: TextSpan(
-          text:
-              'Cette application utilise vos données, en particulier votre localisation. En cliquant sur ',
-          style: textStyle,
-          children: <TextSpan>[
-            TextSpan(
-              text: 'j\'accepte',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = _accepted,
-            ),
-            TextSpan(
-              text: ', vous marquez votre accord avec notre ',
-              style: textStyle,
-            ),
-            TextSpan(
-              text: 'politique de confidentialité.',
-              style: linkStyle,
-              recognizer: TapGestureRecognizer()..onTap = _printRGPD,
-            ),
-          ],
-        ),
-      );
-      _pressedOnOff = null;
-      _pressedDataButton = null;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO Location().hasPermission().then((b) => print(b.toString()));
     return Scaffold(
       appBar: appBar,
       body: Container(
@@ -206,99 +148,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: _bottomNavigationBar,
     );
-    /*if (_hasRefused) {
-      return Scaffold(
-        appBar: appBar,
-        body: Container(
-          color: Colors.red,
-          child: Center(
-            child: Text(
-              'Désolé, pour des raisons techniques, nous ne pouvons pas' +
-                  ' vous proposer le service sans utiliser votre position.',
-              style: textStyle,
-            ),
-          ),
-        ),
-      );
-    } else if (_givenConsent) {
-      return Scaffold(
-        appBar: appBar,
-        body: Container(
-          color: Colors.green,
-          child: Center(
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(_onOffIcon),
-                  onPressed: _pressedOnOff,
-                  iconSize: 120.0,
-                ),
-                RaisedButton(
-                  child: _data,
-                  onPressed: _printData,
-                ),
-              ],
-            ),
-          ),
-        ),
-        bottomNavigationBar: null,
-      );
-    } else {
-      return Scaffold(
-        appBar: appBar,
-        body: Container(
-          color: Colors.green,
-          child: Center(
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    'TODO: consent text',
-                    style: textStyle,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 75.0),
-                  child: RaisedButton(
-                    child: Text(
-                      'J\'accepte',
-                      style: textStyle,
-                    ),
-                    onPressed: _accepted,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 75.0),
-                  child: RaisedButton(
-                    child: Text(
-                      'Je refuse',
-                      style: textStyle,
-                    ),
-                    onPressed: _refused,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        bottomNavigationBar: RichText(
-          text: TextSpan(
-            text: 'This ',
-            style: textStyle,
-            children: <TextSpan>[
-              TextSpan(
-                text: 'is',
-                style: linkStyle,
-                recognizer: TapGestureRecognizer()..onTap = _printRGPD,
-              )
-            ],
-          ),
-        ),
-      );
-    }*/
   }
 }

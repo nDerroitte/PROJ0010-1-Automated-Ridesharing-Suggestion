@@ -1,0 +1,275 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+
+import 'Cst.dart';
+import 'TextInput.dart';
+import 'RGPDScreen.dart';
+import 'serverCommunication.dart';
+
+class SignUpScreen extends StatefulWidget {
+  @override
+  _SignUpScreenState createState() => new _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  static final _backgroundColor = Colors.lightBlue;
+  List<Widget> _listViewContent;
+  TextInput _usernameInput;
+  TextEditingController _username = TextEditingController();
+  TextInput _passwordInput;
+  TextEditingController _password = TextEditingController();
+  TextInput _passwordConfirmationInput;
+  TextEditingController _passwordConfirmation = TextEditingController();
+  TextInput _emailInput;
+  TextEditingController _email = TextEditingController();
+  RichText _bottomNavigationBar;
+  Padding _signUpButton;
+  TapGestureRecognizer _rgpdRecognizer;
+
+  _printRGPD() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RGPDScreen()),
+    );
+  }
+
+  _signUp() async {
+    bool goodId = _username.text != "";
+    bool goodPassword = _password.text.length > 3 && _password.text.length < 17;
+    bool goodConfirmation = _passwordConfirmation.text == _password.text;
+    bool goodEmail = true;
+    int indexOfAt = _email.text.indexOf("@");
+    int indexOfDot = _email.text.lastIndexOf(".");
+    if (indexOfAt < 1 ||
+        indexOfDot == -1 ||
+        indexOfDot == _email.text.length - 1 ||
+        indexOfDot < indexOfAt + 2) {
+      goodEmail = false;
+    }
+
+    if (goodId && goodPassword && goodConfirmation && goodEmail) {
+      // These lines are disabled until the server is operational
+      //int signUpResult =
+          //await sendSignUp(_username.text, _password.text, _email.text);
+      int signUpResult =
+          signUpOK; // TODO remove this line (when server operational)
+      if (signUpResult == signUpOK) {
+        Navigator.pop(context);
+        return;
+      }
+      setState(() {
+        _listViewContent = <Widget>[
+          _usernameInput,
+        ];
+        if (signUpResult == invalidUsername) {
+          _listViewContent += <Widget>[
+            Text(
+              "Cet identifiant existe déjà",
+              style: smallWarningStyle,
+              textAlign: TextAlign.right,
+            )
+          ];
+        }
+
+        _listViewContent += <Widget>[
+          _passwordInput,
+        ];
+        _listViewContent += <Widget>[
+          Text(
+            "Entre 4 et 16 charactères",
+            style: smallInfoStyle,
+            textAlign: TextAlign.right,
+          )
+        ];
+
+        _listViewContent += <Widget>[
+          _passwordConfirmationInput,
+        ];
+
+        _listViewContent += <Widget>[
+          _emailInput,
+        ];
+        if (signUpResult == invalidEmail) {
+          _listViewContent += <Widget>[
+            Text(
+              "Cette adresse email n'existe pas",
+              style: smallWarningStyle,
+              textAlign: TextAlign.right,
+            )
+          ];
+        }
+
+        _listViewContent += <Widget>[
+          _signUpButton,
+        ];
+        if (signUpResult == httpError) {
+          _listViewContent += <Widget>[
+            Text(
+              serverError,
+              style: warningStyle,
+            ),
+          ];
+        }
+      });
+      return;
+    }
+
+    setState(() {
+      _listViewContent = <Widget>[
+        _usernameInput,
+      ];
+      if (!goodId) {
+        _listViewContent += <Widget>[
+          Text(
+            "Champ obligatoire",
+            style: smallWarningStyle,
+            textAlign: TextAlign.right,
+          )
+        ];
+      }
+
+      _listViewContent += <Widget>[
+        _passwordInput,
+      ];
+      TextStyle style;
+      if (!goodPassword) {
+        style = smallWarningStyle;
+      } else {
+        style = smallInfoStyle;
+      }
+      _listViewContent += <Widget>[
+        Text(
+          "Entre 4 et 16 charactères",
+          style: style,
+          textAlign: TextAlign.right,
+        )
+      ];
+
+      _listViewContent += <Widget>[
+        _passwordConfirmationInput,
+      ];
+      if (!goodConfirmation) {
+        _listViewContent += <Widget>[
+          Text(
+            "Les mots de passe sont différents",
+            style: smallWarningStyle,
+            textAlign: TextAlign.right,
+          )
+        ];
+      }
+
+      _listViewContent += <Widget>[
+        _emailInput,
+      ];
+      if (!goodEmail) {
+        _listViewContent += <Widget>[
+          Text(
+            "Adresse email invalide",
+            style: smallWarningStyle,
+            textAlign: TextAlign.right,
+          )
+        ];
+      }
+
+      _listViewContent += <Widget>[
+        _signUpButton,
+      ];
+    });
+  }
+
+  @override
+  void dispose() {
+    _rgpdRecognizer.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameInput = TextInput(
+      messageToUser: 'Identifiant',
+      color: _backgroundColor,
+      controller: _username,
+    );
+    _passwordInput = TextInput(
+      messageToUser: 'Mot de passe',
+      color: _backgroundColor,
+      controller: _password,
+      obscureText: true,
+    );
+    _passwordConfirmationInput = TextInput(
+      messageToUser: 'Confirmation',
+      color: _backgroundColor,
+      controller: _passwordConfirmation,
+      obscureText: true,
+    );
+    _emailInput = TextInput(
+      messageToUser: 'Adresse email',
+      color: _backgroundColor,
+      controller: _email,
+      emailAddress: true,
+    );
+
+    _signUpButton = Padding(
+      padding: EdgeInsets.symmetric(horizontal: 75.0),
+      child: RaisedButton(
+        child: Text(
+          'S\'inscrire',
+          style: textStyle,
+        ),
+        onPressed: _signUp,
+      ),
+    );
+
+    _listViewContent = <Widget>[
+      _usernameInput,
+      _passwordInput,
+      Text(
+        'Entre 4 et 16 charactères',
+        style: smallInfoStyle,
+        textAlign: TextAlign.right,
+      ),
+      _passwordConfirmationInput,
+      _emailInput,
+      _signUpButton,
+    ];
+
+    _rgpdRecognizer = TapGestureRecognizer()..onTap = _printRGPD;
+    _bottomNavigationBar = RichText(
+      text: TextSpan(
+        text: 'Cette application utilise vos données, en particulier votre localisation.' +
+            ' En cliquant sur s\'inscrire, vous marquez votre accord avec notre ',
+        style: textStyle,
+        children: <TextSpan>[
+          TextSpan(
+            text: 'politique de confidentialité.',
+            style: linkStyle,
+            recognizer: _rgpdRecognizer,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: appBar,
+      body: Container(
+        color: _backgroundColor,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 30.0,
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              children: _listViewContent,
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: _bottomNavigationBar,
+    );
+  }
+}
