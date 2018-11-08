@@ -35,7 +35,7 @@ final appBar = AppBar(
   backgroundColor: _appBarColor,
 );
 
-final rgpdText = Padding(
+final gdprText = Padding(
   padding: const EdgeInsets.symmetric(horizontal: 10.0),
   child:   ListView(
     children: <Widget>[

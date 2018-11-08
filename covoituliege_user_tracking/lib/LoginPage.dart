@@ -16,21 +16,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   static final _backgroundColor = Colors.lightBlue;
-  String username;
-  String password;
   List<Widget> _baseListViewContent;
   List<Widget> _listViewContent;
-  bool invalidPassPrinted = false;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TapGestureRecognizer _forgottenPasswordRecognizer;
   TapGestureRecognizer _signUpRecognizer;
 
   _connexion() async {
-    username = _usernameController.text;
-    password = _passwordController.text;
     // This line is disabled until the server is operational
-    //int connexionResult = await checkConnexion(username, password);
+    //int connexionResult = await checkConnexion(_usernameController.text, _passwordController.text);
     int connexionResult =
         passwordOK; //TODO remove this line (when server operational)
     setState(() {
@@ -38,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen(UserInfo(username))),
+              builder: (context) => MainScreen(UserInfo(_usernameController.text))),
         );
       } else {
         String errorExplanation;

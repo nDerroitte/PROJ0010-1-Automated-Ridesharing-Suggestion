@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 
 import 'Cst.dart';
 import 'TextInput.dart';
-import 'RGPDScreen.dart';
+import 'GDPRScreen.dart';
 import 'serverCommunication.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -24,12 +24,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _email = TextEditingController();
   RichText _bottomNavigationBar;
   Padding _signUpButton;
-  TapGestureRecognizer _rgpdRecognizer;
+  TapGestureRecognizer _gdprRecognizer;
 
-  _printRGPD() {
+  _printGDPR() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => RGPDScreen()),
+      MaterialPageRoute(builder: (context) => GDPRScreen()),
     );
   }
 
@@ -76,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ];
         _listViewContent += <Widget>[
           Text(
-            "Entre 4 et 16 charactères",
+            "Entre 4 et 16 caractères",
             style: smallInfoStyle,
             textAlign: TextAlign.right,
           )
@@ -139,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
       _listViewContent += <Widget>[
         Text(
-          "Entre 4 et 16 charactères",
+          "Entre 4 et 16 caractères",
           style: style,
           textAlign: TextAlign.right,
         )
@@ -179,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    _rgpdRecognizer.dispose();
+    _gdprRecognizer.dispose();
     super.dispose();
   }
 
@@ -225,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _usernameInput,
       _passwordInput,
       Text(
-        'Entre 4 et 16 charactères',
+        'Entre 4 et 16 caractères',
         style: smallInfoStyle,
         textAlign: TextAlign.right,
       ),
@@ -234,7 +234,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _signUpButton,
     ];
 
-    _rgpdRecognizer = TapGestureRecognizer()..onTap = _printRGPD;
+    _gdprRecognizer = TapGestureRecognizer()..onTap = _printGDPR;
     _bottomNavigationBar = RichText(
       text: TextSpan(
         text: 'Cette application utilise vos données, en particulier votre localisation.' +
@@ -244,7 +244,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           TextSpan(
             text: 'politique de confidentialité.',
             style: linkStyle,
-            recognizer: _rgpdRecognizer,
+            recognizer: _gdprRecognizer,
           ),
         ],
       ),

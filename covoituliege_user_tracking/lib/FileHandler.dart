@@ -26,6 +26,6 @@ Future<String> readFile() async {
     return contents;
   } catch (e) {
     print("Error reading file!");
-    return "Error reading file";
+    return "Error reading, file";
   }
 }

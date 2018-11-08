@@ -1,5 +1,5 @@
 class UserInfo {
-  var _name;
+  String _name;
   String _data;
   UserInfo(this._name);
 
