@@ -6,6 +6,10 @@ import 'TextInput.dart';
 import 'GDPRScreen.dart';
 import 'serverCommunication.dart';
 
+/// This class represents the sign up screen of the application.
+/// It allows the user to create a new account that will be directly usable.
+/// The screen also contains a link to the GDPR screen, because signing up implies giving consent
+/// for the data collection and usage.
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => new _SignUpScreenState();
@@ -26,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Padding _signUpButton;
   TapGestureRecognizer _gdprRecognizer;
 
+  /// This function pushes the GDPR screen that contains the corresponding consent text.
   _printGDPR() {
     Navigator.push(
       context,
@@ -33,6 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  /// This function is called when the user taps on the "S'inscrire" button,
+  /// it asks the server to create a new account and/or explains why it could not be done.
   _signUp() async {
     bool goodId = _username.text != "";
     bool goodPassword = _password.text.length > 3 && _password.text.length < 17;
@@ -40,6 +47,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     bool goodEmail = true;
     int indexOfAt = _email.text.indexOf("@");
     int indexOfDot = _email.text.lastIndexOf(".");
+    /// The email should contain at least one @ and one dot,
+    /// there should be at least one character before the @, after the dot and between the @ and the dot.
     if (indexOfAt < 1 ||
         indexOfDot == -1 ||
         indexOfDot == _email.text.length - 1 ||
@@ -71,6 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ];
         }
 
+        /// Note that the server will never answer with an invalidPassword error.
         _listViewContent += <Widget>[
           _passwordInput,
         ];
@@ -177,6 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
+  /// TapGestureRecognizer don't dispose themselves automatically.
   @override
   void dispose() {
     _gdprRecognizer.dispose();
@@ -186,6 +197,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+    /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
     _usernameInput = TextInput(
       messageToUser: 'Identifiant',
       color: _backgroundColor,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 const _fontSize = 24.0;
 const _smallSize = 18.0;
 
+/// Different text styles.
 const textStyle = TextStyle(fontSize: _fontSize, color: Colors.black);
 const warningStyle = TextStyle(fontSize: _fontSize, color: Colors.red);
 const linkStyle = TextStyle(fontSize: _fontSize, color: Colors.lightBlue);
@@ -11,21 +12,25 @@ const smallInfoStyle = TextStyle(fontSize: _smallSize, color: Colors.black);
 const smallWarningStyle = TextStyle(fontSize: _smallSize, color: Colors.red);
 const confirmationStyle = TextStyle(fontSize: _fontSize, color: Colors.lightGreenAccent);
 
+
 const serverURL = "http://10.0.2.2:8002/";
 const serverError = 'Erreur serveur, veuillez réessayer. Si le problème persiste, merci de contacter le service technique.';
 
 const httpError = -1;
+/// Possible connection results.
 const invalidUsername = 0;
 const invalidPassword = 1;
 const passwordOK = 2;
 
+/// Possible sign up results.
 const signUpOK = 3;
 const invalidEmail = 4;
 
-const newPasswordOK = 5;
+/// Possible forgottenPasswordResults.
+const forgottenPasswordOK = 5;
 
+/// The appBar is the same for all screens.
 final _appBarColor = Colors.green;
-
 final appBar = AppBar(
   title: Text(
     'User Tracking CovoitULiège',
@@ -35,6 +40,7 @@ final appBar = AppBar(
   backgroundColor: _appBarColor,
 );
 
+/// Text relative to the users' personal data usage.
 final gdprText = Padding(
   padding: const EdgeInsets.symmetric(horizontal: 10.0),
   child:   ListView(

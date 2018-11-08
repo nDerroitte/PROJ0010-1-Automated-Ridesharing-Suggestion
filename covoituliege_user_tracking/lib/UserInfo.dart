@@ -1,3 +1,6 @@
+/// This class represents the points captured for the currently connected user,
+/// it's used to convert easily the data to and from a JSon format.
+/// The format is not perfect yet, it should be changed soon.
 class UserInfo {
   String _name;
   String _data;

@@ -9,6 +9,10 @@ import 'serverCommunication.dart';
 import 'ForgottenPasswordScreen.dart';
 import 'SignUpScreen.dart';
 
+/// This class represents the login screen of the application.
+/// It allows the user to connect to its account, to go the sign up screen
+/// if he has no account yet, and to go to the forgotten password screen
+/// if he can't remember its password.
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => new _LoginPageState();
@@ -23,13 +27,15 @@ class _LoginPageState extends State<LoginPage> {
   TapGestureRecognizer _forgottenPasswordRecognizer;
   TapGestureRecognizer _signUpRecognizer;
 
-  _connexion() async {
+  /// Ask the server to check the username-password pair, and push the tracking screen if yes.
+  /// If the connection fails, the cause is given to the user.
+  _connection() async {
     // This line is disabled until the server is operational
-    //int connexionResult = await checkConnexion(_usernameController.text, _passwordController.text);
-    int connexionResult =
+    //int connectionResult = await checkConnection(_usernameController.text, _passwordController.text);
+    int connectionResult =
         passwordOK; //TODO remove this line (when server operational)
     setState(() {
-      if (connexionResult == passwordOK) {
+      if (connectionResult == passwordOK) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -37,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         String errorExplanation;
-        switch (connexionResult) {
+        switch (connectionResult) {
           case invalidUsername:
             errorExplanation = 'Cet identifiant n\'existe pas';
             break;
@@ -62,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  /// Function called by the "Mot de passe oublié?" text, it simply pushes the ForgottenPassword screen.
   _forgottenPassword() {
     Navigator.push(
       context,
@@ -69,11 +76,20 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  /// Function called by the "S'inscrire" text, it simply pushes the SignUp screen.
   _signUp() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SignUpScreen()),
     );
+  }
+
+  /// TapGestureRecognizer don't dispose themselves automatically.
+  @override
+  void dispose() {
+    _forgottenPasswordRecognizer.dispose();
+    _signUpRecognizer.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,6 +99,8 @@ class _LoginPageState extends State<LoginPage> {
       ..onTap = _forgottenPassword;
     _signUpRecognizer = TapGestureRecognizer()..onTap = _signUp;
 
+    /// This variable holds the content of the screen. It's useful in the case we want to add a text
+    /// at the bottom (that occurs in case of connection error), it avoids rebuilding the main content each time.
     _baseListViewContent = <Widget>[
       TextInput(
         messageToUser: 'Identifiant',
@@ -99,10 +117,10 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.symmetric(horizontal: 75.0),
         child: RaisedButton(
           child: Text(
-            'Connexion',
+            'Connection',
             style: textStyle,
           ),
-          onPressed: _connexion,
+          onPressed: _connection,
         ),
       ),
       Center(

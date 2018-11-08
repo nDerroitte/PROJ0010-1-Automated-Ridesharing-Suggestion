@@ -9,6 +9,9 @@ import 'Cst.dart';
 import 'UserInfo.dart';
 import 'FileHandler.dart';
 
+/// This class represents the main screen of the application. It allows the user to launch the position capturing,
+/// as well as to print the points currently in the file to have an idea of the kind of data we collect.
+/// [The behaviour is likely to change].
 class MainScreen extends StatefulWidget {
   final UserInfo user;
   MainScreen(this.user);
@@ -26,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   StringBuffer _bufferedData;
   Text _data;
 
+  /// This wrapper reads the file and delete all useless characters so that the print is cleaner.
   Future<String> _readFile() async {
     String data = await readFile();
     data = data
@@ -42,6 +46,9 @@ class _MainScreenState extends State<MainScreen> {
     return formatted.toString();
   }
 
+  /// This function get the current user's location and add it in a buffer,
+  /// in an easy-to-parse way. This behaviour should change as using a RAM buffer causes problems
+  /// if the application is closed (we did not find any callback to handle this event).
   Future<void> _newPos() async {
     Map<String, double> currentLocation = <String, double>{};
     var location = new Location();
@@ -69,6 +76,8 @@ class _MainScreenState extends State<MainScreen> {
     _bufferedData.writeln("Longitude = " + longitude.toString());
   }
 
+  /// This function launches periodically the newPos function. The index handle the situation
+  /// in which the user presses multiple time on the start button : only one instance can be active simultaneously.
   _capturePos(index) {
     if (!_stopped && index == _capturePosIndex) {
       _newPos();
@@ -78,6 +87,9 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  /// This function clear the buffer and starts a new capturePos process.
+  /// It also updates the button so that it's now a stop button.
+  /// It is called when the user taps on the start button.
   _start() {
     _stopped = false;
     _bufferedData.clear();
@@ -88,6 +100,9 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  /// This function is called when the user taps on the stop button.
+  /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
+  /// and updates the button so that it becomes a start button.
   _stop() {
     _stopped = true;
     _capturePosIndex += 1;
@@ -100,11 +115,13 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  /// This function is called when the user taps on the print data button.
+  /// It prints the points that are in the application local file.
   _printData() async {
     String data = await _readFile();
     setState(() {
       _data = Text(
-        "(tap again to reload)\n" + data.replaceAll("\\n", "\n"),
+        "(appuyer à nouveau pour recharger)\n" + data.replaceAll("\\n", "\n"),
         style: textStyle,
       );
     });
@@ -120,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
     _capturePosIndex = 0;
     _bufferedData = StringBuffer();
     _data = Text(
-      'print data',
+      'afficher les données',
       style: textStyle,
     );
   }

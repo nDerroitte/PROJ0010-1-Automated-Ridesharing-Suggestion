@@ -2,6 +2,10 @@ import 'package:http/http.dart' as http;
 
 import 'Cst.dart';
 
+/// This file contains wrappers to send messages to the server and handling the potential exceptions.
+/// The functions returns integers, defined in the Cst.dart file, that represent the different possible answers of the server.
+/// An httpError is returned in case of Exception or not understood answer.
+
 Future<http.Response> _get(String url) {
   return http.get(url).timeout(
         Duration(seconds: 2),
@@ -81,7 +85,7 @@ Future<int> sendNewPassword(String username, String email) async {
   if (response.statusCode == 200) {
     switch (response.body) {
       case "OK":
-        return newPasswordOK;
+        return forgottenPasswordOK;
 
       case "username":
         return invalidUsername;
