@@ -1,0 +1,6 @@
+[0m[[0m[31merror[0m] [0m[0mC:\Users\Parick Schils\Downloads\play-java-starter-example\test\TestSignUp.java:15:1:  error: variable request is already defined in method SIGNUP()[0m
+[0m[[0m[31merror[0m] [0m[0m	RequestBuilder request = Helpers.fakeRequest("GET","/sign_up?user=schils&password=1");[0m
+[0m[[0m[31merror[0m] [0m[0m	               ^[0m
+[0m[[0m[31merror[0m] [0m[0mC:\Users\Parick Schils\Downloads\play-java-starter-example\test\TestSignUp.java:16:1:  error: variable result is already defined in method SIGNUP()[0m
+[0m[[0m[31merror[0m] [0m[0m    Result result = Helpers.route(fakeApp,request);[0m
+[0m[[0m[31merror[0m] [0m[0m           ^2 errors[0m
