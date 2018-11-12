@@ -17,6 +17,8 @@ import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.UUID;
 import java.util.List;
 
 import services.MongoInterface;
@@ -30,15 +32,19 @@ public class SignUp extends Controller {
 		this.database = db.get_database();	
 	}
 	
-	public Result sign_up(String a_user, String a_password){
+	public Result sign_up(String a_user, String a_password,String email){
 		MongoCollection<Document> users = database.getCollection("users");
 		Document registred_user = users.find(eq("user", a_user)).first();
+		//sign in the new user.
+		String key = UUID.randomUUID().toString();
 		if (registred_user == null){
 			// write new user in database
-			Document new_user = new Document("user", a_user).append("password",a_password);
+			Document new_user = new Document("user", a_user).append("password",a_password).append("email", email).append("last_sign_in",new Date() ).append("key",key);
 			users.insertOne(new_user);
+		response().setCookie(Cookie.builder("user", key).build());
 		return ok("user successfully recorded");
+ 
 		}
-		return badRequest("pseudo " + a_user + " already used" );	
+		return ok("pseudo " + a_user + " already used" );	
 	}	
 }

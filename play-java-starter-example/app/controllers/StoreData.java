@@ -18,27 +18,47 @@ import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Date;
+import java.util.UUID;
 import services.MongoInterface;
- 
-public class RemoveUser extends Controller {
+
+
+@Singleton
+public class StoreData extends Controller {
 	
 	 private final MongoDatabase database ;
 
 	@Inject
-	public RemoveUser  (MongoInterface db){
+	public SignIn  (MongoInterface db){
 		this.database = db.get_database();	
 	}
-	
-	public Result remove_user(String a_user,String a_password){
+
+	public Result store_data(String a_user, String a_password){
+		JsonNode body = request().body().asJson();
+    		if(json == null) {
+        		return badRequest("Expecting Json data");
+    		}
+		//get user ID from JSON
+		JsonNode user_info = body.get("UserInfo");
+		String user_id = user_info.get("UserID").asText();
+		//get key and last sign in to chack authentification
 		MongoCollection<Document> users = database.getCollection("users");
-		DeleteResult delete_result = users.deleteMany(and(eq("user",a_user),eq("password",a_password)));
-		if (delete_result.getDeletedCount() == 1){
-			return ok("user data succesfully removed");				
-		}
-		if(users.find(eq("user",a_user)).first() != null){
-			return ok("incorrect password");
-		}
-		return ok("user not exist");
+		FindIterable<field> findIterable users.find(eq("user", user_id)).projection(include("last_sign_in", "key")).first();
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -18,7 +18,11 @@ import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.util.UUID;
 import services.MongoInterface;
+
+
  
 
 @Singleton
@@ -33,11 +37,27 @@ public class SignIn extends Controller {
 
 	public Result sign_in(String a_user, String a_password){
 		MongoCollection<Document> users = database.getCollection("users");
-		Document registred_user = users.find(and(eq("user", a_user),eq("password", a_password))).first();
-		if (registred_user == null){
-			//user not suscribe yet.
-			return badRequest("Incorrect pseudo and/or password");	
+		String key = UUID.randomUUID().toString();
+		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),combine(currentDate("last_sign_in"),set("key",key)));
+		if(updateresult.getModifiedCount() == 1) {
+			response().setCookie(Cookie.builder("user",key).build());
+			return ok();
 		}
-		return(ok("sign in "));			
+		if (users.find(eq("user",a_user)).first() == null){
+			return ok("user not exist");		
+		}
+
+		return ok("incorrect pasword");
+
 	}
 }
+
+
+
+
+
+
+
+
+
+
