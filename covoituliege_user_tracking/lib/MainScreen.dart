@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
+import 'FileHandler.dart';
 
+/// This class represents the main screen of the application. It allows the user to launch the position capturing,
+/// as well as to print the points currently in the file to have an idea of the kind of data we collect.
+/// [The behaviour is likely to change].
 class MainScreen extends StatefulWidget {
   final UserInfo user;
   MainScreen(this.user);
@@ -17,122 +20,108 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool _givenConsent;
-  bool _hasRefused;
   bool _stopped;
-  Function _onPressed;
-  IconData _icon;
-  UserInfo user;
+  Function _pressedOnOff;
+  Function _pressedDataButton;
+  IconData _onOffIcon;
+  int _capturePosIndex;
+  UserInfo _user;
+  StringBuffer _bufferedData;
   Text _data;
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+  /// This wrapper reads the file and delete all useless characters so that the print is cleaner.
+  Future<String> _readFile() async {
+    String data = await readFile();
+    data = data
+        .replaceAll("{", "")
+        .replaceAll("}", "")
+        .replaceAll('"', "")
+        .replaceFirst("Data:", "");
+    StringBuffer formatted = StringBuffer();
+
+    List<String> splittedAtComma = data.split(",");
+    formatted.writeln(splittedAtComma[0]); // username
+    formatted.write(splittedAtComma[1]);
+
+    return formatted.toString();
   }
 
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/data.json');
-  }
-
-  Future<File> writeInFile(String jsonString) async {
-    final file = await _localFile;
-    return file.writeAsString('$jsonString');
-  }
-
-  Future<String> readFile() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      String contents = await file.readAsString();
-
-      return contents;
-    } catch (e) {
-      print("Error reading file!");
-      return "Error";
-    }
-  }
-
-  Future<void> newPos() async {
+  /// This function get the current user's location and add it in a buffer,
+  /// in an easy-to-parse way. This behaviour should change as using a RAM buffer causes problems
+  /// if the application is closed (we did not find any callback to handle this event).
+  Future<void> _newPos() async {
     Map<String, double> currentLocation = <String, double>{};
     var location = new Location();
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       currentLocation = await location.getLocation();
     } on PlatformException {
-      currentLocation = null;
+      /// We only skip one point, it doesn't hurt as long as this is rare
+      _bufferedData.writeln("-1: A PlatformException occured");
+      return;
     }
     double latitude = currentLocation['latitude'];
     double longitude = currentLocation['longitude'];
-    user.addData("Latitude= " +
-        latitude.toString() +
-        "; Longitude= " +
-        longitude.toString());
-    String jSon = json.encode(user);
-    writeInFile(jSon);
+    String dateTime = DateTime.now()
+        .toString()
+        .replaceFirst(":", "h")
+        .replaceFirst(":", "m")
+        .replaceFirst(".", "s");
+    dateTime = dateTime.substring(0, dateTime.indexOf("s") + 1);
+    List<String> dateAndTime = dateTime.split(" ");
+    _bufferedData.writeln("\nPoint:");
+    _bufferedData.writeln("Date = " + dateAndTime[0]);
+    _bufferedData.writeln("Time = " + dateAndTime[1]);
+    _bufferedData.writeln("Latitude = " + latitude.toString());
+    _bufferedData.writeln("Longitude = " + longitude.toString());
   }
 
-  _capturePos() {
-    if (!_stopped) {
-      newPos();
+  /// This function launches periodically the newPos function. The index handle the situation
+  /// in which the user presses multiple time on the start button : only one instance can be active simultaneously.
+  _capturePos(index) {
+    if (!_stopped && index == _capturePosIndex) {
+      _newPos();
       Future.delayed(Duration(minutes: 2, seconds: 30), () {
-        _capturePos();
+        _capturePos(index);
       });
     }
   }
 
-  _accepted() {
-    //TODO: tell to server consent has been given
-    setState(() {
-      _givenConsent = true;
-    });
-  }
-
-  _refused() {
-    setState(() {
-      _hasRefused = true;
-    });
-  }
-
+  /// This function clear the buffer and starts a new capturePos process.
+  /// It also updates the button so that it's now a stop button.
+  /// It is called when the user taps on the start button.
   _start() {
     _stopped = false;
-    _capturePos();
+    _bufferedData.clear();
+    _capturePos(_capturePosIndex);
     setState(() {
-      _onPressed = _stop;
-      _icon = Icons.stop;
+      _pressedOnOff = _stop;
+      _onOffIcon = Icons.stop;
     });
   }
 
+  /// This function is called when the user taps on the stop button.
+  /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
+  /// and updates the button so that it becomes a start button.
   _stop() {
     _stopped = true;
+    _capturePosIndex += 1;
+    _user.addData(_bufferedData.toString());
+    String jSon = json.encode(_user);
+    writeInFile(jSon);
     setState(() {
-      _onPressed = _start;
-      _icon = Icons.play_arrow;
+      _pressedOnOff = _start;
+      _onOffIcon = Icons.play_arrow;
     });
   }
 
+  /// This function is called when the user taps on the print data button.
+  /// It prints the points that are in the application local file.
   _printData() async {
-    String data = await readFile();
-    StringBuffer toPrint = StringBuffer("(click again to reload)\n");
-    data = data.replaceAll("{", "").replaceAll("}", "").replaceAll('"', "").replaceFirst("Data:", "");
-    List<String> splittedAtComma = data.split(",");
-    toPrint.writeln(splittedAtComma[0]);
-
-    List<String> timeAndPos;
-    List<String> dayAndTime;
-    for (int i = 1; i < splittedAtComma.length; i++) {
-      timeAndPos = splittedAtComma[i].split(":");
-      dayAndTime = timeAndPos[0].split(" ");
-      toPrint.writeln("\nPoint number " + i.toString() + ":");
-      toPrint.writeln("Date: " + dayAndTime[0]);
-      toPrint.writeln("Time: " + dayAndTime[1]);
-      toPrint.writeln(timeAndPos[1].replaceAll("; ", "\n"));
-    }
-
+    String data = await _readFile();
     setState(() {
       _data = Text(
-        toPrint.toString(),
+        "(appuyer à nouveau pour recharger)\n" + data.replaceAll("\\n", "\n"),
         style: textStyle,
       );
     });
@@ -141,95 +130,41 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    user = widget.user;
-    _givenConsent = false; //TODO ask to server if consent were already given
-    _hasRefused = false;
-    _onPressed = _start;
-    _icon = Icons.play_arrow;
+    _user = widget.user;
+    _pressedOnOff = _start;
+    _pressedDataButton = _printData;
+    _onOffIcon = Icons.play_arrow;
+    _capturePosIndex = 0;
+    _bufferedData = StringBuffer();
     _data = Text(
-      'print data',
+      'afficher les données',
       style: textStyle,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_hasRefused) {
-      return Scaffold(
-        appBar: appBar,
-        body: Container(
-          color: Colors.red,
-          child: Center(
-            child: Text(
-              'Désolé, pour des raisons techniques, nous ne pouvons pas' +
-                  ' vous proposer le service sans utiliser votre position.',
-              style: textStyle,
-            ),
-          ),
-        ),
-      );
-    } else if (_givenConsent) {
-      return Scaffold(
-        appBar: appBar,
-        body: Container(
-          color: Colors.green,
-          child: Center(
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(_icon),
-                  onPressed: _onPressed,
-                  iconSize: 120.0,
-                ),
-                RaisedButton(
-                  child: _data,
-                  onPressed: _printData,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Scaffold(
-        appBar: appBar,
-        body: Container(
-          color: Colors.green,
-          child: Center(
-              child: ListView(
+    return Scaffold(
+      appBar: appBar,
+      body: Container(
+        color: Colors.green,
+        child: Center(
+          child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              Center(
-                child: Text(
-                  'TODO: consent text',
-                  style: textStyle,
-                ),
+              IconButton(
+                icon: Icon(_onOffIcon),
+                onPressed: _pressedOnOff,
+                iconSize: 120.0,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 75.0),
-                child: RaisedButton(
-                  child: Text(
-                    'J\'accepte',
-                    style: textStyle,
-                  ),
-                  onPressed: _accepted,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 75.0),
-                child: RaisedButton(
-                  child: Text(
-                    'Je refuse',
-                    style: textStyle,
-                  ),
-                  onPressed: _refused,
-                ),
+              RaisedButton(
+                child: _data,
+                onPressed: _pressedDataButton,
               ),
             ],
-          )),
+          ),
         ),
-      );
-    }
+      ),
+    );
   }
 }
