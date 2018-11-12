@@ -33,17 +33,19 @@ public class StoreData extends Controller {
 		this.database = db.get_database();	
 	}
 
+	//En cours de devellopement.
 	public Result store_data(String a_user, String a_password){
-		JsonNode body = request().body().asJson();
-    		if(json == null) {
-        		return badRequest("Expecting Json data");
-    		}
-		//get user ID from JSON
-		JsonNode user_info = body.get("UserInfo");
-		String user_id = user_info.get("UserID").asText();
-		//get key and last sign in to chack authentification
-		MongoCollection<Document> users = database.getCollection("users");
-		FindIterable<field> findIterable users.find(eq("user", user_id)).projection(include("last_sign_in", "key")).first();
+		//JsonNode body = request().body().asJson();
+    		//if(json == null) {
+        	//	return badRequest("Expecting Json data");
+    		//}
+		////get user ID from JSON
+		//JsonNode user_info = body.get("UserInfo");
+		//String user_id = user_info.get("UserID").asText();
+		////get key and last sign in to chack authentification
+		//MongoCollection<Document> users = database.getCollection("users");
+		//FindIterable<field> findIterable users.find(eq("user", user_id)).projection(include("last_sign_in", "key")).first();
+		return ok();
 		
 	}
 }

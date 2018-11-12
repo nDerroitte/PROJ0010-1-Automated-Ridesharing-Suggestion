@@ -38,7 +38,7 @@ public class SignIn extends Controller {
 	public Result sign_in(String a_user, String a_password){
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
-		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),combine(currentDate("last_sign_in"),set("key",key)));
+		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
 			return ok();

@@ -39,7 +39,7 @@ public class SignUp extends Controller {
 		String key = UUID.randomUUID().toString();
 		if (registred_user == null){
 			// write new user in database
-			Document new_user = new Document("user", a_user).append("password",a_password).append("email", email).append("last_sign_in",new Date() ).append("key",key);
+			Document new_user = new Document("user", a_user).append("password",a_password).append("email", email).append("key",key);
 			users.insertOne(new_user);
 		response().setCookie(Cookie.builder("user", key).build());
 		return ok("user successfully recorded");
