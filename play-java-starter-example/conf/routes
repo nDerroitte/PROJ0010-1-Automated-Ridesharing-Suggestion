@@ -25,3 +25,6 @@ GET /sign_in						controllers.SignIn.sign_in(user,password)
 
 #remove user from database
 GET /remove_user					controllers.RemoveUser.remove_user(user,password)
+
+#Store point in the database
+GET /store_data 					controllers.StoreData.store_data(user)

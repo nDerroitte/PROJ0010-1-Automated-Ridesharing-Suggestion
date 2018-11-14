@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Sun Nov 11 17:48:06 CET 2018
+// @DATE:Wed Nov 14 15:31:06 CET 2018
 
 package router
 
@@ -28,6 +28,8 @@ class Routes(
   SignIn_3: controllers.SignIn,
   // @LINE:27
   RemoveUser_4: controllers.RemoveUser,
+  // @LINE:30
+  StoreData_7: controllers.StoreData,
   val prefix: String
 ) extends GeneratedRouter {
 
@@ -46,12 +48,14 @@ class Routes(
     // @LINE:24
     SignIn_3: controllers.SignIn,
     // @LINE:27
-    RemoveUser_4: controllers.RemoveUser
-  ) = this(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_6, SignUp_5, SignIn_3, RemoveUser_4, "/")
+    RemoveUser_4: controllers.RemoveUser,
+    // @LINE:30
+    StoreData_7: controllers.StoreData
+  ) = this(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_6, SignUp_5, SignIn_3, RemoveUser_4, StoreData_7, "/")
 
   def withPrefix(prefix: String): Routes = {
     router.RoutesPrefix.setPrefix(prefix)
-    new Routes(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_6, SignUp_5, SignIn_3, RemoveUser_4, prefix)
+    new Routes(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_6, SignUp_5, SignIn_3, RemoveUser_4, StoreData_7, prefix)
   }
 
   private[this] val defaultPrefix: String = {
@@ -67,6 +71,7 @@ class Routes(
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """sign_up""", """controllers.SignUp.sign_up(user:String, password:String, email:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """sign_in""", """controllers.SignIn.sign_in(user:String, password:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """remove_user""", """controllers.RemoveUser.remove_user(user:String, password:String)"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """store_data""", """controllers.StoreData.store_data(user:String)"""),
     Nil
   ).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
     case r @ (_,_,_) => s :+ r.asInstanceOf[(String,String,String)]
@@ -218,6 +223,24 @@ class Routes(
     )
   )
 
+  // @LINE:30
+  private[this] lazy val controllers_StoreData_store_data8_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("store_data")))
+  )
+  private[this] lazy val controllers_StoreData_store_data8_invoker = createInvoker(
+    StoreData_7.store_data(fakeValue[String]),
+    play.api.routing.HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.StoreData",
+      "store_data",
+      Seq(classOf[String]),
+      "GET",
+      this.prefix + """store_data""",
+      """Store point in the database""",
+      Seq()
+    )
+  )
+
 
   def routes: PartialFunction[RequestHeader, Handler] = {
   
@@ -267,6 +290,12 @@ class Routes(
     case controllers_RemoveUser_remove_user7_route(params@_) =>
       call(params.fromQuery[String]("user", None), params.fromQuery[String]("password", None)) { (user, password) =>
         controllers_RemoveUser_remove_user7_invoker.call(RemoveUser_4.remove_user(user, password))
+      }
+  
+    // @LINE:30
+    case controllers_StoreData_store_data8_route(params@_) =>
+      call(params.fromQuery[String]("user", None)) { (user) =>
+        controllers_StoreData_store_data8_invoker.call(StoreData_7.store_data(user))
       }
   }
 }

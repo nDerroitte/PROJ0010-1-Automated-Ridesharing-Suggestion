@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
 // @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Sun Nov 11 17:48:06 CET 2018
+// @DATE:Wed Nov 14 15:31:06 CET 2018
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -45,6 +45,26 @@ package controllers.javascript {
       """
         function(file1) {
           return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "assets/" + (""" + implicitly[play.api.mvc.PathBindable[Asset]].javascriptUnbind + """)("file", file1)})
+        }
+      """
+    )
+  
+  }
+
+  // @LINE:30
+  class ReverseStoreData(_prefix: => String) {
+
+    def _defaultPrefix: String = {
+      if (_prefix.endsWith("/")) "" else "/"
+    }
+
+  
+    // @LINE:30
+    def store_data: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.StoreData.store_data",
+      """
+        function(user0) {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "store_data" + _qS([(""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("user", user0)])})
         }
       """
     )

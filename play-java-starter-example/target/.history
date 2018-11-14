@@ -41,3 +41,12 @@ run  -Dhttps.port=9443
 run
 compile
 run
+compile
+run
+compile
+run
+compile
+run
+exit
+compile
+run

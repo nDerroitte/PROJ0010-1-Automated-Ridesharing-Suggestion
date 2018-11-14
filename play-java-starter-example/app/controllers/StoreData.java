@@ -21,20 +21,23 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
+import services.HabitGenerator;
 
 
 @Singleton
 public class StoreData extends Controller {
 	
 	 private final MongoDatabase database ;
+	 private final HabitGenerator hb;
 
 	@Inject
-	public SignIn  (MongoInterface db){
+	public StoreData  (MongoInterface db, HabitGenerator habit_generator){
 		this.database = db.get_database();	
+		this.hb = habit_generator;
 	}
 
 	//En cours de devellopement.
-	public Result store_data(String a_user, String a_password){
+	public Result store_data(String a_user){
 		//JsonNode body = request().body().asJson();
     		//if(json == null) {
         	//	return badRequest("Expecting Json data");
@@ -45,6 +48,7 @@ public class StoreData extends Controller {
 		////get key and last sign in to chack authentification
 		//MongoCollection<Document> users = database.getCollection("users");
 		//FindIterable<field> findIterable users.find(eq("user", user_id)).projection(include("last_sign_in", "key")).first();
+		hb.submit_task(a_user);
 		return ok();
 		
 	}

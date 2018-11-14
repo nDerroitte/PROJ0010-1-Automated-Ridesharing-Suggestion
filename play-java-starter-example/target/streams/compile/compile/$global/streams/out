@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/minh/PI/play-java-starter-example/app/controllers/StoreData.java:32:1: invalid method declaration; return type required[0m
-[0m[[0m[31merror[0m] [0m[0m	public SignIn  (MongoInterface db){[0m
-[0m[[0m[31merror[0m] [0m[0m/home/minh/PI/play-java-starter-example/app/controllers/StoreData.java:46:1: ';' expected[0m
-[0m[[0m[31merror[0m] [0m[0m		FindIterable<field> findIterable users.find(eq("user", user_id)).projection(include("last_sign_in", "key")).first();[0m
+[0m[[0m[31merror[0m] [0m[0m/home/minh/PI/play-java-starter-example/app/controllers/StoreData.java:51:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   method submit(java.lang.String)[0m
+[0m[[0m[31merror[0m] [0m[0m  location: variable hb of type services.HabitGenerator[0m
+[0m[[0m[31merror[0m] [0m[0m		hb.submit(a_user);[0m
