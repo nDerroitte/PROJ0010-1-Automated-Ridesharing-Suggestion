@@ -30,10 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   /// Ask the server to check the username-password pair, and push the tracking screen if yes.
   /// If the connection fails, the cause is given to the user.
   _connection() async {
-    // This line is disabled until the server is operational
-    //int connectionResult = await checkConnection(_usernameController.text, _passwordController.text);
-    int connectionResult =
-        passwordOK; //TODO remove this line (when server operational)
+    int connectionResult = await checkConnection(_usernameController.text, _passwordController.text);
     setState(() {
       if (connectionResult == passwordOK) {
         Navigator.push(
@@ -117,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
         padding: EdgeInsets.symmetric(horizontal: 75.0),
         child: RaisedButton(
           child: Text(
-            'Connection',
+            'Connexion',
             style: textStyle,
           ),
           onPressed: _connection,

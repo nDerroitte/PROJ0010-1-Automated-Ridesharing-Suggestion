@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Wed Nov 14 15:31:06 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Wed Nov 14 17:11:34 GMT 2018
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -51,7 +51,7 @@ package controllers.javascript {
   
   }
 
-  // @LINE:30
+  // @LINE:33
   class ReverseStoreData(_prefix: => String) {
 
     def _defaultPrefix: String = {
@@ -59,7 +59,7 @@ package controllers.javascript {
     }
 
   
-    // @LINE:30
+    // @LINE:33
     def store_data: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.StoreData.store_data",
       """
@@ -85,6 +85,26 @@ package controllers.javascript {
       """
         function(user0,password1,email2) {
           return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "sign_up" + _qS([(""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("user", user0), (""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("password", password1), (""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("email", email2)])})
+        }
+      """
+    )
+  
+  }
+
+  // @LINE:27
+  class ReverseForgottenPassword(_prefix: => String) {
+
+    def _defaultPrefix: String = {
+      if (_prefix.endsWith("/")) "" else "/"
+    }
+
+  
+    // @LINE:27
+    def forgotten_password: JavaScriptReverseRoute = JavaScriptReverseRoute(
+      "controllers.ForgottenPassword.forgotten_password",
+      """
+        function(user0,email1) {
+          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "forgotten_password" + _qS([(""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("user", user0), (""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("email", email1)])})
         }
       """
     )
@@ -161,7 +181,7 @@ package controllers.javascript {
   
   }
 
-  // @LINE:27
+  // @LINE:30
   class ReverseRemoveUser(_prefix: => String) {
 
     def _defaultPrefix: String = {
@@ -169,7 +189,7 @@ package controllers.javascript {
     }
 
   
-    // @LINE:27
+    // @LINE:30
     def remove_user: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.RemoveUser.remove_user",
       """

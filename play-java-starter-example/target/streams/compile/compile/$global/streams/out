@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/home/minh/PI/play-java-starter-example/app/controllers/StoreData.java:51:1: cannot find symbol[0m
-[0m[[0m[31merror[0m] [0m[0m  symbol:   method submit(java.lang.String)[0m
-[0m[[0m[31merror[0m] [0m[0m  location: variable hb of type services.HabitGenerator[0m
-[0m[[0m[31merror[0m] [0m[0m		hb.submit(a_user);[0m
+[0m[[0m[31merror[0m] [0m[0m/mnt/d/Documents/PI/play-java-starter-example/app/controllers/ForgottenPassword.java:55:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   method fetch()[0m
+[0m[[0m[31merror[0m] [0m[0m  location: interface com.mongodb.client.FindIterable<org.bson.Document>[0m
+[0m[[0m[31merror[0m] [0m[0m			return ok(users.find(eq("user", a_user)).fetch().toString());[0m

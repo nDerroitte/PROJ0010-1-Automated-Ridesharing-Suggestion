@@ -23,6 +23,9 @@ GET 	/sign_up 					controllers.SignUp.sign_up(user,password,email)
 #check user id
 GET /sign_in						controllers.SignIn.sign_in(user,password)
 
+#send new password
+GET /forgotten_password				controllers.ForgottenPassword.forgotten_password(user, email)
+
 #remove user from database
 GET /remove_user					controllers.RemoveUser.remove_user(user,password)
 

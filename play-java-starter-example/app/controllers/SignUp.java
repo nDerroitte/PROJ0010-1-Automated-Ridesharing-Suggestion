@@ -45,6 +45,6 @@ public class SignUp extends Controller {
 		return ok("user successfully recorded");
  
 		}
-		return ok("pseudo " + a_user + " already used" );	
+		return ok("pseudo already used" );	
 	}	
 }

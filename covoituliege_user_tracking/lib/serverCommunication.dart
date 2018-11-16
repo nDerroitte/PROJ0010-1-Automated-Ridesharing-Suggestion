@@ -7,12 +7,18 @@ import 'Cst.dart';
 /// An httpError is returned in case of Exception or not understood answer.
 
 Future<http.Response> _get(String url) {
-  return http.get(url).timeout(
-        Duration(seconds: 2),
-      );
+  return http.get(
+    Uri.encodeFull(url),
+    headers: {
+      "Accept": "application/json",
+      "host": "localhost:9000",
+    },
+  ).timeout(
+    Duration(seconds: 5),
+  );
 }
 
-Future<int> checkConnexion(String username, String password) async {
+Future<int> checkConnection(String username, String password) async {
   http.Response response;
   try {
     response = await _get(
@@ -23,13 +29,13 @@ Future<int> checkConnexion(String username, String password) async {
 
   if (response.statusCode == 200) {
     switch (response.body) {
-      case "OK":
+      case "connection OK":
         return passwordOK;
 
-      case "username":
+      case "user doesn't exist":
         return invalidUsername;
 
-      case "password":
+      case "incorrect pasword":
         return invalidPassword;
 
       default:
@@ -56,10 +62,10 @@ Future<int> sendSignUp(String username, String password, String email) async {
 
   if (response.statusCode == 200) {
     switch (response.body) {
-      case "OK":
+      case "user successfully recorded":
         return signUpOK;
 
-      case "username":
+      case "pseudo already used":
         return invalidUsername;
 
       default:
@@ -73,21 +79,18 @@ Future<int> sendSignUp(String username, String password, String email) async {
 Future<int> sendNewPassword(String username, String email) async {
   http.Response response;
   try {
-    response = await _get(serverURL +
-        "new_password?user=" +
-        username +
-        "&email=" +
-        email);
+    response = await _get(
+        serverURL + "forgotten_password?user=" + username + "&email=" + email);
   } catch (exception) {
     return httpError;
   }
 
   if (response.statusCode == 200) {
     switch (response.body) {
-      case "OK":
+      case "username OK":
         return forgottenPasswordOK;
 
-      case "username":
+      case "user doesn't exist":
         return invalidUsername;
 
       default:

@@ -27,6 +27,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
     bool goodEmail = true;
     int indexOfAt = _email.text.lastIndexOf("@");
     int indexOfDot = _email.text.lastIndexOf(".");
+
     /// The email should contain at least one @ and one dot,
     /// there should be at least one character before the @, after the dot and between the @ and the dot.
     if (indexOfAt < 1 ||
@@ -37,11 +38,8 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
     }
 
     if (goodId && goodEmail) {
-      // These lines are disabled until the server is operational
-      //int newPasswordResult =
-      //await sendNewPassword(_username.text, _email.text);
       int newPasswordResult =
-          forgottenPasswordOK; // TODO remove this line (when server operational)
+          await sendNewPassword(_username.text, _email.text);
 
       /// If the username exists, we don't tell the user whether the email address is good or not,
       if (newPasswordResult == forgottenPasswordOK) {
@@ -62,6 +60,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
         _listViewContent = <Widget>[
           _usernameInput,
         ];
+
         /// An invalid username is a username that's not in our database
         if (newPasswordResult == invalidUsername) {
           _listViewContent += <Widget>[
@@ -127,6 +126,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
   @override
   void initState() {
     super.initState();
+
     /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
     _usernameInput = TextInput(
       messageToUser: 'Identifiant',

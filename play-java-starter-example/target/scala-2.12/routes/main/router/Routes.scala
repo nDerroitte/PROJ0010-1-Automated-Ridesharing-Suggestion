@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Wed Nov 14 15:31:06 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Wed Nov 14 17:11:34 GMT 2018
 
 package router
 
@@ -21,15 +21,17 @@ class Routes(
   // @LINE:15
   AsyncController_2: controllers.AsyncController,
   // @LINE:18
-  Assets_6: controllers.Assets,
+  Assets_7: controllers.Assets,
   // @LINE:21
-  SignUp_5: controllers.SignUp,
+  SignUp_6: controllers.SignUp,
   // @LINE:24
   SignIn_3: controllers.SignIn,
   // @LINE:27
-  RemoveUser_4: controllers.RemoveUser,
+  ForgottenPassword_4: controllers.ForgottenPassword,
   // @LINE:30
-  StoreData_7: controllers.StoreData,
+  RemoveUser_5: controllers.RemoveUser,
+  // @LINE:33
+  StoreData_8: controllers.StoreData,
   val prefix: String
 ) extends GeneratedRouter {
 
@@ -42,20 +44,22 @@ class Routes(
     // @LINE:15
     AsyncController_2: controllers.AsyncController,
     // @LINE:18
-    Assets_6: controllers.Assets,
+    Assets_7: controllers.Assets,
     // @LINE:21
-    SignUp_5: controllers.SignUp,
+    SignUp_6: controllers.SignUp,
     // @LINE:24
     SignIn_3: controllers.SignIn,
     // @LINE:27
-    RemoveUser_4: controllers.RemoveUser,
+    ForgottenPassword_4: controllers.ForgottenPassword,
     // @LINE:30
-    StoreData_7: controllers.StoreData
-  ) = this(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_6, SignUp_5, SignIn_3, RemoveUser_4, StoreData_7, "/")
+    RemoveUser_5: controllers.RemoveUser,
+    // @LINE:33
+    StoreData_8: controllers.StoreData
+  ) = this(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_7, SignUp_6, SignIn_3, ForgottenPassword_4, RemoveUser_5, StoreData_8, "/")
 
   def withPrefix(prefix: String): Routes = {
     router.RoutesPrefix.setPrefix(prefix)
-    new Routes(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_6, SignUp_5, SignIn_3, RemoveUser_4, StoreData_7, prefix)
+    new Routes(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_7, SignUp_6, SignIn_3, ForgottenPassword_4, RemoveUser_5, StoreData_8, prefix)
   }
 
   private[this] val defaultPrefix: String = {
@@ -70,6 +74,7 @@ class Routes(
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """assets/""" + "$" + """file<.+>""", """controllers.Assets.versioned(path:String = "/public", file:Asset)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """sign_up""", """controllers.SignUp.sign_up(user:String, password:String, email:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """sign_in""", """controllers.SignIn.sign_in(user:String, password:String)"""),
+    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """forgotten_password""", """controllers.ForgottenPassword.forgotten_password(user:String, email:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """remove_user""", """controllers.RemoveUser.remove_user(user:String, password:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """store_data""", """controllers.StoreData.store_data(user:String)"""),
     Nil
@@ -156,7 +161,7 @@ class Routes(
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("assets/"), DynamicPart("file", """.+""",false)))
   )
   private[this] lazy val controllers_Assets_versioned4_invoker = createInvoker(
-    Assets_6.versioned(fakeValue[String], fakeValue[Asset]),
+    Assets_7.versioned(fakeValue[String], fakeValue[Asset]),
     play.api.routing.HandlerDef(this.getClass.getClassLoader,
       "router",
       "controllers.Assets",
@@ -174,7 +179,7 @@ class Routes(
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("sign_up")))
   )
   private[this] lazy val controllers_SignUp_sign_up5_invoker = createInvoker(
-    SignUp_5.sign_up(fakeValue[String], fakeValue[String], fakeValue[String]),
+    SignUp_6.sign_up(fakeValue[String], fakeValue[String], fakeValue[String]),
     play.api.routing.HandlerDef(this.getClass.getClassLoader,
       "router",
       "controllers.SignUp",
@@ -206,11 +211,29 @@ class Routes(
   )
 
   // @LINE:27
-  private[this] lazy val controllers_RemoveUser_remove_user7_route = Route("GET",
+  private[this] lazy val controllers_ForgottenPassword_forgotten_password7_route = Route("GET",
+    PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("forgotten_password")))
+  )
+  private[this] lazy val controllers_ForgottenPassword_forgotten_password7_invoker = createInvoker(
+    ForgottenPassword_4.forgotten_password(fakeValue[String], fakeValue[String]),
+    play.api.routing.HandlerDef(this.getClass.getClassLoader,
+      "router",
+      "controllers.ForgottenPassword",
+      "forgotten_password",
+      Seq(classOf[String], classOf[String]),
+      "GET",
+      this.prefix + """forgotten_password""",
+      """send new password""",
+      Seq()
+    )
+  )
+
+  // @LINE:30
+  private[this] lazy val controllers_RemoveUser_remove_user8_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("remove_user")))
   )
-  private[this] lazy val controllers_RemoveUser_remove_user7_invoker = createInvoker(
-    RemoveUser_4.remove_user(fakeValue[String], fakeValue[String]),
+  private[this] lazy val controllers_RemoveUser_remove_user8_invoker = createInvoker(
+    RemoveUser_5.remove_user(fakeValue[String], fakeValue[String]),
     play.api.routing.HandlerDef(this.getClass.getClassLoader,
       "router",
       "controllers.RemoveUser",
@@ -223,12 +246,12 @@ class Routes(
     )
   )
 
-  // @LINE:30
-  private[this] lazy val controllers_StoreData_store_data8_route = Route("GET",
+  // @LINE:33
+  private[this] lazy val controllers_StoreData_store_data9_route = Route("GET",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("store_data")))
   )
-  private[this] lazy val controllers_StoreData_store_data8_invoker = createInvoker(
-    StoreData_7.store_data(fakeValue[String]),
+  private[this] lazy val controllers_StoreData_store_data9_invoker = createInvoker(
+    StoreData_8.store_data(fakeValue[String]),
     play.api.routing.HandlerDef(this.getClass.getClassLoader,
       "router",
       "controllers.StoreData",
@@ -271,13 +294,13 @@ class Routes(
     // @LINE:18
     case controllers_Assets_versioned4_route(params@_) =>
       call(Param[String]("path", Right("/public")), params.fromPath[Asset]("file", None)) { (path, file) =>
-        controllers_Assets_versioned4_invoker.call(Assets_6.versioned(path, file))
+        controllers_Assets_versioned4_invoker.call(Assets_7.versioned(path, file))
       }
   
     // @LINE:21
     case controllers_SignUp_sign_up5_route(params@_) =>
       call(params.fromQuery[String]("user", None), params.fromQuery[String]("password", None), params.fromQuery[String]("email", None)) { (user, password, email) =>
-        controllers_SignUp_sign_up5_invoker.call(SignUp_5.sign_up(user, password, email))
+        controllers_SignUp_sign_up5_invoker.call(SignUp_6.sign_up(user, password, email))
       }
   
     // @LINE:24
@@ -287,15 +310,21 @@ class Routes(
       }
   
     // @LINE:27
-    case controllers_RemoveUser_remove_user7_route(params@_) =>
-      call(params.fromQuery[String]("user", None), params.fromQuery[String]("password", None)) { (user, password) =>
-        controllers_RemoveUser_remove_user7_invoker.call(RemoveUser_4.remove_user(user, password))
+    case controllers_ForgottenPassword_forgotten_password7_route(params@_) =>
+      call(params.fromQuery[String]("user", None), params.fromQuery[String]("email", None)) { (user, email) =>
+        controllers_ForgottenPassword_forgotten_password7_invoker.call(ForgottenPassword_4.forgotten_password(user, email))
       }
   
     // @LINE:30
-    case controllers_StoreData_store_data8_route(params@_) =>
+    case controllers_RemoveUser_remove_user8_route(params@_) =>
+      call(params.fromQuery[String]("user", None), params.fromQuery[String]("password", None)) { (user, password) =>
+        controllers_RemoveUser_remove_user8_invoker.call(RemoveUser_5.remove_user(user, password))
+      }
+  
+    // @LINE:33
+    case controllers_StoreData_store_data9_route(params@_) =>
       call(params.fromQuery[String]("user", None)) { (user) =>
-        controllers_StoreData_store_data8_invoker.call(StoreData_7.store_data(user))
+        controllers_StoreData_store_data9_invoker.call(StoreData_8.store_data(user))
       }
   }
 }

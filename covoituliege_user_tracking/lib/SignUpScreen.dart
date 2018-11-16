@@ -47,6 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     bool goodEmail = true;
     int indexOfAt = _email.text.indexOf("@");
     int indexOfDot = _email.text.lastIndexOf(".");
+
     /// The email should contain at least one @ and one dot,
     /// there should be at least one character before the @, after the dot and between the @ and the dot.
     if (indexOfAt < 1 ||
@@ -57,11 +58,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (goodId && goodPassword && goodConfirmation && goodEmail) {
-      // These lines are disabled until the server is operational
-      //int signUpResult =
-          //await sendSignUp(_username.text, _password.text, _email.text);
       int signUpResult =
-          signUpOK; // TODO remove this line (when server operational)
+          await sendSignUp(_username.text, _password.text, _email.text);
       if (signUpResult == signUpOK) {
         Navigator.pop(context);
         return;
@@ -197,6 +195,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+
     /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
     _usernameInput = TextInput(
       messageToUser: 'Identifiant',

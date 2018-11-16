@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Wed Nov 14 15:31:06 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Wed Nov 14 17:11:34 GMT 2018
 
 import play.api.mvc.Call
 
@@ -41,14 +41,14 @@ package controllers {
   
   }
 
-  // @LINE:30
+  // @LINE:33
   class ReverseStoreData(_prefix: => String) {
     def _defaultPrefix: String = {
       if (_prefix.endsWith("/")) "" else "/"
     }
 
   
-    // @LINE:30
+    // @LINE:33
     def store_data(user:String): Call = {
       
       Call("GET", _prefix + { _defaultPrefix } + "store_data" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("user", user)))))
@@ -67,6 +67,21 @@ package controllers {
     def sign_up(user:String, password:String, email:String): Call = {
       
       Call("GET", _prefix + { _defaultPrefix } + "sign_up" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("user", user)), Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("password", password)), Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("email", email)))))
+    }
+  
+  }
+
+  // @LINE:27
+  class ReverseForgottenPassword(_prefix: => String) {
+    def _defaultPrefix: String = {
+      if (_prefix.endsWith("/")) "" else "/"
+    }
+
+  
+    // @LINE:27
+    def forgotten_password(user:String, email:String): Call = {
+      
+      Call("GET", _prefix + { _defaultPrefix } + "forgotten_password" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("user", user)), Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("email", email)))))
     }
   
   }
@@ -122,14 +137,14 @@ package controllers {
   
   }
 
-  // @LINE:27
+  // @LINE:30
   class ReverseRemoveUser(_prefix: => String) {
     def _defaultPrefix: String = {
       if (_prefix.endsWith("/")) "" else "/"
     }
 
   
-    // @LINE:27
+    // @LINE:30
     def remove_user(user:String, password:String): Call = {
       
       Call("GET", _prefix + { _defaultPrefix } + "remove_user" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("user", user)), Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("password", password)))))

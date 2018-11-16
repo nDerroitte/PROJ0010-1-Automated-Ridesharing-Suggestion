@@ -4,7 +4,7 @@
 		module="play-java-starter-example_2.12"
 		revision="1.0-SNAPSHOT"
 		status="integration"
-		publication="20181106154445"
+		publication="20181114220647"
 	>
 		<description>
 		play-java-starter-example
@@ -55,5 +55,7 @@
 		<dependency org="org.assertj" name="assertj-core" rev="3.6.2" conf="test->default(compile)"/>
 		<dependency org="org.awaitility" name="awaitility" rev="2.0.0" conf="test->default(compile)"/>
 		<dependency org="org.mongodb" name="mongodb-driver" rev="3.8.2" conf="compile->default(compile)"/>
+		<dependency org="com.typesafe.play" name="play-mailer_2.12" rev="6.0.1" conf="compile->default(compile)"/>
+		<dependency org="com.typesafe.play" name="play-mailer-guice_2.12" rev="6.0.1" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

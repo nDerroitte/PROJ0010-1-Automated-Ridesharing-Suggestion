@@ -41,10 +41,10 @@ public class SignIn extends Controller {
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
-			return ok();
+			return ok("connection OK");
 		}
 		if (users.find(eq("user",a_user)).first() == null){
-			return ok("user not exist");		
+			return ok("user doesn't exist");		
 		}
 
 		return ok("incorrect pasword");
