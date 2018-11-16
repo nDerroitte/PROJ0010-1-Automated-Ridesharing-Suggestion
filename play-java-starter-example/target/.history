@@ -92,3 +92,5 @@ compile
 run
 compile
 run
+cd 
+exit

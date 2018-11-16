@@ -1,4 +1,4 @@
 [0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/play-java-starter-example/conf/application.conf,/mnt/d/Documents/PI/play-java-starter-example/target/scala-2.12/classes/application.conf)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/play-java-starter-example/conf/logback.xml,/mnt/d/Documents/PI/play-java-starter-example/target/scala-2.12/classes/logback.xml)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/play-java-starter-example/conf/routes,/mnt/d/Documents/PI/play-java-starter-example/target/scala-2.12/classes/routes)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/play-java-starter-example/conf/logback.xml,/home/minh/PI/play-java-starter-example/target/scala-2.12/classes/logback.xml)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/play-java-starter-example/conf/routes,/home/minh/PI/play-java-starter-example/target/scala-2.12/classes/routes)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/play-java-starter-example/conf/application.conf,/home/minh/PI/play-java-starter-example/target/scala-2.12/classes/application.conf)[0m

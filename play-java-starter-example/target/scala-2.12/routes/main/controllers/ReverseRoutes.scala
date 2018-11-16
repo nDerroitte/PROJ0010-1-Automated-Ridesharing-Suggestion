@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
-// @DATE:Wed Nov 14 17:11:34 GMT 2018
+// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
+// @DATE:Fri Nov 16 16:28:02 CET 2018
 
 import play.api.mvc.Call
 
