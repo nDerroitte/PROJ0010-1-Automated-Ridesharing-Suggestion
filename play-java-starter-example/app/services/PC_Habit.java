@@ -10,8 +10,18 @@ public class PC_Habit{
     public long getPeriod(){
         return this.period;
     }
+
     public long getOffset(){
         return this.offset;
+    }
+
+    //return true if x does not aport new information regarding this. 
+    //(Ex: if this.period = 10 and this.offset = 0, x.period = 20 and x.offset = 0, x doesn't bring new information)
+    public boolean equivalent(PC_Habit x){
+        if(x.getPeriod() % period != 0){
+            return false;
+        }
+        return x.getOffset() % period == offset;
     }
 
     @Override

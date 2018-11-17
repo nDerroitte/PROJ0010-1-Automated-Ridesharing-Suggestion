@@ -1,11 +1,14 @@
 import java.util.*;
-
+import PC_Habit;
 public class PC_test{
 
     //must find a period of 100 and 90
-    static long [] data = {9,18,27,36,45,54,63,72,81,90,99,100,110,120};
+    static long [] data = {9,10,18,20,27,30,36,40,45,50,54,60,63,72,80,81,90,99,100,110,120};
 
-    static boolean search(long x,long tolerance,int down,int up){
+    static boolean search(long x,long tolerance){
+        int down = 0;
+        int up = data.length-1;
+
         if(x < data[down]-tolerance || x > data[up] + tolerance){
             return false;
         }
@@ -30,10 +33,21 @@ public class PC_test{
         }
         return false;
     }
-    
+
+    static boolean isRedundant(HashSet<PC_Habit> habits,PC_Habit candidate){
+        Iterator<PC_Habit> ite = habits.iterator();
+        while(ite.hasNext()){
+            if(ite.next().equivalent(candidate)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void main(String args[]){
-        LinkedList<Long> habit_periode  = new LinkedList<> () ;
-        LinkedList<Long> habit_offset  = new LinkedList<> ();   
+
+        HashSet<PC_Habit> habits = new HashSet<>();
+        System.out.println(new PC_Habit(50,20).equivalent(new PC_Habit(50,70)));
         System.out.println("Hello !");  
         for(int i=data.length - 1; i > 0; i--){
            for(int j = i-1; j > 0; j--){
@@ -43,9 +57,15 @@ public class PC_test{
                float total = 0;
                float hit_rate = 1;
                long cur_date = data[i] - periode;
+                
+               if(isRedundant(habits,new PC_Habit(periode,cur_date))){
+                   System.out.println("HABIT ALREADY FIND !");
+                   continue;
+               }
+
                while((total < 2 || hit_rate > 0.8) && cur_date > data[0]) { 
                    //System.out.println("cur_date: " + cur_date);
-                   if(search(cur_date,0,0,data.length-1)){
+                   if(search(cur_date,0)){
                        hit ++;
                    }
                    total ++;
@@ -55,7 +75,7 @@ public class PC_test{
                cur_date = data[i] + periode;
                while((total < 2 || hit_rate > 0.8) && cur_date < data[data.length-1]) { 
                 //System.out.println("cur_date: " + cur_date);
-                if(search(cur_date,0,0,data.length-1)){
+                if(search(cur_date,0)){
                     hit ++;
                 }
                 total ++;
@@ -63,9 +83,8 @@ public class PC_test{
                 cur_date += periode;
                 }
                if(hit > 3 && hit_rate > 0.8){
-                    habit_periode.add(periode);
-                    habit_offset.add(data[i]);
-                    System.out.println("find period of: " + periode +  " with an offset of " + data[i] + " hit rate:" + hit_rate);
+                    habits.add(new PC_Habit(periode,cur_date));
+                    System.out.println("find period of: " + periode +  " with an offset of " + data[i]%periode + " hit rate:" + hit_rate);
                     System.out.println("hit : " + hit + " total: " + total);
                }
            }
