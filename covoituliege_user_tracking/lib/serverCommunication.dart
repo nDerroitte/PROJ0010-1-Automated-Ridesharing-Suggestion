@@ -18,6 +18,28 @@ Future<http.Response> _get(String url) {
   );
 }
 
+Future<bool> sendPoints(String data) async {
+  http.Response response;
+  try {
+    response = await http.post(
+      serverURL,
+      headers: {
+        "Accept": "application/json",
+        "host": "localhost:9000",
+      },
+      body: data,
+    );
+  } catch (exception) {
+    return false;
+  }
+
+  if (response.statusCode == 200) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 Future<int> checkConnection(String username, String password) async {
   http.Response response;
   try {
