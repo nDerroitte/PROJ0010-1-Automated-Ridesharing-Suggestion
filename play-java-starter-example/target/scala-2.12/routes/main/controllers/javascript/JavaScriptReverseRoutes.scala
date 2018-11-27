@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Fri Nov 16 16:28:02 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Tue Nov 27 18:42:40 GMT 2018
 
 import play.api.routing.JavaScriptReverseRoute
 
@@ -51,7 +51,7 @@ package controllers.javascript {
   
   }
 
-  // @LINE:33
+  // @LINE:34
   class ReverseStoreData(_prefix: => String) {
 
     def _defaultPrefix: String = {
@@ -59,12 +59,12 @@ package controllers.javascript {
     }
 
   
-    // @LINE:33
+    // @LINE:34
     def store_data: JavaScriptReverseRoute = JavaScriptReverseRoute(
       "controllers.StoreData.store_data",
       """
-        function(user0) {
-          return _wA({method:"GET", url:"""" + _prefix + { _defaultPrefix } + """" + "store_data" + _qS([(""" + implicitly[play.api.mvc.QueryStringBindable[String]].javascriptUnbind + """)("user", user0)])})
+        function() {
+          return _wA({method:"POST", url:"""" + _prefix + { _defaultPrefix } + """" + "store_data"})
         }
       """
     )

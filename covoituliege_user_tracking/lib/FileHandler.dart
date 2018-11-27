@@ -16,16 +16,30 @@ Future<File> get _localFile async {
 }
 
 /// Write the argument in the application local file.
-Future<File> writeInFile(String data) async {
-  final file = await _localFile;
-  return file.writeAsString('$data');
+writeInFile(String data) async {
+  File _file = await _localFile;
+  RandomAccessFile file = await _file.open(mode: FileMode.append);
+  file.lockSync(FileLock.blockingExclusive);
+  await file.writeString('${data}data_splitter');
+  file.unlockSync();
+  file.close();
+}
+
+/// Delete all the content of the application local file.
+clearFile() async {
+  File _file = await _localFile;
+  RandomAccessFile file = await _file.open(mode: FileMode.write);
+  file.lockSync(FileLock.blockingExclusive);
+  await file.truncate(0);
+  file.unlockSync();
+  file.close();
 }
 
 /// Returns the current application local file content.
 /// Returns "Error reading file" in case of exception, will be improved.
 Future<String> readFile() async {
   try {
-    final file = await _localFile;
+    File file = await _localFile;
 
     // Read the file
     String contents = await file.readAsString();

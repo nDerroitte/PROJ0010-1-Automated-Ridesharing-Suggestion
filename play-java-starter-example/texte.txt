@@ -1,0 +1,6 @@
+{"UserId":"Greg","Points":[{"date":"2018-11-26","time":"17h06m33s","lat":"1.2299983","long":"3.56"}]}
+{"UserId":"Greg","Points":[{"date":"2018-11-26","time":"17h19m47s","lat":"1.2299983","long":"3.56"}]}
+{"UserId":"Greg","Points":[{"date":"2018-11-26","time":"17h19m47s","lat":"1.2299983","long":"3.56"}]}
+{"UserId":"Greg","Points":[{"date":"2018-11-26","time":"17h19m47s","lat":"1.2299983","long":"3.56"}]}
+{"UserId":"Greg","Points":[{"date":"2018-11-26","time":"17h19m47s","lat":"1.2299983","long":"3.56"}]}
+{"UserId":"Greg","Points":[{"date":"2018-11-26","time":"17h19m47s","lat":"1.2299983","long":"3.56"}]}

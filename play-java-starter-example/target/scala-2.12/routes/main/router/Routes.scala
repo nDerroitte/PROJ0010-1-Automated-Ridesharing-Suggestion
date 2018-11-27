@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Fri Nov 16 16:28:02 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Tue Nov 27 18:42:40 GMT 2018
 
 package router
 
@@ -30,7 +30,7 @@ class Routes(
   ForgottenPassword_4: controllers.ForgottenPassword,
   // @LINE:30
   RemoveUser_5: controllers.RemoveUser,
-  // @LINE:33
+  // @LINE:34
   StoreData_8: controllers.StoreData,
   val prefix: String
 ) extends GeneratedRouter {
@@ -53,7 +53,7 @@ class Routes(
     ForgottenPassword_4: controllers.ForgottenPassword,
     // @LINE:30
     RemoveUser_5: controllers.RemoveUser,
-    // @LINE:33
+    // @LINE:34
     StoreData_8: controllers.StoreData
   ) = this(errorHandler, HomeController_1, CountController_0, AsyncController_2, Assets_7, SignUp_6, SignIn_3, ForgottenPassword_4, RemoveUser_5, StoreData_8, "/")
 
@@ -76,7 +76,7 @@ class Routes(
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """sign_in""", """controllers.SignIn.sign_in(user:String, password:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """forgotten_password""", """controllers.ForgottenPassword.forgotten_password(user:String, email:String)"""),
     ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """remove_user""", """controllers.RemoveUser.remove_user(user:String, password:String)"""),
-    ("""GET""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """store_data""", """controllers.StoreData.store_data(user:String)"""),
+    ("""POST""", this.prefix + (if(this.prefix.endsWith("/")) "" else "/") + """store_data""", """controllers.StoreData.store_data"""),
     Nil
   ).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
     case r @ (_,_,_) => s :+ r.asInstanceOf[(String,String,String)]
@@ -205,7 +205,7 @@ class Routes(
       Seq(classOf[String], classOf[String]),
       "GET",
       this.prefix + """sign_in""",
-      """check user id""",
+      """ Check user id""",
       Seq()
     )
   )
@@ -223,7 +223,7 @@ class Routes(
       Seq(classOf[String], classOf[String]),
       "GET",
       this.prefix + """forgotten_password""",
-      """send new password""",
+      """ Send new password""",
       Seq()
     )
   )
@@ -241,26 +241,26 @@ class Routes(
       Seq(classOf[String], classOf[String]),
       "GET",
       this.prefix + """remove_user""",
-      """remove user from database""",
+      """ Remove user from database""",
       Seq()
     )
   )
 
-  // @LINE:33
-  private[this] lazy val controllers_StoreData_store_data9_route = Route("GET",
+  // @LINE:34
+  private[this] lazy val controllers_StoreData_store_data9_route = Route("POST",
     PathPattern(List(StaticPart(this.prefix), StaticPart(this.defaultPrefix), StaticPart("store_data")))
   )
   private[this] lazy val controllers_StoreData_store_data9_invoker = createInvoker(
-    StoreData_8.store_data(fakeValue[String]),
+    StoreData_8.store_data,
     play.api.routing.HandlerDef(this.getClass.getClassLoader,
       "router",
       "controllers.StoreData",
       "store_data",
-      Seq(classOf[String]),
-      "GET",
+      Nil,
+      "POST",
       this.prefix + """store_data""",
-      """Store point in the database""",
-      Seq()
+      """ Store points in the database""",
+      Seq("""nocsrf""")
     )
   )
 
@@ -321,10 +321,10 @@ class Routes(
         controllers_RemoveUser_remove_user8_invoker.call(RemoveUser_5.remove_user(user, password))
       }
   
-    // @LINE:33
+    // @LINE:34
     case controllers_StoreData_store_data9_route(params@_) =>
-      call(params.fromQuery[String]("user", None)) { (user) =>
-        controllers_StoreData_store_data9_invoker.call(StoreData_8.store_data(user))
+      call { 
+        controllers_StoreData_store_data9_invoker.call(StoreData_8.store_data)
       }
   }
 }

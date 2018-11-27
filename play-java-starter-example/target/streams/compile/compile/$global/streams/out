@@ -1,4 +1,4 @@
-[0m[[0m[31merror[0m] [0m[0m/mnt/d/Documents/PI/play-java-starter-example/app/controllers/ForgottenPassword.java:55:1: cannot find symbol[0m
-[0m[[0m[31merror[0m] [0m[0m  symbol:   method fetch()[0m
-[0m[[0m[31merror[0m] [0m[0m  location: interface com.mongodb.client.FindIterable<org.bson.Document>[0m
-[0m[[0m[31merror[0m] [0m[0m			return ok(users.find(eq("user", a_user)).fetch().toString());[0m
+[0m[[0m[31merror[0m] [0m[0m/mnt/d/Documents/PI/play-java-starter-example/app/controllers/StoreData.java:67:1: cannot find symbol[0m
+[0m[[0m[31merror[0m] [0m[0m  symbol:   method getString(java.lang.String)[0m
+[0m[[0m[31merror[0m] [0m[0m  location: variable point of type javax.json.JsonValue[0m
+[0m[[0m[31merror[0m] [0m[0m				System.err.println((JsonObject)(point).getString("date"));[0m

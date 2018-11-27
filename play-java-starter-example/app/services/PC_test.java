@@ -1,5 +1,4 @@
 import java.util.*;
-import PC_Habit;
 public class PC_test{
 
     //must find a period of 100 and 90

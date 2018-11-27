@@ -39,7 +39,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
 
     if (goodId && goodEmail) {
       int newPasswordResult =
-          await sendNewPassword(_username.text, _email.text);
+          await ServerCommunication.sendNewPassword(_username.text, _email.text);
 
       /// If the username exists, we don't tell the user whether the email address is good or not,
       if (newPasswordResult == forgottenPasswordOK) {

@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Fri Nov 16 16:28:02 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Tue Nov 27 18:42:40 GMT 2018
 
 import play.api.mvc.Call
 
@@ -41,17 +41,17 @@ package controllers {
   
   }
 
-  // @LINE:33
+  // @LINE:34
   class ReverseStoreData(_prefix: => String) {
     def _defaultPrefix: String = {
       if (_prefix.endsWith("/")) "" else "/"
     }
 
   
-    // @LINE:33
-    def store_data(user:String): Call = {
+    // @LINE:34
+    def store_data(): Call = {
       
-      Call("GET", _prefix + { _defaultPrefix } + "store_data" + play.core.routing.queryString(List(Some(implicitly[play.api.mvc.QueryStringBindable[String]].unbind("user", user)))))
+      Call("POST", _prefix + { _defaultPrefix } + "store_data")
     }
   
   }

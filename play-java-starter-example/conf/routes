@@ -20,14 +20,15 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 #add user in database
 GET 	/sign_up 					controllers.SignUp.sign_up(user,password,email) 
 
-#check user id
+# Check user id
 GET /sign_in						controllers.SignIn.sign_in(user,password)
 
-#send new password
+# Send new password
 GET /forgotten_password				controllers.ForgottenPassword.forgotten_password(user, email)
 
-#remove user from database
+# Remove user from database
 GET /remove_user					controllers.RemoveUser.remove_user(user,password)
 
-#Store point in the database
-GET /store_data 					controllers.StoreData.store_data(user)
+# Store points in the database
++nocsrf
+POST /store_data 					controllers.StoreData.store_data

@@ -17,7 +17,8 @@ import 'serverCommunication.dart';
 /// [The behaviour is likely to change].
 class MainScreen extends StatefulWidget {
   final UserInfo user;
-  MainScreen(this.user);
+  final ServerCommunication serverCommunication;
+  MainScreen(this.user, this.serverCommunication);
   @override
   _MainScreenState createState() => new _MainScreenState();
 }
@@ -29,19 +30,21 @@ class _MainScreenState extends State<MainScreen> {
   int _capturePosIndex;
   UserInfo _user;
   Text _data;
-  Location _location = new Location();
+  Stream<ConnectivityResult> _onConnectivityChanged;
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  Stream<Map<String, double>> _onLocationChanged;
   StreamSubscription<Map<String, double>> _locationSubscription;
   int _nbSameLocationPoints;
   bool _waitingForWifi;
+  ServerCommunication _serverCommunication;
 
-  /// This function get the current user's location and add it in a buffer,
-  /// in an easy-to-parse way. This behaviour should change as using a RAM buffer causes problems
-  /// if the application is closed (we did not find any callback to handle this event).
+  /// This function gets the current user's location and adds it in a buffer,
+  /// in an easy-to-parse way.
   Future<void> _newPos() async {
     Map<String, double> currentLocation = <String, double>{};
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      currentLocation = await _location.getLocation();
+      currentLocation = await Location().getLocation();
     } on PlatformException {
       /// We only skip one point, it doesn't hurt as long as this is rare
       return;
@@ -61,11 +64,10 @@ class _MainScreenState extends State<MainScreen> {
         await Geolocator().distanceBetween(double.parse(lastPos["lat"]),
                 double.parse(lastPos["long"]), latitude, longitude) <
             1000) {
-      if (_nbSameLocationPoints > 2) {
-        _stop();
+      _nbSameLocationPoints += 1;
+      if (_nbSameLocationPoints > 7) {
+        await _stop();
         _start();
-      } else {
-        _nbSameLocationPoints += 1;
       }
     } else {
       _nbSameLocationPoints = 0;
@@ -88,9 +90,9 @@ class _MainScreenState extends State<MainScreen> {
   /// This function clear the buffer and starts a new capturePos process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
-  _start() {
+  void _start() {
     _locationSubscription =
-        _location.onLocationChanged().listen((Map<String, double> result) {
+        _onLocationChanged.listen((Map<String, double> result) {
       _nbSameLocationPoints = 0;
       _locationSubscription.cancel();
       _capturePos(_capturePosIndex);
@@ -104,11 +106,12 @@ class _MainScreenState extends State<MainScreen> {
   /// This function is called when the user taps on the stop button.
   /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
   /// and updates the button so that it becomes a start button.
-  _stop() {
+  _stop() async {
     _capturePosIndex += 1;
     _locationSubscription.cancel();
     String jSon = json.encode(_user);
-    writeInFile(jSon);
+    await writeInFile(jSon);
+    print("written: " + await readFile());
     if (!_waitingForWifi) {
       _waitingForWifi = true;
       _sendPoints();
@@ -120,11 +123,15 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _sendPoints() async {
-    var connectivity = await Connectivity().checkConnectivity();
-    if (connectivity == ConnectivityResult.wifi && await sendPoints(await readFile())) {
+    ConnectivityResult connectivity = await Connectivity().checkConnectivity();
+    if (connectivity == ConnectivityResult.wifi &&
+        await _serverCommunication.sendPoints(await readFile())) {
+      clearFile();
       _waitingForWifi = false;
     } else {
-      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      _connectivitySubscription =
+          _onConnectivityChanged.listen((ConnectivityResult result) {
+        _connectivitySubscription.cancel();
         _sendPoints();
       });
     }
@@ -154,7 +161,11 @@ class _MainScreenState extends State<MainScreen> {
       'afficher les données',
       style: textStyle,
     );
+    _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
+    _onLocationChanged = Location()
+        .onLocationChanged(); //TODO check bug callback called every second
     _waitingForWifi = false;
+    _serverCommunication = widget.serverCommunication;
   }
 
   @override
@@ -167,6 +178,13 @@ class _MainScreenState extends State<MainScreen> {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
+              RaisedButton(
+                child: Text(
+                  "Effacer les données",
+                  style: textStyle,
+                ),
+                onPressed: clearFile,
+              ),
               IconButton(
                 icon: Icon(_onOffIcon),
                 onPressed: _pressedOnOff,

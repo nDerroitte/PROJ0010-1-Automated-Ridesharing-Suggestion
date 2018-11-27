@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/home/minh/PI/play-java-starter-example/conf/routes
-// @DATE:Fri Nov 16 16:28:02 CET 2018
+// @SOURCE:/mnt/d/Documents/PI/play-java-starter-example/conf/routes
+// @DATE:Tue Nov 27 18:42:40 GMT 2018
 
 package controllers;
 

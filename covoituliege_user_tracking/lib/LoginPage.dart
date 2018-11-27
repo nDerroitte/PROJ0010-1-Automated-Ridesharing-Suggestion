@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
 import 'Cst.dart';
 import 'TextInput.dart';
@@ -26,17 +27,18 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _passwordController = TextEditingController();
   TapGestureRecognizer _forgottenPasswordRecognizer;
   TapGestureRecognizer _signUpRecognizer;
+  ServerCommunication _serverCommunication;
 
   /// Ask the server to check the username-password pair, and push the tracking screen if yes.
   /// If the connection fails, the cause is given to the user.
   _connection() async {
-    int connectionResult = await checkConnection(_usernameController.text, _passwordController.text);
+    int connectionResult = await _serverCommunication.checkConnection(_usernameController.text, _passwordController.text);
     setState(() {
       if (connectionResult == passwordOK) {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen(UserInfo(_usernameController.text))),
+              builder: (context) => MainScreen(UserInfo(_usernameController.text), _serverCommunication)),
         );
       } else {
         String errorExplanation;
@@ -143,6 +145,12 @@ class _LoginPageState extends State<LoginPage> {
     ];
 
     _listViewContent = _baseListViewContent;
+
+    /// This line is necessary because the location package has an issue with the requestPermissions
+    /// callbacks for SDK < 21.
+    SimplePermissions.requestPermission(Permission.AlwaysLocation);
+
+    _serverCommunication = ServerCommunication();
   }
 
   @override
