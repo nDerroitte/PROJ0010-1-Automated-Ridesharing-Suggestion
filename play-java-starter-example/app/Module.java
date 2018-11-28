@@ -8,6 +8,7 @@ import services.MongoInterface;
 import services.MongoDB;
 import services.HabitGenerator;
 import services.PeriodicityCheck;
+import services.ThreadExecutor;
 /**
  * This class is a Guice module that tells Guice how to bind several
  * different types. This Guice module is created when the Play
@@ -30,7 +31,7 @@ public class Module extends AbstractModule {
         // Set AtomicCounter as the implementation for Counter.
         bind(Counter.class).to(AtomicCounter.class);
 	    bind(MongoInterface.class).to(MongoDB.class);
-        bind(HabitGenerator.class).to(PeriodicityCheck.class);
+        bind(HabitGenerator.class).to(ThreadExecutor.class);
     }
 
 }
