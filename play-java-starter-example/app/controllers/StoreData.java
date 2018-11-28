@@ -45,8 +45,7 @@ public class StoreData extends Controller {
 		this.hb = habit_generator;
 	}
 
-	public Result store_data(){
-		System.err.println("request: " + request().body().asText());
+	public Result store_data() throws Exception{
 		String[] data = request().body().asText().split("data_splitter");
 		JsonReader reader;
 		JsonObject dataUnit;

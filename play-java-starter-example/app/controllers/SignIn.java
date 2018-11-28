@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
-import services.Journey;
 
 
  
@@ -36,13 +35,11 @@ public class SignIn extends Controller {
 		this.database = db.get_database();	
 	}
 
-	public Result sign_in(String a_user, String a_password){
+	public Result sign_in(String a_user, String a_password) {
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
-			ArrayList<Document> journeys = (ArrayList<Document>)users.find(eq("user", a_user)).first().get("journeys");
-			System.err.println(Journey.fromDoc(journeys.get(0)).toString());
 			response().setCookie(Cookie.builder("user",key).build());
 			return ok("connection OK");
 		}
