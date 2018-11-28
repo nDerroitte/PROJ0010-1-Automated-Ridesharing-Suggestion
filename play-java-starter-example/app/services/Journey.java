@@ -1,4 +1,4 @@
-package services;
+import org.bson.Document;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -33,5 +33,25 @@ public class Journey
     public long getFirstPointTime()
     {
         return meeting_point.get(0).getTimeInMs();
+    }
+
+    public  Document toDoc()
+    {
+        Document doc = new Document();
+        ArrayList<Document> doc_meeting_point = new ArrayList<>();
+        for(int i =0; i < this.meeting_point.size();i++)
+            doc_meeting_point.add(meeting_point.get(i).toDoc());
+        doc.put("meeting_point",doc_meeting_point);
+        return doc;
+
+    }
+    public static Journey fromDoc(Document doc)
+    {
+        ArrayList<Point> meeting_point = doc.get("meeting_point");
+        return new Journey(meeting_point);
+    }
+    public Point getIthMeetingPoint(int index)
+    {
+        return this.meeting_point.get(index);
     }
 }
