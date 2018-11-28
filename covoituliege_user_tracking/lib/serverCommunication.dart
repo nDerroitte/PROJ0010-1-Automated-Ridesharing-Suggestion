@@ -6,7 +6,7 @@ import 'Cst.dart';
 /// The functions returns integers, defined in the Cst.dart file, that represent the different possible answers of the server.
 /// An httpError is returned in case of Exception or not understood answer.
 
-
+<<<<<<< Updated upstream
 class ServerCommunication {
   String cookie;
 
@@ -20,6 +20,31 @@ class ServerCommunication {
     ).timeout(
       Duration(seconds: 5),
     );
+=======
+Future<http.Response> _get(String url) {
+  return http.get(
+    Uri.encodeFull(url),
+    headers: {
+      "Accept": "application/json",
+      "host": "localhost:9000", //TODO check this line when released out of an emulator
+    },
+  ).timeout(
+    Duration(seconds: 5),
+  );
+}
+
+Future<http.Response> _post(String url, String body) {
+  return http.post(Uri.encodeFull(url), headers: {"Accept": "application/json", "host": "localhost:9000",}, body: body,).timeout(Duration(seconds: 5),);
+}
+
+Future<int> checkConnection(String username, String password) async {
+  http.Response response;
+  try {
+    response = await _get(
+        serverURL + "sign_in?user=" + username + "&password=" + password);
+  } catch (exception) {
+    return httpError;
+>>>>>>> Stashed changes
   }
 
   Future<http.Response> _post(String url, String body) {
@@ -146,4 +171,28 @@ class ServerCommunication {
       return httpError;
     }
   }
+<<<<<<< Updated upstream
+=======
+}
+
+Future<int> _storeData(String jsonData, int tryNumber) async {
+  if (tryNumber > 9) {
+    return httpError;
+  }
+  http.Response response;
+  try {
+    response = await _post(serverURL + "store_data?", jsonData);
+  } catch (exception) {
+    return _storeData(jsonData, tryNumber + 1);
+  }
+  if (response.statusCode == 200) {
+    return storeDataOK;
+  } else {
+    return _storeData(jsonData, tryNumber + 1);
+  }
+}
+
+Future<int> storeData(String jsonData) async {
+  return _storeData(jsonData, 0);
+>>>>>>> Stashed changes
 }

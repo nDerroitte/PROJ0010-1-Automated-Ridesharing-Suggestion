@@ -40,6 +40,7 @@ public class StoreData extends Controller {
 	}
 
 	//En cours de devellopement.
+<<<<<<< Updated upstream
 	public Result store_data(){
 		System.err.println("request: " + request().body().asText());
 		String[] data = request().body().asText().split("data_splitter");
@@ -69,6 +70,20 @@ public class StoreData extends Controller {
 				System.err.println(_point.getString("date"));
 			}
 		}
+=======
+	public Result store_data(String json){
+		//JsonNode body = request().body().asJson();
+    		//if(json == null) {
+        	//	return badRequest("Expecting Json data");
+    		//}
+		////get user ID from JSON
+		//JsonNode user_info = body.get("UserInfo");
+		//String user_id = user_info.get("UserID").asText();
+		////get key and last sign in to chack authentification
+		//MongoCollection<Document> users = database.getCollection("users");
+		//FindIterable<field> findIterable users.find(eq("user", user_id)).projection(include("last_sign_in", "key")).first();
+		hb.submit_task(a_user);
+>>>>>>> Stashed changes
 		return ok();
 	}
 }

@@ -26,8 +26,11 @@ const passwordOK = 2;
 const signUpOK = 3;
 const invalidEmail = 4;
 
-/// Possible forgottenPasswordResults.
+/// Possible forgottenPassword results.
 const forgottenPasswordOK = 5;
+
+/// Possible storeData results.
+const storeDataOK = 6;
 
 /// The appBar is the same for all screens.
 final _appBarColor = Colors.green;

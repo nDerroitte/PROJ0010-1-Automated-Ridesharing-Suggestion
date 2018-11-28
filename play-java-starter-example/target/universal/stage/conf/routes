@@ -17,11 +17,14 @@ GET     /message                    controllers.AsyncController.message
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
-#add user in database
+# Add user in database
 GET 	/sign_up 					controllers.SignUp.sign_up(user,password,email) 
 
-#check user id
+# Check user id
 GET /sign_in						controllers.SignIn.sign_in(user,password)
 
-#remove user from database
+# Remove user from database
 GET /remove_user					controllers.RemoveUser.remove_user(user,password)
+
+# Add points in the database
+POST /store_data					controllers.StoreData.store_data(json)
