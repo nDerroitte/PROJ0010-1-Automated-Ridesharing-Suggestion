@@ -27,6 +27,7 @@ import services.MongoInterface;
 import services.HabitGenerator;
 
 
+
 @Singleton
 public class StoreData extends Controller {
 	
@@ -63,11 +64,22 @@ public class StoreData extends Controller {
 			if (user == null || !user.get("key").equals(cookieValue.split("=")[1])) {
 				continue;
 			}
-			for (JsonValue point : dataUnit.getJsonArray("Points")) {
-				//TODO add points in DB, need to check with Natan
+			ArrayList<Point> point_list = new ArrayList<>();
+			for (JsonValue point : dataUnit.getJsonArray("Points")) {				
 				JsonObject _point = (JsonObject)(point);
-				System.err.println(_point.getString("date"));
+				Calendar cal = Constants.stringToCalendar(_point.getString("calendar"));
+				
+				double lat = Double.parseDouble(_point.getString("lat"));
+				double lon = Double.parseDouble(_point.getString("long"));
+				Coordinate coord = Constants.CoordinateTransformation(lat,lon);
+				Point current_point = new Point(cal,coord);
+				point_list.add(current_point);			
 			}
+			Journey current_journey = new Journey(point_list);
+			ArrayList<Journey> journeys = user.get("journeys");
+			journeys.add(current_journey);
+			users.updateOne(eq(user.get("user")),set("journeys", journeys));
+
 		}
 		return ok();
 	}
