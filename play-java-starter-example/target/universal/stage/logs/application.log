@@ -2,3 +2,10 @@
 2018-11-11 19:28:08,728 [INFO] from application in main - ApplicationTimer demo: Starting application at 2018-11-11T18:28:08.726Z
 2018-11-11 20:16:26,177 [WARN] from org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator in main - HV000184: ParameterMessageInterpolator has been chosen, EL interpolation will not be supported
 2018-11-11 20:16:26,465 [INFO] from application in main - ApplicationTimer demo: Starting application at 2018-11-11T19:16:26.464Z
+2018-11-28 13:27:04,843 [WARN] from org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator in main - HV000184: ParameterMessageInterpolator has been chosen, EL interpolation will not be supported
+2018-11-28 13:27:05,090 [INFO] from application in main - ApplicationTimer demo: Starting application at 2018-11-28T13:27:05.087Z
+2018-11-28 13:27:05,108 [INFO] from play.api.Play in main - Application started (Prod)
+2018-11-28 13:27:06,724 [INFO] from play.core.server.AkkaHttpServer in main - Listening for HTTP on /0:0:0:0:0:0:0:0:9000
+2018-11-28 13:27:06,728 [INFO] from play.core.server.AkkaHttpServer in main - Listening for HTTPS on /0:0:0:0:0:0:0:0:9000
+2018-11-28 13:32:20,448 [INFO] from play.core.server.AkkaHttpServer in Thread-6 - Stopping server...
+2018-11-28 13:32:20,489 [INFO] from application in Thread-6 - ApplicationTimer demo: Stopping application at 2018-11-28T13:32:20.489Z after 315s.

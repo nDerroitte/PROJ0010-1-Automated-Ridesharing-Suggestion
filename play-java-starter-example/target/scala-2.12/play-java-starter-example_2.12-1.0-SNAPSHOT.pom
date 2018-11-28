@@ -84,5 +84,20 @@
             <artifactId>mongodb-driver</artifactId>
             <version>3.8.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.play</groupId>
+            <artifactId>play-mailer_2.12</artifactId>
+            <version>6.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.play</groupId>
+            <artifactId>play-mailer-guice_2.12</artifactId>
+            <version>6.0.1</version>
+        </dependency>
     </dependencies>
 </project>

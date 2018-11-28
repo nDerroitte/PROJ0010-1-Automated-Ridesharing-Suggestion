@@ -130,3 +130,12 @@ compile
 run
 reload
 run
+./start -Dhttps.port=9000
+start -Dhttps.port=9000
+runProd -Dhttps.port=9000
+runProd -Dhttps.port=9000 -Dhttp.port=disabled
+ls
+kill
+run -Dhttps.port=9000 Dhttp.port=disabled
+run -Dhttps.port=9001 Dhttp.port=9000
+run -Dhttps.port=9001
