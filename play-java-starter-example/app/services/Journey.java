@@ -29,4 +29,8 @@ public class Journey
         }
         return true;
     }
+    public long getFirstPointTime()
+    {
+        return meeting_point.get(0).getTimeInMs();
+    }
 }
