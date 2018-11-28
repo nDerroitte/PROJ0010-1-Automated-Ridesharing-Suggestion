@@ -1,26 +1,34 @@
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 public class main
 {
     public static void main(String[] args)
     {
-        Calendar calendar = new GregorianCalendar(2013,1,28,13,24,56);
+        System.out.println("hello");
+        User test = new User();
+        ArrayList<Long> dates = new ArrayList<Long>();
+        Random noise = new Random();
+        int nb_noise = 8;
+        long bound = 1000;
+        System.out.println(bound/11);
+        System.out.println(bound/7);
+        for(long i=0; i < bound;i+=bound/11){
+            dates.add(i);
+        }
+        for(long i=0; i < bound; i+= bound/7){
+            dates.add(i);
+        }
+        Iterator<Long> ite = noise.longs(nb_noise,0,bound).iterator();
+        while(ite.hasNext()){
+            dates.add(ite.next());
+        }
 
-        int year       = calendar.get(Calendar.YEAR);
-        int month      = calendar.get(Calendar.MONTH); // Jan = 0, dec = 11
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-        int dayOfWeek  = calendar.get(Calendar.DAY_OF_WEEK);
-        int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
-        int weekOfMonth= calendar.get(Calendar.WEEK_OF_MONTH);
-
-        int hour       = calendar.get(Calendar.HOUR);        // 12 hour clock
-        int hourOfDay  = calendar.get(Calendar.HOUR_OF_DAY); // 24 hour clock
-        int minute     = calendar.get(Calendar.MINUTE);
-        int second     = calendar.get(Calendar.SECOND);
-        int millisecond= calendar.get(Calendar.MILLISECOND);
-        //
-        System.out.println(Constants.CoordinateTransformation(50.1234567,5.1234567).getX());
+        ArrayList<Habits> habit = test.getHabits(dates,9);
+        Iterator<Habits> ite2 = habit.iterator();
+        while(ite2.hasNext()){
+            ite2.next().print();
+        }
+        System.out.println("goodbye");
 
     }
 }
