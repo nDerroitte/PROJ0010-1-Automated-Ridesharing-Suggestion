@@ -8,8 +8,6 @@ public class Habits
     private TreeSet<Long> dates; //contain all the date which is in the habit.
     private long last_date; //the last day of this journey, whether it is in the habit.
 
-
-
     public Habits(long period, long offset, int journey_ID)
     {
         this.period = period;
@@ -38,7 +36,7 @@ public class Habits
         if(dates.size() == 0){
             return 0;
         }
-        return (this.last_date - dates.first()) / this.period;
+        return (this.last_date - dates.first()) / this.period + 1;
     }
     public float getHitRate()
     {
@@ -68,14 +66,11 @@ public class Habits
     }
     public void update(long new_date)
     {
-        if(!inHabit(new_date))
+        if(this.last_date < new_date)
         {
-            if(this.last_date < new_date)
-            {
-                this.last_date = new_date;
-            }
+            this.last_date = new_date;
         }
-        else
+        if(inHabit(new_date))
         {
             this.dates.add(new_date);
             return;
@@ -83,7 +78,8 @@ public class Habits
     }
     public void print(){
         System.out.println("Period " + this.period +" Journey id "+ this.journey_ID+ " offset " + this.offset + " hit: " + this.getHit() + " total " + this.getTotal());
+        for (Long element : this.dates) {
+            System.out.print(element + " ");
+        }
     }
-
-
 }
