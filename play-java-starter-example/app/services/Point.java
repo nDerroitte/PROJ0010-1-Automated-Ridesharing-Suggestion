@@ -1,21 +1,24 @@
-
-import java.util.Date;
+import java.util.Calendar;
 
 public class Point
 {
-    private final Date time;
-    private final String position;
+    private final Calendar time;
+    private final Coordinate position;
 
-    public Point(Date time, String position) {
+    public Point(Calendar time, Coordinate position)
+    {
         this.time = time;
         this.position = position;
     }
 
-    public Date getTime() {
+    public Calendar getTime() {
         return time;
     }
 
-    public String getPosition() {
+    public Coordinate getPosition() {
         return position;
     }
+
+    public long getTimeInMs() {return time.getTimeInMillis();}
 }
+
