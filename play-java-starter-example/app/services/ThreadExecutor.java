@@ -59,7 +59,7 @@ class ComputationUnit implements Runnable {
     }
     public void run() 
     {        
-        User user = new User(this.user_id , journeys);
+        User user = new User(this.user_id , this.journeys);
         user.createHabits();
     }
 }

@@ -23,8 +23,13 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 import java.util.Optional;
+import java.util.Calendar;
 import services.MongoInterface;
 import services.HabitGenerator;
+import services.Point;
+import services.Constants;
+import services.Coordinate;
+import services.Journey;
 
 
 
@@ -48,11 +53,11 @@ public class StoreData extends Controller {
 		JsonObject dataUnit;
 		Optional cookie = request().header("cookie");
 		if (!cookie.isPresent()) {
-			return badRequest();
+			return badRequest("Cookie required");
 		}
 		String cookieValue = cookie.get().toString().split(";")[0];
 		if (!cookieValue.split("=")[0].equals("user") || cookieValue.split("=").length != 2) {
-			return badRequest();
+			return badRequest("Cookie badly set");
 		}
 
 		for (String jSonString : data) {
@@ -67,7 +72,12 @@ public class StoreData extends Controller {
 			ArrayList<Point> point_list = new ArrayList<>();
 			for (JsonValue point : dataUnit.getJsonArray("Points")) {				
 				JsonObject _point = (JsonObject)(point);
-				Calendar cal = Constants.stringToCalendar(_point.getString("calendar"));
+				Calendar cal;
+				try {
+					cal = Constants.stringToCalendar(_point.getString("calendar"));
+				} catch (java.text.ParseException e) {
+					return badRequest("Bad format for calendar");
+				}
 				
 				double lat = Double.parseDouble(_point.getString("lat"));
 				double lon = Double.parseDouble(_point.getString("long"));
@@ -76,11 +86,10 @@ public class StoreData extends Controller {
 				point_list.add(current_point);			
 			}
 			Journey current_journey = new Journey(point_list);
-			ArrayList<Journey> journeys = user.get("journeys");
+			ArrayList<Journey> journeys = (ArrayList<Journey>)(user.get("journeys"));
 			journeys.add(current_journey);
 			users.updateOne(eq(user.get("user")),set("journeys", journeys));
-			//appelle du code de Cédric
-			hb.submit_task(user.get("user"),journeys);
+			hb.submitTask((String)(user.get("user")),journeys);
 		}
 		return ok();
 	}

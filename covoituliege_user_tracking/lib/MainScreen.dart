@@ -104,7 +104,6 @@ class _MainScreenState extends State<MainScreen> {
     _locationSubscription.cancel();
     String jSon = json.encode(_user);
     await writeInFile(jSon);
-    print("written: " + await readFile());
     if (!_waitingForWifi) {
       _waitingForWifi = true;
       _sendPoints();

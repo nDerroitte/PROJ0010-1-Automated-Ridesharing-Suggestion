@@ -1,6 +1,5 @@
-//package services;
+package services;
 import java.util.*;
-import User;
 
 public class TestUser {
 

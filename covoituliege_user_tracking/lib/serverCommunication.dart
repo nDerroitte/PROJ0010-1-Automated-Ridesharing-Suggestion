@@ -38,7 +38,7 @@ class ServerCommunication {
   }
 
   Future<bool> _sendPoints(String jsonData, int tryIndex) async {
-    if (tryIndex > 9) {
+    if (tryIndex > 4) {
       return false;
     }
     http.Response response;
@@ -145,25 +145,4 @@ class ServerCommunication {
       return httpError;
     }
   }
-}
-
-Future<int> _storeData(String jsonData, int tryNumber) async {
-  if (tryNumber > 9) {
-    return httpError;
-  }
-  http.Response response;
-  try {
-    response = await _post(serverURL + "store_data?", jsonData);
-  } catch (exception) {
-    return _storeData(jsonData, tryNumber + 1);
-  }
-  if (response.statusCode == 200) {
-    return storeDataOK;
-  } else {
-    return _storeData(jsonData, tryNumber + 1);
-  }
-}
-
-Future<int> storeData(String jsonData) async {
-  return _storeData(jsonData, 0);
 }

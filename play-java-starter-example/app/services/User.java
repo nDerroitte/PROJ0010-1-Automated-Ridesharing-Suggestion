@@ -1,3 +1,4 @@
+package services;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -6,11 +7,18 @@ public class User
 {
     public ArrayList<Habits> user_habits;
     private ArrayList<Journey> unused_journeys;
+    private String user_id;
 
     public User()
     {
         this.user_habits = new ArrayList<>();
         this.unused_journeys = new ArrayList<>();
+    }
+    public User(String user_id, ArrayList<Journey> journeys)
+    {
+        this.user_id = user_id;
+        this.user_habits = new ArrayList<>();
+        this.unused_journeys = journeys;
     }
     public void addJourney(Journey new_journey)
     {
@@ -81,7 +89,7 @@ public class User
                 Habits cur_habit = new Habits(period,array.get(i),journey_id);
                 if(isRedundant(habits,cur_habit))
                 {
-                    System.out.println("HABIT ALREADY FIND !");
+                    System.out.println("HABIT ALREADY FOUND !");
                     continue;
                 }
                 int k = i;

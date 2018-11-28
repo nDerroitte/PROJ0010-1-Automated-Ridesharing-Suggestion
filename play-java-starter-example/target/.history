@@ -139,3 +139,10 @@ kill
 run -Dhttps.port=9000 Dhttp.port=disabled
 run -Dhttps.port=9001 Dhttp.port=9000
 run -Dhttps.port=9001
+compile
+compile -Xlint:unchecked
+ls
+compile --Xlint:unchecked
+compile--Xlint:unchecked
+compile
+run
