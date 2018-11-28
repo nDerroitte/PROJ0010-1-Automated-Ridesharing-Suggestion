@@ -132,10 +132,19 @@ class _MainScreenState extends State<MainScreen> {
   /// This function is called when the user taps on the print data button.
   /// It prints the points that are in the application local file.
   _printData() async {
-    String data = UserInfo.toPrint(json.decode(await readFile()));
+    String data = await readFile();
+    List<String> dataUnit = data.split("data_splitter");
+    StringBuffer toPrint = StringBuffer();
+    for (String userInfo in dataUnit) {
+      /// The split method returns an empty String if there is nothing after the last regex (argument)
+      if (userInfo == "") {
+        break;
+      }
+      toPrint.write(UserInfo.toPrint(json.decode(userInfo)));
+    }
     setState(() {
       _data = Text(
-        "(appuyer à nouveau pour recharger)\n" + data,
+        "(appuyer à nouveau pour recharger)\n" + toPrint.toString(),
         style: textStyle,
       );
     });

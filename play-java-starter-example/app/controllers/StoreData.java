@@ -86,10 +86,10 @@ public class StoreData extends Controller {
 				point_list.add(current_point);			
 			}
 			Journey current_journey = new Journey(point_list);
-			ArrayList<Journey> journeys = (ArrayList<Journey>)(user.get("journeys"));
-			journeys.add(current_journey);
+			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
+			journeys.add(Journey.toDoc(current_journey));
 			users.updateOne(eq(user.get("user")),set("journeys", journeys));
-			hb.submitTask((String)(user.get("user")),journeys);
+			hb.submitTask((String)(user.get("user")), journeys);
 		}
 		return ok();
 	}

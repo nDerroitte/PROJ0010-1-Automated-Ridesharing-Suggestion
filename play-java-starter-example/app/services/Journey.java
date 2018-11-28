@@ -19,6 +19,7 @@ public class Journey
         this.arrive_coordinates = meeting_point.get(size_array-1).getPosition();
 
     }
+
     public boolean sameJourney(Journey other)
     {
         for(int i = 0; i<this.meeting_point.size();i++)
@@ -30,6 +31,12 @@ public class Journey
         }
         return true;
     }
+
+    public Point getIthMeetingPoint(int index)
+    {
+        return this.meeting_point.get(index);
+    }
+    
     public long getFirstPointTime()
     {
         return meeting_point.get(0).getTimeInMs();
