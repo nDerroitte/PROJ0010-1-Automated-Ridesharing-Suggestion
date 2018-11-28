@@ -6,11 +6,13 @@ public class User
 {
     public ArrayList<Habits> user_habits;
     private ArrayList<Journey> unused_journeys;
+    private String user_id;
 
-    public User()
+    public User(String user_id)
     {
         this.user_habits = new ArrayList<>();
         this.unused_journeys = new ArrayList<>();
+        this.user_id = user_id;
     }
     public void addJourney(Journey new_journey)
     {
@@ -57,6 +59,7 @@ public class User
             long_array.clear();
 
         }
+        //TODO : write this.user_habits in DB(mongo)
 
     }
     public ArrayList<Habits> getHabits(ArrayList<Long> array, int journey_id)
@@ -77,11 +80,11 @@ public class User
                 else{
                     continue;
                 }
-                //System.out.println("current period is : " + period +  " current offset is: " + array.get(i));
+                System.out.println("current period is : " + period +  " current offset is: " + array.get(i));
                 Habits cur_habit = new Habits(period,array.get(i),journey_id);
                 if(isRedundant(habits,cur_habit))
                 {
-                  //  System.out.println("HABIT ALREADY FIND !");
+                    System.out.println("HABIT ALREADY FIND !");
                     continue;
                 }
                 int k = i;
@@ -93,10 +96,10 @@ public class User
                 if(cur_habit.getHit() > 3 && cur_habit.getHitRate() > 0.8)
                 {
                     habits.add(cur_habit);
-                    //System.out.println("find period of: " + cur_habit.getPeriod() +  " with an offset of " + cur_habit.getHit() + " hit rate:" + cur_habit.getHitRate());
-                    //System.out.println("hit : " + cur_habit.getHit() + " total: " + cur_habit.getTotal());
+                    System.out.println("find period of: " + cur_habit.getPeriod() +  " with an offset of " + cur_habit.getHit() + " hit rate:" + cur_habit.getHitRate());
+                    System.out.println("hit : " + cur_habit.getHit() + " total: " + cur_habit.getTotal());
                 }
-                //System.out.println("hit: " + cur_habit.getHit() + " total " + cur_habit.getTotal());
+                System.out.println("hit: " + cur_habit.getHit() + " total " + cur_habit.getTotal());
             }
         }
         //this.user_habits.addAll(habits);
