@@ -192,6 +192,28 @@ Future<int> _storeData(String jsonData, int tryNumber) async {
   }
 }
 
+<<<<<<< Updated upstream
+Future<int> storeData(String jsonData) async {
+  return _storeData(jsonData, 0);
+>>>>>>> Stashed changes
+=======
+Future<int> _storeData(String jsonData, int tryNumber) async {
+  if (tryNumber > 9) {
+    return httpError;
+  }
+  http.Response response;
+  try {
+    response = await _post(serverURL + "store_data?", jsonData);
+  } catch (exception) {
+    return _storeData(jsonData, tryNumber + 1);
+  }
+  if (response.statusCode == 200) {
+    return storeDataOK;
+  } else {
+    return _storeData(jsonData, tryNumber + 1);
+  }
+}
+
 Future<int> storeData(String jsonData) async {
   return _storeData(jsonData, 0);
 >>>>>>> Stashed changes

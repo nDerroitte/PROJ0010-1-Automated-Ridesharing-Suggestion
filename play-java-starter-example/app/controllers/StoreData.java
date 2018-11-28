@@ -41,6 +41,7 @@ public class StoreData extends Controller {
 
 	//En cours de devellopement.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	public Result store_data(){
 		System.err.println("request: " + request().body().asText());
 		String[] data = request().body().asText().split("data_splitter");
@@ -71,6 +72,8 @@ public class StoreData extends Controller {
 			}
 		}
 =======
+=======
+>>>>>>> Stashed changes
 	public Result store_data(String json){
 		//JsonNode body = request().body().asJson();
     		//if(json == null) {
