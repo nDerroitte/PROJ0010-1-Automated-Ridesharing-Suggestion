@@ -1,3 +1,5 @@
+package services;
+
 import org.bson.Document;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,11 +33,6 @@ public class Journey
         }
         return true;
     }
-
-    public Point getIthMeetingPoint(int index)
-    {
-        return this.meeting_point.get(index);
-    }
     
     public long getFirstPointTime()
     {
@@ -54,7 +51,7 @@ public class Journey
     }
     public static Journey fromDoc(Document doc)
     {
-        ArrayList<Point> meeting_point = doc.get("meeting_point");
+        ArrayList<Point> meeting_point = (ArrayList<Point>)(doc.get("meeting_point"));
         return new Journey(meeting_point);
     }
     public Point getIthMeetingPoint(int index)

@@ -45,7 +45,6 @@ public class StoreData extends Controller {
 		this.hb = habit_generator;
 	}
 
-	//En cours de devellopement.
 	public Result store_data(){
 		System.err.println("request: " + request().body().asText());
 		String[] data = request().body().asText().split("data_splitter");
@@ -87,8 +86,8 @@ public class StoreData extends Controller {
 			}
 			Journey current_journey = new Journey(point_list);
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-			journeys.add(Journey.toDoc(current_journey));
-			users.updateOne(eq(user.get("user")),set("journeys", journeys));
+			journeys.add(current_journey.toDoc());
+			users.updateOne(eq("user", user.get("user")),set("journeys", journeys));
 			hb.submitTask((String)(user.get("user")), journeys);
 		}
 		return ok();

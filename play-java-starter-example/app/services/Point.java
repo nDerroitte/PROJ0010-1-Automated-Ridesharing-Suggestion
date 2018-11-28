@@ -1,3 +1,6 @@
+package services;
+
+import org.bson.Document;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,12 +42,13 @@ public class Point
         doc.put("position",coordinates);
         return doc;
     }
-    public static Point FromDoc(Document) throws ParseException
+
+    static public Point FromDoc(Document doc) throws ParseException
     {
-        String string_time = doc.get("time");
+        String string_time = (String)doc.get("time");
         Calendar time = Constants.stringToCalendar(string_time);
 
-        ArrayList<Long> coordinates = doc.get("position");
+        ArrayList<Long> coordinates = (ArrayList<Long>)doc.get("position");
         Coordinate position = new Coordinate(coordinates.get(0),coordinates.get(1));
 
         return new Point(time,position);
