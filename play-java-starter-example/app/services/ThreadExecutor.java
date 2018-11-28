@@ -43,38 +43,23 @@ public class ThreadExecutor implements HabitGenerator{
         this.habits = database.getCollection("habits");
 	}
 
-    class ComputationUnit implements Runnable {
-        private final String user;
-        ComputationUnit(String userID, ArrayList<Journey> journeys)
-        {  
-            this.user = userID;
-        }
-        public void run() {
-
-            // GET DATA FROM THE DATABASE
-
-            // PRE PROCESS THE DATA
-
-            //COMPUTE THE HABIT
-            System.out.println("Computing habit of user "+ this.user);
-
-            //WRITE THE HABIT IN DATABASE
-		    UpdateResult updateresult = users.updateOne(eq("user", this.user),set("habit","habit update in development"));
-		    if(updateresult.getModifiedCount() == 1) {
-			    return ;
-		    }
-            else{
-                // create new user with its habit.
-                Document new_user = new Document("user",user).append("habit","In development");
-                habits.insertOne(new_user);
-            }
-        }
-    }
-
     @Override 
-	public void submitTask(String userID) {
-       	this.worker.submit(new PTask(userID));
+	public void submitTask(String userID,ArrayList<Journey> journeys) {
+       	this.worker.submit(new ComputationUnit(userID, journeys));
     }
 
-
+}
+class ComputationUnit implements Runnable {
+    private final String user_id;
+    private final ArrayList<Journey> journeys;
+    ComputationUnit(String userID, ArrayList<Journey> journeys)
+    {  
+        this.user_id = userID;
+        this.journeys = journeys;
+    }
+    public void run() 
+    {        
+        User user = new User(this.user_id , journeys);
+        user.createHabits();
+    }
 }

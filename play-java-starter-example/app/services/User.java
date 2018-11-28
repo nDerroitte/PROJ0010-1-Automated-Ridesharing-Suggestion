@@ -6,13 +6,11 @@ public class User
 {
     public ArrayList<Habits> user_habits;
     private ArrayList<Journey> unused_journeys;
-    private String user_id;
 
-    public User(String user_id)
+    public User()
     {
         this.user_habits = new ArrayList<>();
         this.unused_journeys = new ArrayList<>();
-        this.user_id = user_id;
     }
     public void addJourney(Journey new_journey)
     {
@@ -59,7 +57,6 @@ public class User
             long_array.clear();
 
         }
-        //TODO : write this.user_habits in DB(mongo)
 
     }
     public ArrayList<Habits> getHabits(ArrayList<Long> array, int journey_id)
