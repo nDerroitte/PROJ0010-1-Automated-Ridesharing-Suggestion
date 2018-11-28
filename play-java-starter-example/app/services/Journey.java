@@ -49,9 +49,13 @@ public class Journey
         return doc;
 
     }
-    public static Journey fromDoc(Document doc)
+    public static Journey fromDoc(Document doc)throws ParseException
     {
-        ArrayList<Point> meeting_point = (ArrayList<Point>)(doc.get("meeting_point"));
+        ArrayList<Document> doc_meeting_point = doc.get("meeting_point");
+        ArrayList<Point> meeting_point = new ArrayList<>();
+        for(int i =0; i <doc_meeting_point.size();i++)
+            meeting_point.add(Point.FromDoc(doc_meeting_point.get(i)));
+        
         return new Journey(meeting_point);
     }
     public Point getIthMeetingPoint(int index)
