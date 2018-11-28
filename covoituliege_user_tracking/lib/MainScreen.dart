@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:intl/intl.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -13,8 +14,7 @@ import 'FileHandler.dart';
 import 'serverCommunication.dart';
 
 /// This class represents the main screen of the application. It allows the user to launch the position capturing,
-/// as well as to print the points currently in the file to have an idea of the kind of data we collect.
-/// [The behaviour is likely to change].
+/// as well as printing and deleting the buffered data.
 class MainScreen extends StatefulWidget {
   final UserInfo user;
   final ServerCommunication serverCommunication;
@@ -51,13 +51,7 @@ class _MainScreenState extends State<MainScreen> {
     }
     double latitude = currentLocation['latitude'];
     double longitude = currentLocation['longitude'];
-    String dateTime = DateTime.now()
-        .toString()
-        .replaceFirst(":", "h")
-        .replaceFirst(":", "m")
-        .replaceFirst(".", "s");
-    dateTime = dateTime.substring(0, dateTime.indexOf("s") + 1);
-    List<String> dateAndTime = dateTime.split(" ");
+    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
 
     Map<String, dynamic> lastPos = _user.getLastPos();
     if (lastPos != null &&
@@ -71,8 +65,7 @@ class _MainScreenState extends State<MainScreen> {
       }
     } else {
       _nbSameLocationPoints = 0;
-      _user.addData(dateAndTime[0], dateAndTime[1], latitude.toString(),
-          longitude.toString());
+      _user.addData(calendar, latitude.toString(), longitude.toString());
     }
   }
 

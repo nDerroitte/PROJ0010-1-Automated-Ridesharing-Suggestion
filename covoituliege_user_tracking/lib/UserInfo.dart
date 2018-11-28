@@ -1,29 +1,27 @@
 class _Point {
-  String _date;
-  String _time;
+  String _calendar;
   String _lat;
   String _long;
-  _Point(this._date, this._time, this._lat, this._long);
+  _Point(this._calendar, this._lat, this._long);
 
   static String toPrint(Map<String, dynamic> point) {
     StringBuffer res = StringBuffer();
-    res.writeln("Date: ${point['date']}");
-    res.writeln("Time: ${point['time']}");
+    List<String> dateAndTime = point['calendar'].split(" ");
+    res.writeln("Date: ${dateAndTime[0]}");
+    res.writeln("Time: ${dateAndTime[1]}");
     res.writeln("Latitude: ${point['lat']}");
     res.writeln("Longitude: ${point['long']}");
     return res.toString();
   }
 
   _Point.fromJson(Map<String, dynamic> json)
-    : _date = json['date'],
-      _time = json['time'],
+    : _calendar = json['calendar'],
       _lat = json['lat'],
       _long = json['long'];
 
   Map<String, dynamic> toJson() =>
       {
-        'date': _date,
-        'time': _time,
+        'calendar': _calendar,
         'lat': _lat,
         'long': _long,
       };
@@ -57,8 +55,8 @@ class UserInfo {
     }
   }
 
-  void addData(String date, String time, String lat, String long) {
-    _points += <_Point>[_Point(date, time, lat, long)];
+  void addData(String calendar, String lat, String long) {
+    _points += <_Point>[_Point(calendar, lat, long)];
   }
 
   Map<String, dynamic> toJson() => {'UserId': _userId, 'Points': _points};
