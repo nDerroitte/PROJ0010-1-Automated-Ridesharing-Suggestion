@@ -79,7 +79,8 @@ public class StoreData extends Controller {
 			ArrayList<Journey> journeys = user.get("journeys");
 			journeys.add(current_journey);
 			users.updateOne(eq(user.get("user")),set("journeys", journeys));
-
+			//appelle du code de Cédric
+			hb.submit_task(user.get("user"),journeys);
 		}
 		return ok();
 	}
