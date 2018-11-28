@@ -18,5 +18,5 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface HabitGenerator {
-   void submitTask(String userID,ArrayList<Document> journeys);
+   void submitTask(String userID, ArrayList<Document> journeys);
 }

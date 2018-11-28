@@ -44,22 +44,25 @@ public class ThreadExecutor implements HabitGenerator{
 	}
 
     @Override 
-	public void submitTask(String userID,ArrayList<Journey> journeys) {
-       	this.worker.submit(new ComputationUnit(userID, journeys));
+    public void submitTask(String userID, ArrayList<Document> journeys) 
+    {
+           this.worker.submit(new ComputationUnit(userID, journeys));
     }
 
 }
 class ComputationUnit implements Runnable {
     private final String user_id;
     private final ArrayList<Journey> journeys;
-    ComputationUnit(String userID, ArrayList<Journey> journeys)
+    ComputationUnit(String userID, ArrayList<Document> journeys)
     {  
         this.user_id = userID;
-        this.journeys = journeys;
+        this.journeys = new ArrayList<>();
+        for (Document i :journeys)
+            this.journeys.add(Journey.fromDoc(i));
     }
     public void run() 
     {        
-        User user = new User(this.user_id , this.journeys);
+        User user = new User(this.user_id , journeys);
         user.createHabits();
     }
 }
