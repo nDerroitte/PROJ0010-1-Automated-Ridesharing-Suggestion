@@ -12,11 +12,6 @@ import com.mongodb.client.MongoCollection;
 
 public class User
 {
-    //Parameter
-    private static long round_param = 1000*60*15;
-    private static double min_hit_rate = 0.8;
-
-    //field
     public ArrayList<Habits> user_habits;
     private ArrayList<Journey> unused_journeys;
     private String user_id;
@@ -76,7 +71,7 @@ public class User
             {
                 long_array.add(journey_list.get(i).get(j).getFirstPointTime());
             }
-            habits.addAll(getHabits(long_array,i));
+            habits.addAll(getHabits(long_array, journey_list.get(i).get(0), i));
             long_array.clear();
         }
         
@@ -87,7 +82,7 @@ public class User
         }
         users.updateOne(eq("user",this.user_id),set("habit",docs));
     }
-    public ArrayList<Habits> getHabits(ArrayList<Long> array, int journey_id)
+    public ArrayList<Habits> getHabits(ArrayList<Long> array, Journey journey,int journey_id)
     {
         Collections.sort(array);
         ArrayList<Habits> habits = new ArrayList<Habits>();
@@ -102,7 +97,7 @@ public class User
                     continue;
                 }
                 System.out.println("current period is : " + period +  " current offset is: " + array.get(i));
-                Habits cur_habit = new Habits(period,array.get(i),journey_id);
+                Habits cur_habit = new Habits(period,array.get(i), journey, journey_id);
                 if(isRedundant(habits,cur_habit))
                 {
                     System.out.println("HABIT ALREADY FIND !");
@@ -112,7 +107,7 @@ public class User
                 //Only consider the 400 last dates.
                 int max_attempt = 400;
                 int attempt = 0;
-                while((attempt < 3 || cur_habit.getHit()/(float)attempt > min_hit_rate) && (cur_date > array.get(0) && max_attempt > 0))
+                while((attempt < 3 || cur_habit.getHit()/(float)attempt > Constants.MIN_HIT_RATE) && (cur_date > array.get(0) && max_attempt > 0))
                 {
                     if(Collections.binarySearch(array, cur_date) > 0){
                         cur_habit.update(cur_date);
@@ -121,7 +116,7 @@ public class User
                     attempt ++;
                 }
                 cur_habit.update(array.get(array.size()-1));
-                if(cur_habit.getHit() > 3 && cur_habit.getHitRate() > min_hit_rate)
+                if(cur_habit.getHit() > 3 && cur_habit.getHitRate() > Constants.MIN_HIT_RATE)
                 {
                     habits.add(cur_habit);
                     System.out.println("find period of: " + cur_habit.getPeriod() +  " with an offset of " + cur_habit.getHit() + " hit rate:" + cur_habit.getHitRate());

@@ -7,30 +7,29 @@ An habit is considered to be periodic.
 */
 public class Habits
 {
-    //Parameter
-    private static long round_param = 1000*60*15;
-    private static double min_hit_rate = 0.8;
-
     private long period;
     private long offset;
+    private Journey journey;
     private int journey_ID; //identify to which journey correspond the habit.
     private TreeSet<Long> dates; //contain all the date which is in the habit.
     private long last_date; //the last day of the journey_ID, whether it is in the habit.
 
     //create an empty habit
-    public Habits(long period, long offset, int journey_ID)
+    public Habits(long period, long offset, Journey journey, int journey_ID)
     {
         this.period = period;
         this.offset = offset % period;
+        this.journey = journey;
         this.journey_ID  = journey_ID;
         this.dates = new TreeSet<>();
         this.last_date = 0;
     }
     //create an habit
-    public Habits(long period, long offset, int journey_ID,TreeSet<Long> dates,long last_date)
+    public Habits(long period, long offset, Journey journey, int journey_ID, TreeSet<Long> dates,long last_date)
     {
         this.period = period;
         this.offset = offset % period;
+        this.journey = journey;
         this.journey_ID  = journey_ID;
         this.dates = dates;
         this.last_date = last_date;
@@ -108,26 +107,29 @@ public class Habits
         Document doc = new Document();
         doc.put("period",this.period);
         doc.put("offset",this.offset);
+        doc.put("journey",this.journey.toDoc());
         doc.put("journey_ID",this.journey_ID);
         doc.put("dates",this.dates);
         doc.put("last_date",this.last_date);
         return doc;
     }
     //Restore an habit from a document;
-    public static Habits FromDoc(Document doc)
+    public static Habits fromDoc(Document doc)throws ParseException
     {
         long period = (Long) doc.get("period");
         long offset = (Long) doc.get("offset");
+        Jounrey journey = Journey.FromDoc(doc.get("journey"));
         int journey_ID = (Integer) doc.get("journey_ID");
         TreeSet<Long> dates = (TreeSet<Long>)doc.get("dates");
         long last_date = (Long) doc.get("last_date");
         return new Habits(period, offset, journey_ID, dates, last_date);
     }
     //round
+    //Constants.ROUND_PARAM
     private long round(long x){
-        if(x % this.round_param < this.round_param / 2)
-           return (x / this.round_param) * this.round_param;
+        if(x % Constants.ROUND_PARAM < Constants.ROUND_PARAM / 2)
+           return (x / Constants.ROUND_PARAM) * Constants.ROUND_PARAM;
         else
-            return ((x / this.round_param) + 1) * this.round_param;
+            return ((x / Constants.ROUND_PARAM) + 1) * Constants.ROUND_PARAM;
     }
 }
