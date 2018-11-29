@@ -27,7 +27,7 @@ public class Journey
     {
         for(int i = 0; i<this.meeting_point.size();i++)
         {
-            if(other.meeting_point.get(i).getPosition().isSame(this.meeting_point.get(i).getPosition()))
+            if(other.getIthMeetingPoint(i).getPosition().isSame(this.meeting_point.get(i).getPosition()))
                 continue;
             else
                 return false;
