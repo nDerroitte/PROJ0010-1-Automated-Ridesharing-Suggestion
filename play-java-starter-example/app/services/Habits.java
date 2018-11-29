@@ -53,7 +53,7 @@ public class Habits
         if(dates.size() == 0){
             return 0;
         }
-        return (this.last_date - dates.first()) / this.period;
+        return (this.last_date - dates.first()) / this.period + 1;
     }
     //Clue on the reliability of the habit. If hit rate close to 1, the habit is reliable. Always between 0 and 1
     public float getHitRate()
@@ -85,14 +85,11 @@ public class Habits
     //update the habit from the new knowledge bring by new_date.
     public void update(long new_date)
     {
-        if(!inHabit(new_date))
+        if(this.last_date < new_date)
         {
-            if(this.last_date < new_date)
-            {
-                this.last_date = new_date;
-            }
+            this.last_date = new_date;
         }
-        else
+        if(inHabit(new_date))
         {
             this.dates.add(new_date);
             return;

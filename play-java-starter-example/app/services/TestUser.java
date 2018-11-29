@@ -1,16 +1,17 @@
 package services;
 import java.util.*;
+import services.*;
 
 public class TestUser {
     //For debug purpose only
     
     public static void main(String args[]){
-/*         System.out.println("hello");
+        System.out.println("hello");
         long start = new Date().getTime();
         User test = new User();
         ArrayList<Long> dates = new ArrayList<Long>();
         Random noise = new Random();
-        int nb_noise = 500;
+        int nb_noise = 10;
         long bound = nb_noise*100;
         System.out.println(bound/11);
         System.out.println(bound/7);
@@ -18,6 +19,9 @@ public class TestUser {
             dates.add(i);
         }
         for(long i=0; i < bound; i+= bound/7){
+            dates.add(i);
+        }
+        for(long i=0; i < bound; i+= bound/9){
             dates.add(i);
         }
         Iterator<Long> ite = noise.longs(nb_noise,0,bound).iterator();
@@ -30,10 +34,10 @@ public class TestUser {
         while(ite2.hasNext()){
             ite2.next().print();
         }
-        //System.out.println("goodbye");
-        //for (int i=0; i < dates.size()-1;i++){
-        //    System.out.print(dates.get(i) + " ");
-        //}
-        System.out.println("elapsed time in millisecond: " + (new Date().getTime() - start)); */
+        System.out.println("goodbye");
+        for (int i=0; i < dates.size()-1;i++){
+            System.out.print(dates.get(i) + " ");
+        }
+        System.out.println("elapsed time in millisecond: " + (new Date().getTime() - start)); 
     }
 }
