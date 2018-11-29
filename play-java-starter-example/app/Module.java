@@ -7,7 +7,6 @@ import services.Counter;
 import services.MongoInterface;
 import services.MongoDB;
 import services.HabitGenerator;
-import services.PeriodicityCheck;
 import services.ThreadExecutor;
 /**
  * This class is a Guice module that tells Guice how to bind several

@@ -41,6 +41,9 @@ public class StoreData extends Controller {
 		this.hb = habit_generator;
 	}
 
+	// This function is called when a client send a set of journeys to the server.
+	// Each journey is parsed independently, so that this is easier for the client
+	// to handle wifi unavailability, and is stored in the database in a Journey format (cf class).
 	public Result store_data() throws Exception{
 		String[] data = request().body().asText().split("data_splitter");
 		JsonReader reader;
@@ -77,7 +80,7 @@ public class StoreData extends Controller {
 				double lon = Double.parseDouble(_point.getString("long"));
 				Coordinate coord = Constants.CoordinateTransformation(lat,lon);
 				Point current_point = new Point(cal,coord);
-				point_list.add(current_point);			
+				point_list.add(current_point);
 			}
 			Journey current_journey = new Journey(point_list);
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));

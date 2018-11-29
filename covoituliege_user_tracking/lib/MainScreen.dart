@@ -116,6 +116,8 @@ class _MainScreenState extends State<MainScreen> {
 
   _sendPoints() async {
     ConnectivityResult connectivity = await Connectivity().checkConnectivity();
+    /// We try to send the data, if it fails (likely because wifi is not available),
+    /// we wait for the state of the connectivity to change and we retry.
     if (connectivity == ConnectivityResult.wifi &&
         await _serverCommunication.sendPoints(await readFile())) {
       clearFile();

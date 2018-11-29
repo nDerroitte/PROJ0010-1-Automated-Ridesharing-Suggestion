@@ -38,6 +38,9 @@ public class ForgottenPassword extends Controller {
 		this.database = db.get_database();	
 	}
 
+	// This function is called when the server is ask to give a new password.
+	// It sends an email to the address given in argument, if and only if
+	// this email and the username corresponds to an existing user in the database.
 	public Result forgotten_password(String a_user, String a_email){
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();

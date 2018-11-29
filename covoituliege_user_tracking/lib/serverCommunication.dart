@@ -1,4 +1,6 @@
-import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'dart:convert';
+import 'package:flutter/services.dart';
 
 import 'Cst.dart';
 
@@ -7,44 +9,53 @@ import 'Cst.dart';
 /// An httpError is returned in case of Exception or not understood answer.
 
 class ServerCommunication {
+  // TODO the hostname in the URL and in the CN field of the pkcs12 file should be the same, DON'T FORGET to regenerate the
+  // TODO files when releasing on the production server
   String cookie;
 
-  static Future<http.Response> _get(String url) {
-    return http.get(
-      Uri.encodeFull(url),
-      headers: {
-        "Accept": "application/json",
-        "host": "localhost:9000",
-      },
-    ).timeout(
-      Duration(seconds: 5),
-    );
+  static Future<HttpClient> _secureClient() async {
+    SecurityContext context = SecurityContext();
+    final _cert = await rootBundle.load("CACovoit.pem");
+    context.setTrustedCertificatesBytes(
+        _cert.buffer.asUint8List(_cert.offsetInBytes, _cert.lengthInBytes));
+    return HttpClient(context: context);
   }
 
-  Future<http.Response> _post(String url, String body) {
-    return http
-        .post(
-      Uri.encodeFull(url),
-      headers: {
-        "Accept": "application/json",
-        "host": "localhost:9000",
-        "Cookie": cookie,
-      },
-      body: body,
-    )
-        .timeout(
-      Duration(seconds: 5),
-    );
+  static Future<HttpClientResponse> _get(String url) async {
+    HttpClient client = await _secureClient();
+    return client.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
+      request.headers.set(HttpHeaders.hostHeader, "localhost:19001");
+      request.headers.set(HttpHeaders.acceptHeader, "application/json");
+      return request.close();
+    });
+  }
+
+  Future<HttpClientResponse> _post(String url, String body) async {
+    HttpClient client = await _secureClient();
+    return client.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
+      request.headers.set(HttpHeaders.hostHeader, "localhost:19001");
+      request.headers.set(HttpHeaders.acceptHeader, "application/json");
+      request.headers.set(HttpHeaders.cookieHeader, cookie);
+      request.write(body);  //TODO debug this line, it sends an empty body.
+      return request.close();
+    });
+  }
+
+  static Future<String> _responseBody(HttpClientResponse response) async {
+    StringBuffer body = StringBuffer();
+    for (String readUnit in await response.transform(latin1.decoder).toList()) {
+      body.write(readUnit);
+    }
+    return body.toString();
   }
 
   Future<bool> _sendPoints(String jsonData, int tryIndex) async {
     if (tryIndex > 4) {
       return false;
     }
-    http.Response response;
+    HttpClientResponse response;
     try {
-      response = await _post(
-          serverURL + "store_data?", jsonData);
+      response = await _post(serverURL + "store_data?", jsonData);
     } catch (exception) {
       return _sendPoints(jsonData, tryIndex + 1);
     }
@@ -61,18 +72,18 @@ class ServerCommunication {
   }
 
   Future<int> checkConnection(String username, String password) async {
-    http.Response response;
+    HttpClientResponse response;
     try {
       response = await _get(
           serverURL + "sign_in?user=" + username + "&password=" + password);
     } catch (exception) {
+      print(exception);
       return httpError;
     }
-
-    cookie = response.headers["set-cookie"];
+    cookie = response.headers.value("set-cookie");
 
     if (response.statusCode == 200) {
-      switch (response.body) {
+      switch (await _responseBody(response)) {
         case "connection OK":
           return passwordOK;
 
@@ -90,8 +101,9 @@ class ServerCommunication {
     }
   }
 
-  static Future<int> sendSignUp(String username, String password, String email) async {
-    http.Response response;
+  static Future<int> sendSignUp(
+      String username, String password, String email) async {
+    HttpClientResponse response;
     try {
       response = await _get(serverURL +
           "sign_up?user=" +
@@ -105,7 +117,7 @@ class ServerCommunication {
     }
 
     if (response.statusCode == 200) {
-      switch (response.body) {
+      switch (await _responseBody(response)) {
         case "user successfully recorded":
           return signUpOK;
 
@@ -121,17 +133,19 @@ class ServerCommunication {
   }
 
   static Future<int> sendNewPassword(String username, String email) async {
-    http.Response response;
+    HttpClientResponse response;
     try {
-      response = await _get(
-          serverURL + "forgotten_password?user=" + username + "&email=" +
-              email);
+      response = await _get(serverURL +
+          "forgotten_password?user=" +
+          username +
+          "&email=" +
+          email);
     } catch (exception) {
       return httpError;
     }
 
     if (response.statusCode == 200) {
-      switch (response.body) {
+      switch (await _responseBody(response)) {
         case "username OK":
           return forgottenPasswordOK;
 
