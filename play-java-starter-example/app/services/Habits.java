@@ -10,8 +10,6 @@ public class Habits
     private TreeSet<Long> dates; //contain all the date which is in the habit.
     private long last_date; //the last day of this journey, whether it is in the habit.
 
-
-
     public Habits(long period, long offset, int journey_ID)
     {
         this.period = period;
@@ -107,11 +105,11 @@ public class Habits
 
     public static Habits FromDoc(Document doc)
     {
-        long period = doc.get("period");
-        long offset = doc.get("offset");
-        int journey_ID = doc.get("journey_ID");
-        TreeSet<Long> dates = doc.get("dates");
-        long last_date = doc.get("last_date");
+        long period = (Long) doc.get("period");
+        long offset = (Long) doc.get("offset");
+        int journey_ID = (Integer) doc.get("journey_ID");
+        TreeSet<Long> dates = (TreeSet<Long>)doc.get("dates");
+        long last_date = (Long) doc.get("last_date");
         return new Habits(period, offset, journey_ID, dates, last_date);
     }
 }

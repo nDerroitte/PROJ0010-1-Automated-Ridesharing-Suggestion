@@ -14,6 +14,8 @@ import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,26 +45,31 @@ public class ThreadExecutor implements HabitGenerator{
         this.habits = database.getCollection("habits");
 	}
 
-    @Override 
+   @Override 
     public void submitTask(String userID, ArrayList<Document> journeys) 
     {
            this.worker.submit(new ComputationUnit(userID, journeys));
     }
 
 }
-class ComputationUnit implements Runnable {
+class ComputationUnit implements Runnable{
     private final String user_id;
     private final ArrayList<Journey> journeys;
     ComputationUnit(String userID, ArrayList<Document> journeys)
     {  
         this.user_id = userID;
         this.journeys = new ArrayList<>();
-        for (Document i :journeys)
-            this.journeys.add(Journey.fromDoc(i));
+        try{
+            for (Document i :journeys)
+                this.journeys.add(Journey.fromDoc(i));
+        }
+        catch(ParseException e){
+            e.printStackTrace();
+        }
     }
     public void run() 
     {        
-        User user = new User(this.user_id , journeys);
+        User user = new User(this.user_id,journeys);
         user.createHabits();
     }
 }
