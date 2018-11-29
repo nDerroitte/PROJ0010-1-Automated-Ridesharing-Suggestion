@@ -24,12 +24,8 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.Optional;
 import java.util.Calendar;
-import services.MongoInterface;
-import services.HabitGenerator;
-import services.Point;
-import services.Constants;
-import services.Coordinate;
-import services.Journey;
+import services.*;
+
 
 
 

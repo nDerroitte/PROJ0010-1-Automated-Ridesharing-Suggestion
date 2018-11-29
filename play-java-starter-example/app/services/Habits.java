@@ -7,6 +7,10 @@ An habit is considered to be periodic.
 */
 public class Habits
 {
+    //Parameter
+    private static long round_param = 1000*60*15;
+    private static double min_hit_rate = 0.8;
+
     private long period;
     private long offset;
     private int journey_ID; //identify to which journey correspond the habit.
@@ -118,5 +122,12 @@ public class Habits
         TreeSet<Long> dates = (TreeSet<Long>)doc.get("dates");
         long last_date = (Long) doc.get("last_date");
         return new Habits(period, offset, journey_ID, dates, last_date);
+    }
+    //round
+    private long round(long x){
+        if(x % this.round_param < this.round_param / 2)
+           return (x / this.round_param) * this.round_param;
+        else
+            return ((x / this.round_param) + 1) * this.round_param;
     }
 }

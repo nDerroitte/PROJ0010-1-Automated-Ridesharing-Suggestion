@@ -2,18 +2,32 @@ package services;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import org.bson.Document;
+import static com.mongodb.client.model.Filters.*;
+import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Updates.*;
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.client.MongoCollection;
 
 public class User
 {
+    //Parameter
+    private static long round_param = 1000*60*15;
+    private static double min_hit_rate = 0.8;
+
+    //field
     public ArrayList<Habits> user_habits;
     private ArrayList<Journey> unused_journeys;
     private String user_id;
+    private MongoCollection<Document> users;
 
-    public User(String user_id, ArrayList<Journey> journeys)
+    public User(String user_id, ArrayList<Journey> journeys,MongoCollection<Document> DBusers)
     {
         this.user_habits = new ArrayList<>();
         this.unused_journeys = journeys;
         this.user_id = user_id;
+        this.users = DBusers;
     }
     //for test only
     public User(){
@@ -55,19 +69,23 @@ public class User
 
         //Check nouveau + unused
         ArrayList<Long> long_array = new ArrayList<>();
+        ArrayList<Habits> habits = new ArrayList<>();
         for (i =0; i<journey_list.size();i++)
         {
             for(j =0;j<journey_list.get(i).size();j++)
             {
                 long_array.add(journey_list.get(i).get(j).getFirstPointTime());
             }
-            getHabits(long_array,i);
+            habits.addAll(getHabits(long_array,i));
             long_array.clear();
-
         }
-        //TODO : write this.user_habits in DB(mongo)
-        //TODO: Pour ça il faut tranformer les habits en document en utilisant la methode toDoc() que j'ai crée dedans
-        //TODO: Envoie moi un message si c'est pas clair
+        
+        //write result in DB
+        LinkedList<Document> docs = new LinkedList<>();
+        for(Habits habit: habits){
+            docs.add(habit.toDoc());
+        }
+        users.updateOne(eq("user",this.user_id),set("habit",docs));
     }
     public ArrayList<Habits> getHabits(ArrayList<Long> array, int journey_id)
     {
@@ -94,7 +112,6 @@ public class User
                 //Only consider the 400 last dates.
                 int max_attempt = 400;
                 int attempt = 0;
-                double min_hit_rate = 0.8;
                 while((attempt < 3 || cur_habit.getHit()/(float)attempt > min_hit_rate) && (cur_date > array.get(0) && max_attempt > 0))
                 {
                     if(Collections.binarySearch(array, cur_date) > 0){
