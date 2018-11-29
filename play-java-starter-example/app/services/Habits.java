@@ -1,6 +1,8 @@
 package services;
 import java.util.TreeSet;
 import org.bson.Document;
+import services.*;
+import java.text.ParseException;
 
 /*
 An habit is considered to be periodic.
@@ -118,11 +120,11 @@ public class Habits
     {
         long period = (Long) doc.get("period");
         long offset = (Long) doc.get("offset");
-        Jounrey journey = Journey.FromDoc(doc.get("journey"));
+        Journey journey = Journey.fromDoc((Document) doc.get("journey"));
         int journey_ID = (Integer) doc.get("journey_ID");
         TreeSet<Long> dates = (TreeSet<Long>)doc.get("dates");
         long last_date = (Long) doc.get("last_date");
-        return new Habits(period, offset, journey_ID, dates, last_date);
+        return new Habits(period, offset, journey,journey_ID, dates, last_date);
     }
     //round
     //Constants.ROUND_PARAM
