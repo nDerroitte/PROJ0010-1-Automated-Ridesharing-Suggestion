@@ -6,12 +6,15 @@ public class User
 {
     public ArrayList<Habits> user_habits;
     private ArrayList<Journey> unused_journeys;
+    private String user_id;
 
-    public User()
+    public User(String user_id, ArrayList<Journey> journeys)
     {
         this.user_habits = new ArrayList<>();
-        this.unused_journeys = new ArrayList<>();
+        this.unused_journeys = journeys;
+        this.user_id = user_id;
     }
+
     public void addJourney(Journey new_journey)
     {
         unused_journeys.add(new_journey);
@@ -57,7 +60,9 @@ public class User
             long_array.clear();
 
         }
-
+        //TODO : write this.user_habits in DB(mongo)
+        //TODO: Pour ça il faut tranformer les habits en document en utilisant la methode toDoc() que j'ai crée dedans
+        //TODO: Envoie moi un message si c'est pas clair
     }
     public ArrayList<Habits> getHabits(ArrayList<Long> array, int journey_id)
     {
