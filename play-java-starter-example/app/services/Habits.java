@@ -1,15 +1,19 @@
+package services;
 import java.util.TreeSet;
 import org.bson.Document;
 
-
+/*
+An habit is considered to be periodic.
+*/
 public class Habits
 {
     private long period;
     private long offset;
-    private int journey_ID;
+    private int journey_ID; //identify to which journey correspond the habit.
     private TreeSet<Long> dates; //contain all the date which is in the habit.
-    private long last_date; //the last day of this journey, whether it is in the habit.
+    private long last_date; //the last day of the journey_ID, whether it is in the habit.
 
+    //create an empty habit
     public Habits(long period, long offset, int journey_ID)
     {
         this.period = period;
@@ -18,6 +22,7 @@ public class Habits
         this.dates = new TreeSet<>();
         this.last_date = 0;
     }
+    //create an habit
     public Habits(long period, long offset, int journey_ID,TreeSet<Long> dates,long last_date)
     {
         this.period = period;
@@ -26,6 +31,7 @@ public class Habits
         this.dates = dates;
         this.last_date = last_date;
     }
+    //check if a date is in the habit.
     public boolean inHabit(long date)
     {
         return date % this.period == this.offset;
@@ -36,10 +42,12 @@ public class Habits
     public long getOffset(){
         return this.offset;
     }
+    //number of date which is in the habit
     public int getHit()
     {
         return dates.size();
     }
+    //number of date which should be in the habit.
     public long getTotal()
     {
         if(dates.size() == 0){
@@ -47,11 +55,12 @@ public class Habits
         }
         return (this.last_date - dates.first()) / this.period;
     }
+    //Clue on the reliability of the habit. If hit rate close to 1, the habit is reliable. Always between 0 and 1
     public float getHitRate()
     {
         return (float) this.getHit()/ (float) this.getTotal();
     }
-    //return true if x does not aport new information regarding this
+    //return true if x does not bring new information regarding this
     //(Ex: if this.period = 10 and this.offset = 0, x.period = 20 and x.offset = 0, x doesn't bring new information)
     public boolean equivalent(Habits x){
         if(x.getPeriod() % period != 0){
@@ -73,6 +82,7 @@ public class Habits
     public int hashCode(){
         return Long.hashCode(this.offset) % (Integer.MAX_VALUE/2) + Long.hashCode(this.period) % (Integer.MAX_VALUE/2);
     }
+    //update the habit from the new knowledge bring by new_date.
     public void update(long new_date)
     {
         if(!inHabit(new_date))
@@ -91,7 +101,7 @@ public class Habits
     public void print(){
         System.out.println("Period " + this.period +" Journey id "+ this.journey_ID+ " offset " + this.offset + " hit: " + this.getHit() + " total " + this.getTotal());
     }
-
+    //transform habit to document for storage purpose.
     public Document toDoc()
     {
         Document doc = new Document();
@@ -102,7 +112,7 @@ public class Habits
         doc.put("last_date",this.last_date);
         return doc;
     }
-
+    //Restore an habit from a document;
     public static Habits FromDoc(Document doc)
     {
         long period = (Long) doc.get("period");

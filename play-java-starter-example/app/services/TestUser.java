@@ -2,9 +2,10 @@ package services;
 import java.util.*;
 
 public class TestUser {
-
+    //For debug purpose only
+    
     public static void main(String args[]){
-        System.out.println("hello");
+/*         System.out.println("hello");
         long start = new Date().getTime();
         User test = new User();
         ArrayList<Long> dates = new ArrayList<Long>();
@@ -33,6 +34,6 @@ public class TestUser {
         //for (int i=0; i < dates.size()-1;i++){
         //    System.out.print(dates.get(i) + " ");
         //}
-        System.out.println("elapsed time in millisecond: " + (new Date().getTime() - start));
+        System.out.println("elapsed time in millisecond: " + (new Date().getTime() - start)); */
     }
 }
