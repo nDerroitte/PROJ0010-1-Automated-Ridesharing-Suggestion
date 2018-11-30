@@ -97,11 +97,11 @@ public class User
                 if(period <= 0){
                     continue;
                 }
-                System.out.println("current period is : " + period +  " current offset is: " + array.get(i));
+                //System.out.println("current period is : " + period +  " current offset is: " + array.get(i));
                 Habits cur_habit = new Habits(period,array.get(i), journey, journey_id);
                 if(isRedundant(habits,cur_habit))
                 {
-                    System.out.println("HABIT ALREADY FIND !");
+                    //System.out.println("HABIT ALREADY FIND !");
                     continue;
                 }
                 long cur_date = (array.get(array.size()-1) / period) * period + cur_habit.getOffset();
@@ -120,10 +120,10 @@ public class User
                 if(cur_habit.getHit() > 3 && cur_habit.getHitRate() > Constants.MIN_HIT_RATE)
                 {
                     habits.add(cur_habit);
-                    System.out.println("find period of: " + cur_habit.getPeriod() +  " with an offset of " + cur_habit.getHit() + " hit rate:" + cur_habit.getHitRate());
-                    System.out.println("hit : " + cur_habit.getHit() + " total: " + cur_habit.getTotal());
+                    //System.out.println("find period of: " + cur_habit.getPeriod() +  " with an offset of " + cur_habit.getHit() + " hit rate:" + cur_habit.getHitRate());
+                    //System.out.println("hit : " + cur_habit.getHit() + " total: " + cur_habit.getTotal());
                 }
-                System.out.println("hit: " + cur_habit.getHit() + " total " + cur_habit.getTotal());
+                //System.out.println("hit: " + cur_habit.getHit() + " total " + cur_habit.getTotal());
             }
         }
         //this.user_habits.addAll(habits);

@@ -44,6 +44,7 @@ public class StoreData extends Controller {
 	// This function is called when a client send a set of journeys to the server.
 	// Each journey is parsed independently, so that this is easier for the client
 	// to handle wifi unavailability, and is stored in the database in a Journey format (cf class).
+	@BodyParser.Of(BodyParser.TolerantText.class)
 	public Result store_data() throws Exception{
 		String[] data = request().body().asText().split("data_splitter");
 		JsonReader reader;

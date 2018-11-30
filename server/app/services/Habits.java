@@ -100,9 +100,7 @@ public class Habits
             return;
         }
     }
-    public void print(){
-        System.out.println("Period " + this.period +" Journey id "+ this.journey_ID+ " offset " + this.offset + " hit: " + this.getHit() + " total " + this.getTotal());
-    }
+    
     //transform habit to document for storage purpose.
     public Document toDoc()
     {
