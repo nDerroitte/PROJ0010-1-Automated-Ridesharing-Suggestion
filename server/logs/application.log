@@ -27,3 +27,4 @@
     filters.ExampleFilter
 
 2018-11-30 13:02:42,112 [INFO] from play.api.Play in play-dev-mode-akka.actor.default-dispatcher-9 - Application started (Dev)
+2018-11-30 23:06:01,393 [WARN] from org.mongodb.driver.connection in application-akka.actor.default-dispatcher-6 - Got socket exception on connection [connectionId{localValue:13, serverValue:85472}] to covoituliege-shard-00-01-kisp4.gcp.mongodb.net:27017. All connections to covoituliege-shard-00-01-kisp4.gcp.mongodb.net:27017 will be closed.
