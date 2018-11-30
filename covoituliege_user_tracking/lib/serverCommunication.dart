@@ -36,7 +36,9 @@ class ServerCommunication {
       request.headers.set(HttpHeaders.hostHeader, "localhost:19001");
       request.headers.set(HttpHeaders.acceptHeader, "application/json");
       request.headers.set(HttpHeaders.cookieHeader, cookie);
-      request.write(body);  //TODO debug this line, it sends an empty body.
+      List<int> bodyBytes = latin1.encode(body);
+      request.headers.set(HttpHeaders.contentLengthHeader, bodyBytes.length.toString());
+      request.add(bodyBytes);  //TODO debug this line, it sends an empty body.
       return request.close();
     });
   }

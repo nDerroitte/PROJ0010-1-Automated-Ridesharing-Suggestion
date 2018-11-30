@@ -219,3 +219,5 @@ reload
 run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
 reload
 run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+compile
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
