@@ -32,8 +32,8 @@ class _MainScreenState extends State<MainScreen> {
   Text _data;
   Stream<ConnectivityResult> _onConnectivityChanged;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  Stream<LocationData> _onLocationChanged;
-  StreamSubscription<LocationData> _locationSubscription;
+  Stream<Map<String, double>> _onLocationChanged;
+  StreamSubscription<Map<String, double>> _locationSubscription;
   int _nbSameLocationPoints;
   bool _waitingForWifi;
   ServerCommunication _serverCommunication;
@@ -41,7 +41,7 @@ class _MainScreenState extends State<MainScreen> {
   /// This function gets the current user's location and adds it in a buffer,
   /// in an easy-to-parse way.
   Future<void> _newPos() async {
-    LocationData currentLocation;
+    Map<String, double> currentLocation;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       currentLocation = await Location().getLocation();
@@ -49,8 +49,8 @@ class _MainScreenState extends State<MainScreen> {
       /// We only skip one point, it doesn't hurt as long as this is rare
       return;
     }
-    double latitude = currentLocation.latitude;
-    double longitude = currentLocation.longitude;
+    double latitude = currentLocation['latitude'];
+    double longitude = currentLocation['longitude'];
     String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
 
     Map<String, dynamic> lastPos = _user.getLastPos();
@@ -85,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
   /// It is called when the user taps on the start button.
   void _start() {
     _locationSubscription =
-        _onLocationChanged.listen((LocationData result) {
+        _onLocationChanged.listen((Map<String, double> result) {
       _nbSameLocationPoints = 0;
       _locationSubscription.cancel();
       _capturePos(_capturePosIndex);

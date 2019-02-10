@@ -16,7 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider:
-  location:
+  location: '^1.4.0'
   http:
   geolocator:
   connectivity:
