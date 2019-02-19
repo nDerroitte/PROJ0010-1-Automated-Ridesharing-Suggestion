@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:/mnt/d/Documents/PI/server/conf/routes
-// @DATE:Fri Nov 30 11:51:18 GMT 2018
+// @SOURCE:C:/Users/cedri_000/PI/server/conf/routes
+// @DATE:Tue Feb 19 12:48:04 CET 2019
 
 package controllers;
 

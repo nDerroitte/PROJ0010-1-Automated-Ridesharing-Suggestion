@@ -22,6 +22,10 @@ libraryDependencies ++= Seq(
     "org.mongodb" % "mongodb-driver" % "3.8.2"
 )
 
+// Java commons math for matrix and FFT
+libraryDependencies += "org.apache.commons" % "commons-math3" % "3.6.1"
+
+
 // JSon parsing
 libraryDependencies += "org.glassfish" % "javax.json" % "1.0.4"
 

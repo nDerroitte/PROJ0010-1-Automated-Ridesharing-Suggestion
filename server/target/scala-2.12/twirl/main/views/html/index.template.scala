@@ -33,7 +33,8 @@ object index extends _root_.play.twirl.api.BaseScalaTemplate[play.twirl.api.Html
       {
 
 
-Seq[Any](format.raw/*6.1*/("""
+Seq[Any](format.raw/*5.19*/("""
+
 """),format.raw/*11.4*/("""
 """),_display_(/*12.2*/main("Welcome to Play")/*12.25*/ {_display_(Seq[Any](format.raw/*12.27*/("""
 
@@ -57,11 +58,11 @@ Seq[Any](format.raw/*6.1*/("""
 
               /*
                   -- GENERATED --
-                  DATE: Fri Nov 30 11:51:18 GMT 2018
-                  SOURCE: /mnt/d/Documents/PI/server/app/views/index.scala.html
-                  HASH: 9040cdc6391df1f5c9d9a05a763073d6fd21d0f1
-                  MATRIX: 1037->95|1148->113|1176->308|1204->310|1236->333|1276->335|1309->464|1341->470|1394->502|1427->505
-                  LINES: 31->5|36->6|37->11|38->12|38->12|38->12|40->17|41->18|41->18|43->20
+                  DATE: Tue Feb 19 12:48:06 CET 2019
+                  SOURCE: C:/Users/cedri_000/PI/server/app/views/index.scala.html
+                  HASH: 3098313121bec93983db07120aaaa6ce20180c92
+                  MATRIX: 1040->99|1152->116|1183->318|1212->321|1244->344|1284->346|1319->480|1352->487|1405->519|1440->524
+                  LINES: 31->5|36->5|38->11|39->12|39->12|39->12|41->17|42->18|42->18|44->20
                   -- GENERATED --
               */
           
