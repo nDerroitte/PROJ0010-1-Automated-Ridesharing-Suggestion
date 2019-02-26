@@ -1,6 +1,6 @@
 // @GENERATOR:play-routes-compiler
-// @SOURCE:C:/Users/cedri_000/PI/server/conf/routes
-// @DATE:Tue Feb 19 12:48:04 CET 2019
+// @SOURCE:/home/minh/PI/server/conf/routes
+// @DATE:Mon Feb 25 18:11:39 CET 2019
 
 import play.api.routing.JavaScriptReverseRoute
 

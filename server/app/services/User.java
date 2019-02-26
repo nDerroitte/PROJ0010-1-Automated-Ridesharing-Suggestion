@@ -10,6 +10,8 @@ import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.client.MongoCollection;
 import services.*;
+import ca.pfv.spmf.algorithms.timeseries.autocorrelation.*;
+
 
 public class User
 {

@@ -1,0 +1,22 @@
+# Convert a file to UTF-8 encoding
+# Usage: convertToUtf8 path/to/file
+
+
+function convertToUtf8 {
+    FILE="$1"
+    CHARSET=$(file -i "$FILE" | grep -o "charset=.*" | sed "s/charset=//")
+    # No need to convert us-ascii, since it's a subset of utf-8:
+    if [ "$CHARSET" != "utf-8" ] && [ "$CHARSET" != "us-ascii" ]; then
+        echo "$FILE is not UTF-8 encoded (found $CHARSET)"
+        if [ "$CHARSET" = "unknown-8bit" ] || [ "$CHARSET" = "binary" ]; then
+            CHARSET=$(chardet "$FILE" | sed "s/.*:\s\(.*\)\s(.*/\1/")
+        fi
+        if [ "$CHARSET" != "utf-8" ] && [ "$CHARSET" != "us-ascii" ]; then
+            echo "Convert $CHARSET to UTF-8"
+            iconv -f "$CHARSET" -t utf-8 "$FILE" > "$FILE.tmp"
+            mv -f "$FILE.tmp" "$FILE"
+        fi
+    else 
+        echo "$FILE is properly encoded"
+    fi
+}
