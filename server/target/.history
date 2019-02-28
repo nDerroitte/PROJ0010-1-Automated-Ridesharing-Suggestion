@@ -227,3 +227,13 @@ exit
 compile
 find --help
 compile
+run
+compile
+testOnly TestComputeHabit.testSignal
+comile
+compile
+testOnly TestComputeHabit.testSignal
+testOnly TestComputeHabit
+testOnly TestComputeHabit.testSignal
+run server/app/services/TestComputeHabit
+compile

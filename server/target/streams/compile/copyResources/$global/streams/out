@@ -1,9 +1,9 @@
 [0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/application.conf,/mnt/d/Documents/PI/server/target/scala-2.12/classes/application.conf)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/keystore.pkcs12,/mnt/d/Documents/PI/server/target/scala-2.12/classes/keystore.pkcs12)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/logback.xml,/mnt/d/Documents/PI/server/target/scala-2.12/classes/logback.xml)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/routes,/mnt/d/Documents/PI/server/target/scala-2.12/classes/routes)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/server.crt,/mnt/d/Documents/PI/server/target/scala-2.12/classes/server.crt)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/server.csr,/mnt/d/Documents/PI/server/target/scala-2.12/classes/server.csr)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/server.key,/mnt/d/Documents/PI/server/target/scala-2.12/classes/server.key)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/mnt/d/Documents/PI/server/conf/server.pem,/mnt/d/Documents/PI/server/target/scala-2.12/classes/server.pem)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/server.csr,/home/minh/PI/server/target/scala-2.12/classes/server.csr)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/logback.xml,/home/minh/PI/server/target/scala-2.12/classes/logback.xml)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/routes,/home/minh/PI/server/target/scala-2.12/classes/routes)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/server.key,/home/minh/PI/server/target/scala-2.12/classes/server.key)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/application.conf,/home/minh/PI/server/target/scala-2.12/classes/application.conf)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/server.crt,/home/minh/PI/server/target/scala-2.12/classes/server.crt)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/server.pem,/home/minh/PI/server/target/scala-2.12/classes/server.pem)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	(/home/minh/PI/server/conf/keystore.pkcs12,/home/minh/PI/server/target/scala-2.12/classes/keystore.pkcs12)[0m
