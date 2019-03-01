@@ -4,6 +4,7 @@
 <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <key>NSLocationAlwaysUsageDescription</key>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

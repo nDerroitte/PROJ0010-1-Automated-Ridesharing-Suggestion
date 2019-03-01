@@ -15,11 +15,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: #'^0.4.1'
-  location: '^1.4.0'
+  path_provider: '^0.4.1'
   http:
-  geolocator:
-  connectivity: #'^0.3.2'
+  geolocator: '^2.1.1'
+  connectivity: '^0.3.2'
   simple_permissions:
   intl:
 
