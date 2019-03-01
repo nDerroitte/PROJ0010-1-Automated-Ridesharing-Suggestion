@@ -84,7 +84,9 @@ class _MainScreenState extends State<MainScreen> {
     if (_locationSubscription == null) {
       _locationSubscription = _onLocationChanged.listen((Position position) {
         _nbSameLocationPoints = 0;
-        _locationSubscription.pause();
+        if (!_locationSubscription.isPaused) {
+          _locationSubscription.pause();
+        }
         _capturePos(_capturePosIndex);
       });
     } else {
@@ -101,7 +103,10 @@ class _MainScreenState extends State<MainScreen> {
   /// and updates the button so that it becomes a start button.
   _stop() async {
     _capturePosIndex += 1;
-    _locationSubscription.pause();
+    /// Can happen if the stop button is pressed before the location has changed at least once
+    if (!_locationSubscription.isPaused) {
+      _locationSubscription.pause();
+    }
     String jSon = json.encode(_user);
     await writeInFile(jSon);
     _user.clear();
