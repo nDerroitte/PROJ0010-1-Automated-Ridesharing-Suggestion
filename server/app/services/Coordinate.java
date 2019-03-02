@@ -1,4 +1,4 @@
-
+package services;
 public final class Coordinate
 {
     private final long x;
