@@ -1,4 +1,3 @@
-package services;
 
 public final class Coordinate
 {
@@ -17,6 +16,7 @@ public final class Coordinate
     public long getY() {
         return y;
     }
+
     public boolean isSame(Coordinate other)
     {
         long other_x = other.getX();

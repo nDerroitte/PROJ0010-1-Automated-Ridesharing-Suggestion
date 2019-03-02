@@ -1,35 +1,34 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
 
-public class main
-{
-    // For debug purpose only, do not consider it
-    public static void main(String[] args)
+public class main {
+    public static void main(String [] args)
     {
-        // System.out.println("hello");
-        // User test = new User();
-        // ArrayList<Long> dates = new ArrayList<Long>();
-        // Random noise = new Random();
-        // int nb_noise = 8;
-        // long bound = 1000;
-        // System.out.println(bound/11);
-        // System.out.println(bound/7);
-        // for(long i=0; i < bound;i+=bound/11){
-        //     dates.add(i);
-        // }
-        // for(long i=0; i < bound; i+= bound/7){
-        //     dates.add(i);
-        // }
-        // Iterator<Long> ite = noise.longs(nb_noise,0,bound).iterator();
-        // while(ite.hasNext()){
-        //     dates.add(ite.next());
-        // }
+        Calendar cal = Calendar.getInstance();
 
-        // ArrayList<Habits> habit = test.getHabits(dates,9);
-        // Iterator<Habits> ite2 = habit.iterator();
-        // while(ite2.hasNext()){
-        //     ite2.next().print();
-        // }
-        // System.out.println("goodbye");
+        cal.setTimeInMillis(System.currentTimeMillis());
+        System.out.println(cal.getTime());
+
+        Calendar cal2 = Calendar.getInstance();
+        cal2.set(2019, 1,18,12,29,50);
+
+        Point p = new Point(cal, new Coordinate(55, 5));
+        ArrayList<Point> m_p = new ArrayList<>();
+        m_p.add(p);
+        Journey j = new Journey(m_p);
+
+        Point p2 = new Point(cal2, new Coordinate(55, 5));
+        ArrayList<Point> m_p2 = new ArrayList<>();
+        m_p2.add(p2);
+        Journey j2 = new Journey(m_p2);
+
+        ArrayList<Journey> u_j = new ArrayList<>();
+        u_j.add(j);
+        u_j.add(j2);
+        User u = new User("0", u_j);
+        u.createHabits();
+
+        u.printHabits();
 
     }
 }
