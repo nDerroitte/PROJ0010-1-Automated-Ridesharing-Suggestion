@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestComputeHabit",
+            "request": "launch",
+            "mainClass": "services.TestComputeHabit",
+            "projectName": "app_8fafff53"
+        }
+    ]
+}

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
 import 'Cst.dart';
@@ -25,20 +24,21 @@ class _LoginPageState extends State<LoginPage> {
   List<Widget> _listViewContent;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TapGestureRecognizer _forgottenPasswordRecognizer;
-  TapGestureRecognizer _signUpRecognizer;
   ServerCommunication _serverCommunication;
 
   /// Ask the server to check the username-password pair, and push the tracking screen if yes.
   /// If the connection fails, the cause is given to the user.
   _connection() async {
-    int connectionResult = await _serverCommunication.checkConnection(_usernameController.text, _passwordController.text);
+    //int connectionResult = await _serverCommunication.checkConnection(
+    //    _usernameController.text, _passwordController.text);
+    int connectionResult = passwordOK; //TODO delete this, this is only for easier testing
     setState(() {
       if (connectionResult == passwordOK) {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen(UserInfo(_usernameController.text), _serverCommunication)),
+              builder: (context) => MainScreen(
+                  UserInfo(_usernameController.text), _serverCommunication)),
         );
       } else {
         String errorExplanation;
@@ -83,21 +83,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  /// TapGestureRecognizer don't dispose themselves automatically.
-  @override
-  void dispose() {
-    _forgottenPasswordRecognizer.dispose();
-    _signUpRecognizer.dispose();
-    super.dispose();
-  }
-
   @override
   void initState() {
     super.initState();
-    _forgottenPasswordRecognizer = TapGestureRecognizer()
-      ..onTap = _forgottenPassword;
-    _signUpRecognizer = TapGestureRecognizer()..onTap = _signUp;
-
     /// This variable holds the content of the screen. It's useful in the case we want to add a text
     /// at the bottom (that occurs in case of connection error), it avoids rebuilding the main content each time.
     _baseListViewContent = <Widget>[
@@ -122,26 +110,22 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: _connection,
         ),
       ),
-      Center(
-        child: RichText(
-          text: TextSpan(
-            text: "Mot de passe oublié?",
-            style: underlinedStyle,
-            recognizer: _forgottenPasswordRecognizer,
-            children: <TextSpan>[
-              TextSpan(
-                text: "\n\n",
-                style: textStyle,
-              ),
-              TextSpan(
-                text: "S'inscrire",
-                style: underlinedStyle,
-                recognizer: _signUpRecognizer,
-              ),
-            ],
-          ),
+      FlatButton(
+        onPressed: _forgottenPassword,
+        color: Colors.white,
+        child: Text(
+          "Mot de passe oublié?",
+          style: textStyle,
         ),
-      )
+      ),
+      FlatButton(
+        onPressed: _signUp,
+        color: Colors.white,
+        child: Text(
+          "S'inscrire",
+          style: textStyle,
+        ),
+      ),
     ];
 
     _listViewContent = _baseListViewContent;

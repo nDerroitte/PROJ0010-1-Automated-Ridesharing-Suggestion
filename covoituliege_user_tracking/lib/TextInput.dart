@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'Cst.dart';
 
 /// This class represents a little text followed by a TextInput.
@@ -54,6 +55,9 @@ class TextInput extends StatelessWidget {
                   keyboardType: type,
                   style: textStyle,
                   controller: controller,
+                  inputFormatters: <TextInputFormatter> [
+                    BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
+                  ] ,
                 ),
               ),
             ),

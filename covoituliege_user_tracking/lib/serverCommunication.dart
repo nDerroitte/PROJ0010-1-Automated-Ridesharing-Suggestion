@@ -36,7 +36,9 @@ class ServerCommunication {
       request.headers.set(HttpHeaders.hostHeader, "localhost:19001");
       request.headers.set(HttpHeaders.acceptHeader, "application/json");
       request.headers.set(HttpHeaders.cookieHeader, cookie);
-      request.write(body);  //TODO debug this line, it sends an empty body.
+      List<int> bodyBytes = latin1.encode(body);
+      request.headers.set(HttpHeaders.contentLengthHeader, bodyBytes.length.toString());
+      request.add(bodyBytes);
       return request.close();
     });
   }
@@ -57,6 +59,7 @@ class ServerCommunication {
     try {
       response = await _post(serverURL + "store_data?", jsonData);
     } catch (exception) {
+      print(exception);
       return _sendPoints(jsonData, tryIndex + 1);
     }
 
@@ -77,7 +80,6 @@ class ServerCommunication {
       response = await _get(
           serverURL + "sign_in?user=" + username + "&password=" + password);
     } catch (exception) {
-      print(exception);
       return httpError;
     }
     cookie = response.headers.value("set-cookie");

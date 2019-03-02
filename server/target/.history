@@ -1,0 +1,239 @@
+compile
+sudo compile
+compile
+compilecompile
+compile
+ps
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+comile
+compile
+run
+exit
+evicted
+run
+compile
+run
+/start -Dhttps.port=9443
+./start -Dhttps.port=9443
+compile
+run
+compile
+run
+./start -Dhttps.port=9443
+start -Dhttps.port=9443
+compile
+./start -Dhttps.port=9443
+start -Dhttps.port=9443
+runProd  -Dhttps.port=9443
+run  -Dhttps.port=9443
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+exit
+compile
+run
+compile
+playVersion
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+cd 
+exit
+compile
+run
+compile
+run
+compile
+run
+compile
+reload
+compile
+evicted
+compile
+reload
+compile
+reload
+compile
+reload
+compile
+evicted
+compile
+evicted
+compile
+reload
+compile
+reload
+compile
+reload
+compile
+reload
+compile
+reload
+compile
+run
+compile
+run
+reload
+run
+./start -Dhttps.port=9000
+start -Dhttps.port=9000
+runProd -Dhttps.port=9000
+runProd -Dhttps.port=9000 -Dhttp.port=disabled
+ls
+kill
+run -Dhttps.port=9000 Dhttp.port=disabled
+run -Dhttps.port=9001 Dhttp.port=9000
+run -Dhttps.port=9001
+compile
+compile -Xlint:unchecked
+ls
+compile --Xlint:unchecked
+compile--Xlint:unchecked
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+compile
+run
+run -Dhttps.port=9001
+reload
+run
+run -Dhttps.port=9001
+run
+run -Dhttps.port=9001
+reload
+run -Dhttps.port=9001
+run -Dhttps.port=9443
+run -Dhttps.port=9001
+reload
+run -Dhttps.port=9001
+reload
+run -Dhttps.port=9001
+reload
+run -Dhttps.port=9001
+runprod -Dhttps.port=9001
+runProd -Dhttps.port=9001
+run -Dhttps.port=9001 -Dhttps.keyStore=/mnt/d/Documents/PI/play-java-starter-example/conf/CACovoit.pem
+run -Dhttps.port=9001 -Dhttps.keyStore="/mnt/d/Documents/PI/play-java-starter-example/conf/CACovoit.pem"
+runProd -Dhttps.port=9001
+run -Dhttps.port=9001 -Dhttps.keyStore="/mnt/d/Documents/PI/play-java-starter-example/conf/CACovoit.pem"
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.keystore
+reload
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.keystore
+runProd -Dhttps.port=9001
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.keystore
+ps
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.keystore
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem
+reload
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem
+run -Dhttps.port=9001 -Dhttps.keyStore.path=conf/CACovoit.pem
+run -Dhttps.port=9001 -Dhttps.keyStore.path="conf/CACovoit.pem"
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem -Dhttps.keyStoreType=pem
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem -Dhttps.keyStoreType=PEM
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem -Dhttps.keyStoreType=keystore
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem -Dhttps.keyStoreType=jks
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/CACovoit.pem -Dhttps.keyStoreType=pkcs12
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/keyStoreCovoit.pkcs12 -Dhttps.keyStoreType=pkcs12
+openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/keyStoreCovoit.pkcs12 -Dhttps.keyStoreType=pkcs12
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/keystoreCovoit.pkcs12
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/keystoreCovoit.pkcs12 -Dhttps.keyStoreType=pkcs12
+run -Dhttps.port=9001 -Dhttps.keyStore=conf/keystoreCovoit.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystoreCovoit.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+reload
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+reload
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+reload
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+reload
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+compile
+run -Dhttps.port=19001 -Dhttps.keyStore=conf/keystore.pkcs12 -Dhttps.keyStoreType=pkcs12 -Dhttps.keyStorePassword=9dh4gkd8
+compile
+java -version
+exit
+compile
+find --help
+compile
+run
+compile
+testOnly TestComputeHabit.testSignal
+comile
+compile
+testOnly TestComputeHabit.testSignal
+testOnly TestComputeHabit
+testOnly TestComputeHabit.testSignal
+run server/app/services/TestComputeHabit
+compile

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -18,7 +17,9 @@ import 'serverCommunication.dart';
 class MainScreen extends StatefulWidget {
   final UserInfo user;
   final ServerCommunication serverCommunication;
+
   MainScreen(this.user, this.serverCommunication);
+
   @override
   _MainScreenState createState() => new _MainScreenState();
 }
@@ -32,25 +33,21 @@ class _MainScreenState extends State<MainScreen> {
   Text _data;
   Stream<ConnectivityResult> _onConnectivityChanged;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  Stream<Map<String, double>> _onLocationChanged;
-  StreamSubscription<Map<String, double>> _locationSubscription;
+  Stream<Position> _onLocationChanged;
+  StreamSubscription<Position> _locationSubscription;
   int _nbSameLocationPoints;
   bool _waitingForWifi;
   ServerCommunication _serverCommunication;
+  final int _capturePosID = 0;
 
   /// This function gets the current user's location and adds it in a buffer,
   /// in an easy-to-parse way.
   Future<void> _newPos() async {
-    Map<String, double> currentLocation = <String, double>{};
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      currentLocation = await Location().getLocation();
-    } on PlatformException {
-      /// We only skip one point, it doesn't hurt as long as this is rare
-      return;
-    }
-    double latitude = currentLocation['latitude'];
-    double longitude = currentLocation['longitude'];
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    double latitude = position.latitude;
+    double longitude = position.longitude;
+
     String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
 
     Map<String, dynamic> lastPos = _user.getLastPos();
@@ -83,13 +80,18 @@ class _MainScreenState extends State<MainScreen> {
   /// This function clear the buffer and starts a new capturePos process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
-  void _start() {
-    _locationSubscription =
-        _onLocationChanged.listen((Map<String, double> result) {
-      _nbSameLocationPoints = 0;
-      _locationSubscription.cancel();
-      _capturePos(_capturePosIndex);
-    });
+  void _start() async {
+    if (_locationSubscription == null) {
+      _locationSubscription = _onLocationChanged.listen((Position position) {
+        _nbSameLocationPoints = 0;
+        if (!_locationSubscription.isPaused) {
+          _locationSubscription.pause();
+        }
+        _capturePos(_capturePosIndex);
+      });
+    } else {
+      _locationSubscription.resume();
+    }
     setState(() {
       _pressedOnOff = _stop;
       _onOffIcon = Icons.stop;
@@ -101,13 +103,17 @@ class _MainScreenState extends State<MainScreen> {
   /// and updates the button so that it becomes a start button.
   _stop() async {
     _capturePosIndex += 1;
-    _locationSubscription.cancel();
+    /// Can happen if the stop button is pressed before the location has changed at least once
+    if (!_locationSubscription.isPaused) {
+      _locationSubscription.pause();
+    }
     String jSon = json.encode(_user);
     await writeInFile(jSon);
-    if (!_waitingForWifi) {
+    _user.clear();
+    /*if (!_waitingForWifi) {
       _waitingForWifi = true;
       _sendPoints();
-    }
+    }*/
     setState(() {
       _pressedOnOff = _start;
       _onOffIcon = Icons.play_arrow;
@@ -116,6 +122,7 @@ class _MainScreenState extends State<MainScreen> {
 
   _sendPoints() async {
     ConnectivityResult connectivity = await Connectivity().checkConnectivity();
+
     /// We try to send the data, if it fails (likely because wifi is not available),
     /// we wait for the state of the connectivity to change and we retry.
     if (connectivity == ConnectivityResult.wifi &&
@@ -165,8 +172,10 @@ class _MainScreenState extends State<MainScreen> {
       style: textStyle,
     );
     _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
-    _onLocationChanged = Location()
-        .onLocationChanged(); //TODO check bug callback called every second
+    _onLocationChanged = Geolocator()
+        .getPositionStream(LocationOptions(
+            distanceFilter: 1000, accuracy: LocationAccuracy.high))
+        .skip(1);
     _waitingForWifi = false;
     _serverCommunication = widget.serverCommunication;
   }

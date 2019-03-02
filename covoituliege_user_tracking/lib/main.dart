@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 
-void main() => runApp(new UserTracking());
+void main() async {
+  runApp(new UserTracking());
+}
 
 class UserTracking extends StatelessWidget {
   @override

@@ -60,4 +60,8 @@ class UserInfo {
   }
 
   Map<String, dynamic> toJson() => {'UserId': _userId, 'Points': _points};
+
+  void clear() {
+    _points = <_Point>[];
+  }
 }
