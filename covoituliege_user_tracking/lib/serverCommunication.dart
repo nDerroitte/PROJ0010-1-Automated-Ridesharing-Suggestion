@@ -9,13 +9,11 @@ import 'Cst.dart';
 /// An httpError is returned in case of Exception or not understood answer.
 
 class ServerCommunication {
-  // TODO the hostname in the URL and in the CN field of the pkcs12 file should be the same, DON'T FORGET to regenerate the
-  // TODO files when releasing on the production server
   String cookie;
 
   static Future<HttpClient> _secureClient() async {
     SecurityContext context = SecurityContext();
-    final _cert = await rootBundle.load("CACovoit.pem");
+    final _cert = await rootBundle.load("spem2.pem");
     context.setTrustedCertificatesBytes(
         _cert.buffer.asUint8List(_cert.offsetInBytes, _cert.lengthInBytes));
     return HttpClient(context: context);
@@ -24,7 +22,7 @@ class ServerCommunication {
   static Future<HttpClientResponse> _get(String url) async {
     HttpClient client = await _secureClient();
     return client.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
-      request.headers.set(HttpHeaders.hostHeader, "localhost:19001");
+      request.headers.set(HttpHeaders.hostHeader, "spem2.montefiore.ulg.ac.be:443");
       request.headers.set(HttpHeaders.acceptHeader, "application/json");
       return request.close();
     });
@@ -33,7 +31,7 @@ class ServerCommunication {
   Future<HttpClientResponse> _post(String url, String body) async {
     HttpClient client = await _secureClient();
     return client.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
-      request.headers.set(HttpHeaders.hostHeader, "localhost:19001");
+      request.headers.set(HttpHeaders.hostHeader, "spem2.montefiore.ulg.ac.be:443");
       request.headers.set(HttpHeaders.acceptHeader, "application/json");
       request.headers.set(HttpHeaders.cookieHeader, cookie);
       List<int> bodyBytes = latin1.encode(body);

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:intl/intl.dart';
@@ -38,7 +37,6 @@ class _MainScreenState extends State<MainScreen> {
   int _nbSameLocationPoints;
   bool _waitingForWifi;
   ServerCommunication _serverCommunication;
-  final int _capturePosID = 0;
 
   /// This function gets the current user's location and adds it in a buffer,
   /// in an easy-to-parse way.
@@ -110,10 +108,10 @@ class _MainScreenState extends State<MainScreen> {
     String jSon = json.encode(_user);
     await writeInFile(jSon);
     _user.clear();
-    /*if (!_waitingForWifi) {
+    if (!_waitingForWifi) {
       _waitingForWifi = true;
       _sendPoints();
-    }*/
+    }
     setState(() {
       _pressedOnOff = _start;
       _onOffIcon = Icons.play_arrow;

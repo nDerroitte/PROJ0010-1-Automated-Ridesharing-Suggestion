@@ -1,4 +1,0 @@
-[0m[[0m[31merror[0m] [0m[0m/home/minh/PI/server/test/TestComputeHabit.java:19:1: cannot find symbol[0m
-[0m[[0m[31merror[0m] [0m[0m  symbol:   method asserThat(boolean)[0m
-[0m[[0m[31merror[0m] [0m[0m  location: class services.TestComputeHabit[0m
-[0m[[0m[31merror[0m] [0m[0m        return asserThat(Arrays.equals(result,c.getSignal()));[0m

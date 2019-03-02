@@ -28,11 +28,11 @@ import services.MongoInterface;
 @Singleton
 public class SignIn extends Controller {
 	
-	 private final MongoDatabase database ;
+	private final MongoDatabase database;
 
 	@Inject
 	public SignIn  (MongoInterface db){
-		this.database = db.get_database();	
+		this.database = db.get_database();
 	}
 
 	public Result sign_in(String a_user, String a_password) {

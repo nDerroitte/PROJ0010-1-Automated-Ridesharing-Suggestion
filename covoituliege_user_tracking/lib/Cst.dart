@@ -13,7 +13,7 @@ const smallWarningStyle = TextStyle(fontSize: _smallSize, color: Colors.red);
 const confirmationStyle = TextStyle(fontSize: _fontSize, color: Colors.lightGreenAccent);
 
 
-const serverURL = "https://10.0.2.2:19001/";
+const serverURL = "https://spem2.montefiore.ulg.ac.be/";
 const serverError = 'Erreur serveur, veuillez réessayer. Si le problème persiste, merci de contacter le service technique.';
 
 const httpError = -1;
