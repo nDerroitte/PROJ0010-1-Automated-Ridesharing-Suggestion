@@ -1,9 +1,4 @@
-package services;
 
-import org.bson.Document;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Point
@@ -25,9 +20,8 @@ public class Point
         return position;
     }
 
-    public long getTimeInMs() {return time.getTimeInMillis();}
 
-    public Document toDoc()
+    /*public Document toDoc()
     {
         Document doc = new Document();
 
@@ -53,6 +47,6 @@ public class Point
 
         return new Point(time,position);
 
-    }
+    }*/
 }
 

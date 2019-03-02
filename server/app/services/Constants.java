@@ -1,5 +1,3 @@
-package services;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,8 +12,8 @@ public final class Constants
 
     public static final double DECIMALS_ROUNDING_POSITION = 4;
     public static final int COORDINATE_ERROR_ACCEPTED =5;
-    public static long ROUND_PARAM = 60*1000*15;
-    public static double MIN_HIT_RATE = 0.8;
+
+    public static final int MIN_DIFF_SAME_JOURNEY = 30;
 
     public static  Calendar stringToCalendar(String str_date) throws ParseException
     {
