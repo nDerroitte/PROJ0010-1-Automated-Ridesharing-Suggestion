@@ -1,5 +1,9 @@
 package services;
 import java.util.Calendar;
+import java.util.ArrayList;
+import org.bson.Document;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class Point
 {
@@ -21,7 +25,7 @@ public class Point
     }
 
 
-    /*public Document toDoc()
+    public Document toDoc()
     {
         Document doc = new Document();
 
@@ -47,6 +51,6 @@ public class Point
 
         return new Point(time,position);
 
-    }*/
+    }
 }
 

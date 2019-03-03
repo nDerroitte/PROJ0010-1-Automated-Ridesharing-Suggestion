@@ -14,25 +14,25 @@ public class Habits
     public double spread;
     public double reliability;
  
-    /* transform habit to document for storage purpose.
+    //transform habit to document for storage purpose.
     public Document toDoc()
     {
         Document doc = new Document();
         doc.put("period",this.period);
         doc.put("offset",this.offset);
-        doc.put("spread",this.journey.toDoc());
-        doc.put("reliability",this.journey_ID);
+        doc.put("spread",this.spread);
+        doc.put("reliability",this.reliability);
         return doc;
     }
     //Restore an habit from a document;
     public static Habits fromDoc(Document doc)throws ParseException
     {
-        Habits h = new Habits();
+    Habits h = new Habits();
 	h.period = (Long) doc.get("period");
 	h.offset = (Long) doc.get("offset");
 	h.spread = (Double) doc.get("spread");
 	h.reliability = (Double) doc.get("reliability");
 	return h;
     }
-    */
+    
 }

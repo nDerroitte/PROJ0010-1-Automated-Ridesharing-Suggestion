@@ -1,7 +1,9 @@
 package services;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-
+import org.bson.Document;
+import java.text.ParseException;
 public class Journey
 {
     private final ArrayList<Point> meeting_points;
@@ -28,23 +30,22 @@ public class Journey
     }
 
 
-    /*public  Document toDoc()
+    public  Document toDoc()
     {
         Document doc = new Document();
         ArrayList<Document> doc_meeting_point = new ArrayList<>();
-        for(int i =0; i < this.meeting_point.size();i++)
-            doc_meeting_point.add(meeting_point.get(i).toDoc());
+        for(int i =0; i < this.meeting_points.size();i++)
+            doc_meeting_point.add(meeting_points.get(i).toDoc());
         doc.put("meeting_point",doc_meeting_point);
         return doc;
 
     }
-    public static Journey fromDoc(Document doc)throws ParseException
+    public static Journey fromDoc(Document doc) throws ParseException
     {
         ArrayList<Document> doc_meeting_point = (ArrayList<Document>)doc.get("meeting_point");
         ArrayList<Point> meeting_point = new ArrayList<>();
         for(Document doc_point : doc_meeting_point)
             meeting_point.add(Point.FromDoc(doc_point));
-
         return new Journey(meeting_point);
-    }*/
+    }
 }
