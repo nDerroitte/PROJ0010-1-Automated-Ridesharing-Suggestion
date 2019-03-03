@@ -104,7 +104,7 @@ hs_err_pid*
 /lib/
 /logs/
 /modules
-#/project/project
+/project/project
 /project/target
 /target
 test-result
