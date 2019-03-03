@@ -1,8 +1,7 @@
-package services;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;;
+import java.util.Date;
 import services.ComputeHabit;
 import java.util.Arrays;
 import static org.assertj.core.api.Assertions.*;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import akka.dispatch.forkjoin.ThreadLocalRandom;
 
 import static org.junit.Assert.*;
-import services.ComputeHabit;
 import services.CircularDist;
 
 public class TestComputeHabit {
@@ -56,7 +54,7 @@ public class TestComputeHabit {
         long range = 10080*10;
         ArrayList<Long> raw_data = new ArrayList<Long>();
         for(int i=0; i < 5; i++){
-            raw_data.addAll(new_data(10080,5,1,10080/7*i,0,range));
+            raw_data.addAll(new_data(10080,30,0.8,10080/7*i,10,range));
         }
 
         ComputeHabit c = new ComputeHabit(raw_data);

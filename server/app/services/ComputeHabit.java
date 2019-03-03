@@ -82,12 +82,12 @@ public class ComputeHabit {
             if(score < best_score){
                 best_score = score;
                 best_score_index = i;
-                System.out.println("\n new best score: " + score + " for a period of " + period/1440 + " day with cluster: ");
+                System.out.println("\n new best score: " + score + " for a period of " + period/1440 + " day with cluster: \n");
                 printPartition(partition);
             }
             else{
                 if(score < Double.POSITIVE_INFINITY){
-                    System.out.println("\n score of: " + score + " for a period of " + period/1440 + " day with cluster: ");
+                    System.out.println("\n score of: " + score + " for a period of " + period/1440 + " day with cluster: \n");
                     printPartition(partition);
                 }
             }
@@ -121,14 +121,15 @@ public class ComputeHabit {
         }
         if(nb_cluster > mean_std[0] - 2*mean_std[1] && nb_cluster < mean_std[0] + 2*mean_std[1]){
             //favorise partitioning that explain most of point.
-            return score/(Math.pow(point_in_cluster, 3));
+            return score/(Math.pow(point_in_cluster, 2));
         }
         else {
+            System.out.println("get: " + nb_cluster + " expected: " + mean_std[0] + " +- " + mean_std[1] + " for period " + period/1440 + " day ");
             return Double.POSITIVE_INFINITY;
         }
     }
 
-    private double[] clusterMeanVar(Cluster c,int period){
+    private double[] clusterMeanVar(Cluster<DoublePoint> c,int period){
         CircularDist comparator = new CircularDist(period);
         List<DoublePoint> l = c.getPoints();
         Iterator<DoublePoint> ite = l.iterator();
@@ -189,11 +190,12 @@ public class ComputeHabit {
             }
             i++;
         }
+        System.out.println(" ");
     }
     private double mean(double[] array) {
         double total = 0;
         for (int i = 0; i < array.length; i++) {
-            total += i;
+            total += array[i];
         }
         return  total / array.length;
     }
@@ -265,6 +267,7 @@ public class ComputeHabit {
         is.sort(true);
         //System.out.println(" \n to cluster: ");
         //System.out.println(index.toString());
+        //System.out.println(Arrays.toString(is.get_value()));
         double epsilon = mean(is.get_value());
         //System.out.println("eps = " + epsilon + " min pt= " + min_point + " period " + period);
         CircularDist measure = new CircularDist(period);
