@@ -57,7 +57,6 @@ class ServerCommunication {
     try {
       response = await _post(serverURL + "store_data?", jsonData);
     } catch (exception) {
-      print(exception);
       return _sendPoints(jsonData, tryIndex + 1);
     }
 

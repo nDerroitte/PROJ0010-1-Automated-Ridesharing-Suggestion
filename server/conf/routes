@@ -29,6 +29,9 @@ GET /forgotten_password				controllers.ForgottenPassword.forgotten_password(user
 # Remove user from database
 GET /remove_user					controllers.RemoveUser.remove_user(user,password)
 
+# Send back all the journeys of a user
+GET /get_data						controllers.GetData.get_data(user,password)
+
 # Store points in the database
 +nocsrf
 POST /store_data 					controllers.StoreData.store_data

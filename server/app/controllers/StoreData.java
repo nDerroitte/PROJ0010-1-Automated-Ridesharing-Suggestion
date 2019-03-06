@@ -3,6 +3,8 @@ package controllers;
 import play.mvc.*;
 import play.mvc.Http.*;
 import views.html.*;
+
+import java.awt.Point;
 import java.io.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -82,6 +84,9 @@ public class StoreData extends Controller {
 				Coordinate coord = Constants.CoordinateTransformation(lat,lon);
 				Point current_point = new Point(cal,coord);
 				point_list.add(current_point);
+			}
+			if (point_list.isEmpty()) {
+				continue;
 			}
 			Journey current_journey = new Journey(point_list);
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));

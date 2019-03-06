@@ -107,6 +107,7 @@ class _MainScreenState extends State<MainScreen> {
     }
     String jSon = json.encode(_user);
     await writeInFile(jSon);
+    await _printData();
     _user.clear();
     if (!_waitingForWifi) {
       _waitingForWifi = true;
