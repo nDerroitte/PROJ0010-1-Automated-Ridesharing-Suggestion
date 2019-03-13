@@ -3,6 +3,8 @@ package cryptodecrypto;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import sun.misc.BASE64Encoder;
+import sun.misc.BASE64Decoder;
 
 public class AES {
 
@@ -10,7 +12,7 @@ public class AES {
 
         private Cipher dcipher;
 
-        AES(SecretKey key) {
+        public AES(SecretKey key) {
             try {
                 ecipher = Cipher.getInstance("AES");
                 dcipher = Cipher.getInstance("AES");
@@ -25,7 +27,7 @@ public class AES {
                 byte[] utf8 = str.getBytes("UTF-8");
                 byte[] enc = ecipher.doFinal(utf8);
                  
-                return new sun.misc.BASE64Encoder().encode(enc);
+                return new BASE64Encoder().encode(enc);
             } catch (Exception e) {
             }
             return null;
@@ -33,7 +35,7 @@ public class AES {
         
         public String decrypt(String str) {
             try {
-                byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(str);
+                byte[] dec = new BASE64Decoder().decodeBuffer(str);
                 byte[] utf8 = dcipher.doFinal(dec);
                 return new String(utf8, "UTF-8");
             } catch (Exception e) {
