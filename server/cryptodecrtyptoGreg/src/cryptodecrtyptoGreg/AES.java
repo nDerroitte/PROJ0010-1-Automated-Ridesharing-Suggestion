@@ -43,7 +43,7 @@ public class AES {
         	throw new EncryptionException("Error in doFinal : decrypting with encryption cipher or vice-versa");
         }
     }
-    
+
     public String decrypt(String str) throws IOException, EncryptionException {
         try {
             byte[] dec = new String(Base64.getDecoder().decode(str)).getBytes();

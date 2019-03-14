@@ -1,15 +1,3 @@
-jeudi 7/03 15h maison opéra (retour oublié)
-
-vendredi 7h15 maison Julien // 11h30 Julien Sart // 17h15 Sart maison
-
-samedi 8h20 maison Sart // 13h Sart maison
-
-lundi 11h30 maison Sart // 15h15 Sart Julien // 19h30 Julien maison
-
-mardi 13h30 maison Sart // 17h Sart maison
-
-mercredi envoyé
-
 k1 : bf2dfa595fcc80bd07ce8205717e049438314c19ff92f60ffabe6d6a22909aa6d9485dca67592d32359e3ab8dd308b9999a15587e770fffcfec33b3680420375
 
 k2 : f0125212839c5c48b03d3cfdaa6bf4715802e0cedc22030a0f5a6e5068fdc9f9ba3c2c95be14e0071051bfc1fd332db414bd8f04b4e5408d08d01bff98df4cc7
