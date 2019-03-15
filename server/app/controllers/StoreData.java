@@ -85,7 +85,7 @@ public class StoreData extends Controller {
 				Point current_point = new Point(cal,coord);
 				point_list.add(current_point);
 			}
-			if (point_list.isEmpty()) {
+			if (point_list.size() <= 1) {	// A journey with only one point has no meaning : this is a measurement error
 				continue;
 			}
 			Journey current_journey = new Journey(point_list);
