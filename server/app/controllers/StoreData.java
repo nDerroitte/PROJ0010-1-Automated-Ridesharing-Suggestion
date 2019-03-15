@@ -97,18 +97,3 @@ public class StoreData extends Controller {
 		return ok();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
