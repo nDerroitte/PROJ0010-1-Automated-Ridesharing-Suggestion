@@ -37,6 +37,8 @@ class _MainScreenState extends State<MainScreen> {
   int _nbSameLocationPoints;
   bool _waitingForWifi;
   ServerCommunication _serverCommunication;
+  int _minDist = 1000;
+  Map<String, dynamic> _lastPos;
 
   /// This function gets the current user's location and adds it in a buffer,
   /// in an easy-to-parse way.
@@ -48,11 +50,11 @@ class _MainScreenState extends State<MainScreen> {
 
     String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
 
-    Map<String, dynamic> lastPos = _user.getLastPos();
-    if (lastPos != null &&
-        await Geolocator().distanceBetween(double.parse(lastPos["lat"]),
-                double.parse(lastPos["long"]), latitude, longitude) <
-            1000) {
+    Map<String, dynamic> previousPos = _lastPos;
+    if (previousPos != null &&
+        await Geolocator().distanceBetween(double.parse(previousPos["lat"]),
+                double.parse(previousPos["long"]), latitude, longitude) <
+            _minDist) {
       _nbSameLocationPoints += 1;
       if (_nbSameLocationPoints > 7) {
         await _stop();
@@ -61,6 +63,7 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       _nbSameLocationPoints = 0;
       _user.addData(calendar, latitude.toString(), longitude.toString());
+      _lastPos = _user.getLastPos();
     }
   }
 
@@ -75,18 +78,26 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  _onLocationEvent(Position pos) async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    double latitude = position.latitude;
+    double longitude = position.longitude;
+    if (_lastPos == null || await Geolocator().distanceBetween(double.parse(_lastPos["lat"]),
+        double.parse(_lastPos["long"]), latitude, longitude) >=
+        _minDist) { /// Only if this is not a false trigger
+      _nbSameLocationPoints = 0;
+      _locationSubscription.pause();
+      _capturePos(_capturePosIndex);
+    }
+  }
+
   /// This function clear the buffer and starts a new capturePos process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
   void _start() async {
     if (_locationSubscription == null) {
-      _locationSubscription = _onLocationChanged.listen((Position position) {
-        _nbSameLocationPoints = 0;
-        if (!_locationSubscription.isPaused) {
-          _locationSubscription.pause();
-        }
-        _capturePos(_capturePosIndex);
-      });
+        _locationSubscription = _onLocationChanged.listen(_onLocationEvent);
     } else {
       _locationSubscription.resume();
     }
@@ -173,7 +184,7 @@ class _MainScreenState extends State<MainScreen> {
     _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
     _onLocationChanged = Geolocator()
         .getPositionStream(LocationOptions(
-            distanceFilter: 1000, accuracy: LocationAccuracy.high))
+            distanceFilter: _minDist, accuracy: LocationAccuracy.high))
         .skip(1);
     _waitingForWifi = false;
     _serverCommunication = widget.serverCommunication;
