@@ -16,8 +16,9 @@ import 'serverCommunication.dart';
 class MainScreen extends StatefulWidget {
   final UserInfo user;
   final ServerCommunication serverCommunication;
+  final bool anonymous;
 
-  MainScreen(this.user, this.serverCommunication);
+  MainScreen(this.user, this.serverCommunication, [this.anonymous = false]);
 
   @override
   _MainScreenState createState() => new _MainScreenState();
@@ -39,6 +40,7 @@ class _MainScreenState extends State<MainScreen> {
   ServerCommunication _serverCommunication;
   int _minDist = 1000;
   Map<String, dynamic> _lastPos;
+  bool _anonymous;
 
   /// This function gets the current user's location and adds it in a buffer,
   /// in an easy-to-parse way.
@@ -62,8 +64,7 @@ class _MainScreenState extends State<MainScreen> {
       }
     } else {
       _nbSameLocationPoints = 0;
-      _user.addData(calendar, latitude.toString(), longitude.toString());
-      _lastPos = _user.getLastPos();
+      _lastPos = _user.addData(calendar, latitude.toString(), longitude.toString());
     }
   }
 
@@ -111,6 +112,15 @@ class _MainScreenState extends State<MainScreen> {
   /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
   /// and updates the button so that it becomes a start button.
   _stop() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    double latitude = position.latitude;
+    double longitude = position.longitude;
+
+    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
+
+    _lastPos = _user.addData(calendar, latitude.toString(), longitude.toString());
+
     _capturePosIndex += 1;
     /// Can happen if the stop button is pressed before the location has changed at least once
     if (!_locationSubscription.isPaused) {
@@ -120,7 +130,7 @@ class _MainScreenState extends State<MainScreen> {
     await writeInFile(jSon);
     await _printData();
     _user.clear();
-    if (!_waitingForWifi) {
+    if (!_waitingForWifi && !_anonymous) {
       _waitingForWifi = true;
       _sendPoints();
     }
@@ -173,6 +183,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _user = widget.user;
+    _anonymous = widget.anonymous;
     _pressedOnOff = _start;
     _pressedDataButton = _printData;
     _onOffIcon = Icons.play_arrow;

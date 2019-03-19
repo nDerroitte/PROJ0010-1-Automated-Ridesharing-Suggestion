@@ -72,6 +72,9 @@ class ServerCommunication {
   }
 
   Future<int> checkConnection(String username, String password) async {
+    if (username == "" && password == "") {
+      return anonymousConnexion;
+    }
     HttpClientResponse response;
     try {
       response = await _get(

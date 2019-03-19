@@ -21,6 +21,7 @@ const httpError = -1;
 const invalidUsername = 0;
 const invalidPassword = 1;
 const passwordOK = 2;
+const anonymousConnexion = 7;
 
 /// Possible sign up results.
 const signUpOK = 3;

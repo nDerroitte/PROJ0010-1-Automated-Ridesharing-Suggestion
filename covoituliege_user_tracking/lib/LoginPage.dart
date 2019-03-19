@@ -39,7 +39,14 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => MainScreen(
                   UserInfo(_usernameController.text), _serverCommunication)),
         );
-      } else {
+      } else if (connectionResult == anonymousConnexion) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainScreen(
+                  UserInfo(_usernameController.text), _serverCommunication, true)),
+        );
+    } else {
         String errorExplanation;
         switch (connectionResult) {
           case invalidUsername:

@@ -47,16 +47,10 @@ class UserInfo {
     return res.toString();
   }
 
-  Map<String, dynamic> getLastPos() {
-    if (_points.length > 0) {
-      return _points[_points.length - 1].toJson();
-    } else {
-      return null;
-    }
-  }
-
-  void addData(String calendar, String lat, String long) {
-    _points += <_Point>[_Point(calendar, lat, long)];
+  Map<String, dynamic> addData(String calendar, String lat, String long) {
+    _Point point = _Point(calendar, lat, long);
+    _points += <_Point>[point];
+    return point.toJson();
   }
 
   Map<String, dynamic> toJson() => {'UserId': _userId, 'Points': _points};
