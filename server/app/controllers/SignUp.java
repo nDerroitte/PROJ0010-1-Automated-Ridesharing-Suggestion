@@ -37,10 +37,9 @@ public class SignUp extends Controller {
 		MongoCollection<Document> users = database.getCollection("users");
 		Document registred_user = users.find(eq("user", a_user)).first();
 		//sign in the new user.
-		String key = UUID.randomUUID().toString();
 		if (registred_user == null){
 			// write new user in database
-			Document new_user = new Document("user", a_user).append("password",a_password).append("email", email).append("key",key).append("journeys",new ArrayList<Document>());
+			Document new_user = new Document("user", a_user).append("password",a_password).append("email", email).append("journeys",new ArrayList<Document>());
 			users.insertOne(new_user);
 		response().setCookie(Cookie.builder("user", key).build());
 		return ok("user successfully recorded");

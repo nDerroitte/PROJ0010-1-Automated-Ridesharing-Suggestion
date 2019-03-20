@@ -78,7 +78,7 @@ public class StoreData extends Controller {
 				} catch (java.text.ParseException e) {
 					return badRequest("Bad format for calendar");
 				}
-				
+
 				double lat = Double.parseDouble(_point.getString("lat"));
 				double lon = Double.parseDouble(_point.getString("long"));
 				Coordinate coord = Constants.CoordinateTransformation(lat,lon);
