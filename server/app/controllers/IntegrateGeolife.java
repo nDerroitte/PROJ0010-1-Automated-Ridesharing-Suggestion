@@ -103,6 +103,9 @@ public class IntegrateGeolife extends Controller {
                 if (point_list.size() > 1) {
                     journey_list.add(new Journey(point_list).toDoc());
                 }
+                br.close();
+                isr.close();
+                fis.close();
             }
             Document new_user = new Document("user", username).append("password", password).append("email", email).append("journeys", journey_list);
             users.insertOne(new_user);
