@@ -4,7 +4,7 @@ import play.mvc.*;
 import play.mvc.Http.*;
 import views.html.*;
 
-import java.awt.Point;
+import services.Point;
 import java.io.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;

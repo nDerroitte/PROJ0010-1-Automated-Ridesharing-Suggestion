@@ -1,23 +1,19 @@
 package services;
 
-import ca.pfv.spmf.algorithms.timeseries.autocorrelation.AlgoLagAutoCorrelation;
-import ca.pfv.spmf.algorithms.timeseries.TimeSeries;
 import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.apache.commons.math3.ml.clustering.Cluster;
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.complex.ComplexUtils;
 
 public class ComputeHabit {
 
@@ -69,114 +65,60 @@ public class ComputeHabit {
         List<List<Cluster<DoublePoint>>> partitions = new ArrayList<List<Cluster<DoublePoint>>>();
         ArrayList<int[]> counts = new ArrayList<int[]>();
 
-        double best_score = Double.POSITIVE_INFINITY;
+        double best_score = Double.NEGATIVE_INFINITY;
         int best_score_index = 0;
+        int best_period = 0;
         int i = 0;
         while (ite.hasNext()) {
             Integer period = ite.next();
             int[] count = new int[signal.length / period];
             ArrayList<DoublePoint> index = format_signal(period, count);
             List<Cluster<DoublePoint>> partition = cluster(index,period,count);
-            double score = partitionScore(partition,period,count);
+            double score = partitionScore(partition,period,index.size());
             //System.out.println(score);
-            if(score < best_score){
+            if(score > best_score){
                 best_score = score;
                 best_score_index = i;
+                best_period = period;
                 System.out.println("\n new best score: " + score + " for a period of " + period/1440 + " day with cluster: \n");
                 printPartition(partition);
             }
             else{
-                if(score < Double.POSITIVE_INFINITY){
-                    System.out.println("\n score of: " + score + " for a period of " + period/1440 + " day with cluster: \n");
-                    printPartition(partition);
+                if(score != Double.NEGATIVE_INFINITY){
+                    System.out.println("\n score of: " + score + " for a period of " + period/1440 + " day with cluster: \n");               
                 }
             }
-
             //memorize process.
             partitions.add(partition);
             counts.add(count);
             i++;
-        }
+        }            
+        System.out.println("Best score is " + best_score + "with period of " + periods.toArray(new Integer[1])[best_score_index]/1440 + " day");
+
         //write habit with best score. .
         List<Cluster<DoublePoint>> partition = partitions.get(best_score_index);
         Iterator<Cluster<DoublePoint>> part_ite = partition.iterator();
         LinkedList<Habits> habits = new LinkedList<Habits>();
+        Cluster<DoublePoint> cluster = null;
+        if(part_ite.hasNext()){
+            cluster = part_ite.next();
+        }
+        for( ; part_ite.hasNext(); cluster = part_ite.next()){
+            Habits h = new Habits();
+            h.period = (long) best_period;
+            double[] mean_var = Stat.clusterStat(cluster,best_period); 
+            h.offset = base + Math.round(mean_var[0]*scale);
+            h.reliability = Math.max(1,(double)cluster.getPoints().size()/(index.length/best_period));
+            h.spread = mean_var[1];
+            habits.add(h);
+        }
 
     }
-
-    private double partitionScore(List<Cluster<DoublePoint>> part, int period,int count[]){
-        double score = 0;
-        int nb_cluster = 0;
-        double[] mean_std = meanStd(count);
-        Iterator<Cluster<DoublePoint>> ite = part.iterator();
-        int point_in_cluster = 0;
-        while(ite.hasNext()){
-            Cluster<DoublePoint> cluster = ite.next();
-            score += clusterMeanVar(cluster,period)[1];
-            nb_cluster++;
-            point_in_cluster += cluster.getPoints().size();
-        }
-        if(nb_cluster == 0){
-            return Double.POSITIVE_INFINITY;
-        }
-        if(nb_cluster > mean_std[0] - 2*mean_std[1] && nb_cluster < mean_std[0] + 2*mean_std[1]){
-            //favorise partitioning that explain most of point.
-            return score/(Math.pow(point_in_cluster, 2));
-        }
-        else {
-            System.out.println("get: " + nb_cluster + " expected: " + mean_std[0] + " +- " + mean_std[1] + " for period " + period/1440 + " day ");
-            return Double.POSITIVE_INFINITY;
-        }
+    private double partitionScore(List<Cluster<DoublePoint>> part, int period,int nb_point){
+        PartitionStat stat = new PartitionStat(part,signal.length/period ,period,nb_point);
+        return stat.getlogLikelihood();
     }
-
-    private double[] clusterMeanVar(Cluster<DoublePoint> c,int period){
-        CircularDist comparator = new CircularDist(period);
-        List<DoublePoint> l = c.getPoints();
-        Iterator<DoublePoint> ite = l.iterator();
-        Complex imean = new Complex(0,0);
-        double var = 0;
-        while(ite.hasNext()){
-            double point = ite.next().getPoint()[0];
-            double angle =  point * 2 * Math.PI / period;
-            imean = imean.add(ComplexUtils.polar2Complex(1, angle)) ;
-        }
-        imean.divide(l.size());
-        double theta = imean.getArgument();
-        double mean = 0;
-        if(theta < 0){
-            mean = period + period * theta/(2* Math.PI);
-        }
-        else{
-            mean = period * theta/(2* Math.PI);
-        }
-        ite = l.iterator();
-        double[] mean_arr = {mean};
-        while(ite.hasNext()){
-            DoublePoint p  = ite.next();
-            double dist = comparator.compute(mean_arr,p.getPoint());
-            var += dist;
-        }            
-        var /= (l.size() -1 );
-        double[] out = {mean,var};
-        return out;
-    }
-
-    private double[] meanStd(int[] array){
-        double mean = 0;
-        double var = 0;
-        for(int i=0; i < array.length;i++){
-            mean += array[i];
-        }
-        mean /= array.length;
-        for(int i=0; i < array.length; i++){
-            var += (array[i]-mean) * (array[i]-mean);
-        }
-        var /= (array.length -1);
-        double[] out = {mean,Math.sqrt(var)};
-        return out;
-    }
-
-    private void printPartition(List<Cluster<DoublePoint>> c){
+    public static void printPartition(List<Cluster<DoublePoint>> c){
         Iterator< Cluster<DoublePoint>> ite = c.iterator();
         int i =0;
         System.out.println("printing partition ...");
@@ -192,13 +134,6 @@ public class ComputeHabit {
         }
         System.out.println(" ");
     }
-    private double mean(double[] array) {
-        double total = 0;
-        for (int i = 0; i < array.length; i++) {
-            total += array[i];
-        }
-        return  total / array.length;
-    }
     private ArrayRealVector toRealVector(ArrayList<DoublePoint> d){
         double[] array = new double[d.size()];
         for(int i=0;i<d.size();i++){
@@ -206,18 +141,17 @@ public class ComputeHabit {
         }
         return new ArrayRealVector(array);
     }
-
     private LinkedHashSet<Integer> find_period() throws IOException {
         // period detection with autocorrelation
-        AlgoLagAutoCorrelation autocorr = new AlgoLagAutoCorrelation();
-        TimeSeries result = autocorr.runAlgorithm(new TimeSeries(signal, "raw data"), signal.length / 2);
-        result = autocorr.runAlgorithm(new TimeSeries(result.data, "pre-process data"), signal.length / 2);
-        result.data[0] = 0.0;
-        IndexSorter is = new IndexSorter(result.data);
+        Autocorr autocorr = new Autocorr();
+        double[] result = autocorr.compute(signal, signal.length / 2);
+        result = autocorr.compute(result, signal.length / 2);
+        result[0] = 0.0;
+        IndexSorter is = new IndexSorter(result);
         is.sort(false);
         Integer[] ranked_period = is.getIndexes();
         LinkedHashSet<Integer> periods = new LinkedHashSet<Integer>();
-        for (int i = 0; i < (int) ranked_period.length * 0.05 + 1; i++) {
+        for (int i = 0; i < (int) ranked_period.length * 0.01 + 1; i++) {
             int candidate = Math.round(ranked_period[i] / minimal_period) * minimal_period;
             if (!periods.contains(candidate) && candidate != 0) {
                 periods.add(candidate);
@@ -265,17 +199,25 @@ public class ComputeHabit {
         IndexSorter is = new IndexSorter(diff.toArray());
         Arrays.sort(is.get_value());
         is.sort(true);
-        //System.out.println(" \n to cluster: ");
-        //System.out.println(index.toString());
-        //System.out.println(Arrays.toString(is.get_value()));
-        double epsilon = mean(is.get_value());
-        //System.out.println("eps = " + epsilon + " min pt= " + min_point + " period " + period);
+        double epsilon = Stat.mean(diff.toArray())/2;
         CircularDist measure = new CircularDist(period);
  
         DBSCANClusterer<DoublePoint> dbscan = new DBSCANClusterer<DoublePoint>(epsilon, min_point,measure);
         List<Cluster<DoublePoint>> result = dbscan.cluster(index);
-        //printPartition(result);
+        ListIterator<Cluster<DoublePoint>> ite = result.listIterator();
+        while(ite.hasNext()){
+            Cluster<DoublePoint> cluster = ite.next();
+            ListIterator<DoublePoint> ite2 = cluster.getPoints().listIterator();
+            double[] array = original.toArray();
+            while(ite2.hasNext()){
+                DoublePoint point = ite2.next();
+                int c = Stat.count(array, (int) point.getPoint()[0], array.length)-1;
+                while(c >0){
+                    ite2.add(new DoublePoint(point.getPoint()));
+                    c--;
+                }
+            }
+        }
         return result;
     }
-
 }

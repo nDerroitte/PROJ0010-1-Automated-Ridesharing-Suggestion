@@ -41,7 +41,6 @@ public class SignUp extends Controller {
 			// write new user in database
 			Document new_user = new Document("user", a_user).append("password",a_password).append("email", email).append("journeys",new ArrayList<Document>());
 			users.insertOne(new_user);
-		response().setCookie(Cookie.builder("user", key).build());
 		return ok("user successfully recorded");
  
 		}
