@@ -34,5 +34,8 @@ public class Habits
 	h.reliability = (Double) doc.get("reliability");
 	return h;
     }
+    public String toString(){
+        return "period: " + period + " reliability: " + reliability + " offset: " + offset + " spread: " + spread; 
+    }
     
 }

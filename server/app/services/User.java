@@ -1,7 +1,7 @@
 package services;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.Iterator;
 
 public class User
 {
@@ -22,11 +22,21 @@ public class User
 
     public void createHabits()
     {
+        ArrayList<ArrayList<Long>> week = new ArrayList<>();
+
         for(int i =0; i< unused_journeys.size();i++)
         {
             Calendar date_journey = unused_journeys.get(i).getFirstPointTime();
             int dow = date_journey.get(Calendar.DAY_OF_WEEK)-1;
             addHabits(this.habits.get(dow), unused_journeys.get(i));
+
+            //launch compute habit on each day.
+            week.get(dow).add(date_journey.getTimeInMillis());
+            ArrayList<Long> data = new ArrayList<>();
+            for(Iterator<ArrayList<Long>> ite = week.iterator(); ite.hasNext(); data = ite.next()){
+                ComputeHabit ch= new ComputeHabit(data);
+                ch.getHabit();
+            }
         }
     }
     public void addHabits(ArrayList<Habit> habits_day, Journey journey)

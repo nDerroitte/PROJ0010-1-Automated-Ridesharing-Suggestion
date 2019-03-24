@@ -1,0 +1,65 @@
+noise = noise + 0.000000001 for avoiding multiplication/division by 0.
+
+data: 10week
+score method: reliability/noise
+noise: 5
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 7 19 77 63 46
+
+data: 10week
+score method: likelihood
+noise: 5
+variance: 60
+reliability: 0.9
+Succes on over 100 test for 1,2,3,4,5 day per week: 39 3 0 0 0
+
+data: 10week
+score method: 10000000* reliability/noise + likelihood
+noise: 5
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 14 22 86 60 42
+
+data: 10week
+score method: reliability/ (noise * std)
+noise: 5
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 46 85 97 82 65
+
+data: 3 week
+score method: reliability/ (noise * std)
+noise: 0
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 22 43 35 23 11
+
+data 52 week:
+score method: reliability/ (noise * std)
+noise: 0
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 98 100 100 100 91
+
+data: 10week
+score method: autocorr
+noise: 5
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 41 19 13 17 5
+
+data: 10week
+score method: (autocorr * reliability) / (noise * std/max_std)
+noise: 5
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 58 90 92 70 44
+
+data: 10week
+score method: (autocorr/max_autocorr * reliability) / (noise * std/max_std)
+noise: 5
+reliability: 0.9
+variance: 60
+Succes on over 100 test for 1,2,3,4,5 day per week: 58 82 85 60 41
+
