@@ -1,7 +1,9 @@
 package services;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class User
 {
@@ -22,22 +24,22 @@ public class User
 
     public void createHabits()
     {
-        ArrayList<ArrayList<Long>> week = new ArrayList<>();
-
+        //natan stuff
         for(int i =0; i< unused_journeys.size();i++)
         {
             Calendar date_journey = unused_journeys.get(i).getFirstPointTime();
             int dow = date_journey.get(Calendar.DAY_OF_WEEK)-1;
             addHabits(this.habits.get(dow), unused_journeys.get(i));
-
-            //launch compute habit on each day.
-            week.get(dow).add(date_journey.getTimeInMillis());
-            ArrayList<Long> data = new ArrayList<>();
-            for(Iterator<ArrayList<Long>> ite = week.iterator(); ite.hasNext(); data = ite.next()){
-                ComputeHabit ch= new ComputeHabit(data);
-                ch.getHabit();
-            }
         }
+
+        //cedric stuff 
+        HashMap<JourneyPath,ArrayList<Long>> sorted_journey = sortJourney();
+        Iterator it = sorted_journey.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            ComputeHabit computer = new ComputeHabit((ArrayList<Long>)pair.getValue());
+        }
+
     }
     public void addHabits(ArrayList<Habit> habits_day, Journey journey)
     {
@@ -64,6 +66,23 @@ public class User
             habits.get(dow).get(i).updateReliability();
         }
     }
+
+    public HashMap<JourneyPath,ArrayList<Long>> sortJourney(){
+        HashMap<JourneyPath,ArrayList<Long>> out = new  HashMap<>();
+        for(Journey journey : unused_journeys){
+            JourneyPath key = new JourneyPath(journey.getPath());
+            if(out.containsKey(key)){
+                out.get(key).add(journey.getFirstPointTime().getTimeInMillis());  
+            }
+            else{
+                ArrayList<Long> array = new ArrayList<Long>();
+                array.add(journey.getFirstPointTime().getTimeInMillis());
+                out.put(key,array);
+            }            
+        }
+        return  out;
+    }
+
     public void printHabits()
     {
         for(int i =0; i<7; i++)
@@ -80,4 +99,5 @@ public class User
             System.out.println("-----------------");
         }
     }
+
 }

@@ -30,8 +30,11 @@ public class ComputeHabit {
         //init some internal variable
         Collections.sort(array);
         raw_data = array;
-        base = array.get(0);
-        int signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;
+        int signal_size = 0;
+        if(array.size() > 0){
+            base = array.get(0);
+            signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;            
+        }
         index = new Long[array.size()];
         Iterator<Long> ite = array.iterator();
         signal = new double[signal_size];
@@ -148,6 +151,10 @@ public class ComputeHabit {
     private HashSet<Integer> find_period() {
         // perform the autocorrelation
         Autocorr autocorr = new Autocorr();
+        if(signal == null){
+            return new HashSet<Integer>();
+        }
+
         double[] result = autocorr.compute(signal, signal.length / 2);
         if(result.length == 0){
             return new HashSet<Integer>();

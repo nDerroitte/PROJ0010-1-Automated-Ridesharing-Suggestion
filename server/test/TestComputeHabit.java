@@ -1,8 +1,10 @@
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import services.ComputeHabit;
+import services.Habits;
+
 import java.util.Arrays;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
@@ -50,17 +52,22 @@ public class TestComputeHabit {
     @Test
     public void testSignal() throws IOException{
 
-        //generate fake data:
-        long range = 10080*10;
-        ArrayList<Long> raw_data = new ArrayList<Long>();
-        for(int i=0; i < 5; i++){
-            raw_data.addAll(new_data(10080,30,0.8,10080/7*i,10,range));
+        int[] hit = new int[6];
+        for(int j=1; j < hit.length; j++){
+            for (int k = 0; k < 100; k++){
+                //generate fake data:
+                long range = 10080*3;
+                ArrayList<Long> raw_data = new ArrayList<Long>();
+                for(int i=0; i < j; i++){
+                    raw_data.addAll(new_data(10080,60,0.7,10080/7*i,0,range));
+                }
+                ComputeHabit c = new ComputeHabit(raw_data);
+                LinkedList<Habits> habits = c.getHabit();
+                if(habits.size() > 0 && habits.getFirst().period % 10080 == 0){
+                    hit[j] ++;
+                }                
+            }          
         }
-
-        ComputeHabit c = new ComputeHabit(raw_data);
-        System.out.println(c.getSignal());
-        System.out.println("computing period...");
-        c.getHabit();
-
+        System.out.println(Arrays.toString(hit));
     }
 }
