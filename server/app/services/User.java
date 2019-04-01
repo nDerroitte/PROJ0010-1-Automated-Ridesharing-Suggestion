@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
+import java.util.LinkedList;
 public class User
 {
     private ArrayList<Journey> unused_journeys;
@@ -32,14 +32,56 @@ public class User
             addHabits(this.habits.get(dow), unused_journeys.get(i));
         }
 
-        //cedric stuff 
-        HashMap<JourneyPath,ArrayList<Long>> sorted_journey = sortJourney();
+        //cedric stuff without sorting by day
+        HashMap<JourneyPath,ArrayList<Journey>> sorted_journey = sortJourneyByPath();
         Iterator it = sorted_journey.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-            ComputeHabit computer = new ComputeHabit((ArrayList<Long>)pair.getValue());
+            ArrayList<Journey> data = (ArrayList<Journey>)pair.getValue();
+            ComputeHabit computer = new ComputeHabit(journeyToLong(data));
+            LinkedList<Habits> habits = computer.getHabit();
+            printHabits(habits);
+            //cedric stuff with sorting by day.
+            HashMap<Integer,ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
+            Iterator byday = journey_by_day.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry entry = (Map.Entry)it.next();
+                ArrayList<Journey> databyday = (ArrayList<Journey>)entry.getValue();
+                ComputeHabit ch = new ComputeHabit(journeyToLong(databyday));
+                LinkedList<Habits> habitsbyday = computer.getHabit();
+                printHabits(habitsbyday);
+            }       
         }
+    }
+    public void printHabits(LinkedList<Habits> habits){
+        for(Habits habit : habits){
+            System.out.println(habit.toString());
+        }
+    }
 
+    HashMap<Integer,ArrayList<Journey>> sortJourneyByDay(ArrayList<Journey> journeys){
+        HashMap<Integer,ArrayList<Journey>> out = new HashMap<>();
+        for(Journey journey : journeys){
+            Calendar date_journey = journey.getFirstPointTime();
+            int key = date_journey.get(Calendar.DAY_OF_WEEK)-1; 
+            if(out.containsKey(key)){
+                out.get(key).add(journey);  
+            }
+            else{
+                ArrayList<Journey> array = new ArrayList<>();
+                array.add(journey);
+                out.put(key,array);
+            } 
+        }
+        return out;
+    }
+
+    ArrayList<Long> journeyToLong(ArrayList<Journey> journeys){
+        ArrayList<Long> out = new ArrayList<Long>();
+        for(Journey journey : journeys){
+            out.add(journey.getFirstPointTime().getTimeInMillis());
+        }
+        return out;
     }
     public void addHabits(ArrayList<Habit> habits_day, Journey journey)
     {
@@ -67,16 +109,16 @@ public class User
         }
     }
 
-    public HashMap<JourneyPath,ArrayList<Long>> sortJourney(){
-        HashMap<JourneyPath,ArrayList<Long>> out = new  HashMap<>();
+    public HashMap<JourneyPath,ArrayList<Journey>> sortJourneyByPath(){
+        HashMap<JourneyPath,ArrayList<Journey>> out = new HashMap<>();
         for(Journey journey : unused_journeys){
             JourneyPath key = new JourneyPath(journey.getPath());
             if(out.containsKey(key)){
-                out.get(key).add(journey.getFirstPointTime().getTimeInMillis());  
+                out.get(key).add(journey);  
             }
             else{
-                ArrayList<Long> array = new ArrayList<Long>();
-                array.add(journey.getFirstPointTime().getTimeInMillis());
+                ArrayList<Journey> array = new ArrayList<>();
+                array.add(journey);
                 out.put(key,array);
             }            
         }
