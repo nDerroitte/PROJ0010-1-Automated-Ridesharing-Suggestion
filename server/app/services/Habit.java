@@ -7,11 +7,10 @@ import java.text.ParseException;
 /*
 An habit is considered to be periodic.
 */
-public class Habits
+public abstract class Habit
 {    
     public long period;
     public long offset;
-    public double spread;
     public double reliability;
  
     //transform habit to document for storage purpose.
@@ -20,22 +19,20 @@ public class Habits
         Document doc = new Document();
         doc.put("period",this.period);
         doc.put("offset",this.offset);
-        doc.put("spread",this.spread);
         doc.put("reliability",this.reliability);
         return doc;
     }
     //Restore an habit from a document;
-    public static Habits fromDoc(Document doc)throws ParseException
+    public static Habit fromDoc(Document doc)throws ParseException
     {
-    Habits h = new Habits();
+    Habit h = new Habit();
 	h.period = (Long) doc.get("period");
 	h.offset = (Long) doc.get("offset");
-	h.spread = (Double) doc.get("spread");
 	h.reliability = (Double) doc.get("reliability");
 	return h;
     }
     public String toString(){
-        return "period: " + period + " reliability: " + reliability + " offset: " + offset + " spread: " + spread; 
+        return "period: " + period + " reliability: " + reliability + " offset: " + offset; 
     }
     
 }
