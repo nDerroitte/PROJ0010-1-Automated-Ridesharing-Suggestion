@@ -10,13 +10,14 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 
 import akka.dispatch.forkjoin.ThreadLocalRandom;
+import jdk.jfr.Timestamp;
 
 import static org.junit.Assert.*;
 import services.CircularDist;
 
 public class TestComputeHabit {
 
-    //all in minit
+    //all in minutes; Generate fake data
     public ArrayList<Long> new_data(int period, int spread, double reliability, int offset,int noise, long range){
         long scale = 1000*60;
         ArrayList<Long> out = new ArrayList<Long>();
@@ -25,7 +26,10 @@ public class TestComputeHabit {
         while(curent_date < base_date + scale*range){
             double proba = Math.random();
             if(proba < reliability){
-                long spread_noise = java.util.concurrent.ThreadLocalRandom.current().nextLong(spread*scale);
+                long spread_noise = 0;
+                if(spread > 0){
+                    spread_noise = java.util.concurrent.ThreadLocalRandom.current().nextLong(spread*scale);                    
+                }
                 if(Math.random() < 0.5){
                     out.add(curent_date + spread_noise);
                 }
@@ -40,6 +44,34 @@ public class TestComputeHabit {
         }
         return out;
     }
+
+    @Test 
+    public void EmptyInput(){
+        ArrayList<Long> empty = new ArrayList<Long>();
+        ComputeHabit ch = new ComputeHabit(empty);
+        assertTrue(ch.getHabit().size() == 0);
+    } 
+
+    @Test 
+    public void simpleHabit(){
+        int period = 10080;
+        int spread = 0;
+        double reliability = 1;
+        int noise = 0;
+        long range = 5*period;
+        int offset = 1440;
+        Habits expected_out = new Habits();     
+        ArrayList<Long> data = new_data(period,spread,reliability,offset,noise,range);
+        expected_out.offset = data.get(0);
+        expected_out.period = period/1440;
+        expected_out.spread = spread;
+        expected_out.reliability = reliability;          
+
+        ComputeHabit ch = new ComputeHabit(data);
+        LinkedList<Habits> habits = ch.getHabit(); 
+        assertTrue(habits.size() == 1);
+        assertEquals(expected_out,habits.getFirst());
+    }
     
     public void testCircDist(){
         int period = 44640;
@@ -49,7 +81,7 @@ public class TestComputeHabit {
         System.out.println(c.compute(a,b));
     }
 
-    @Test
+    //realistic case.
     public void testSignal() throws IOException{
 
         int[] hit = new int[6];
