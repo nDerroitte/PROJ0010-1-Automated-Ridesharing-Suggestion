@@ -39,12 +39,12 @@ public class GetHabit extends Controller {
 
 	}
 
-	public Result get_habit(String a_user) {
+	public Result get_habit(String a_user,String method) {
 		MongoCollection<Document> users = database.getCollection("users");
 		Document user = users.find(and(eq("user", a_user))).first();
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-            hb.submitTask(a_user, journeys);
+            hb.submitTask(a_user, journeys,Integer.parseInt(method));
             return ok("computing...");
 		}
 		if (users.find(eq("user",a_user)).first() == null){

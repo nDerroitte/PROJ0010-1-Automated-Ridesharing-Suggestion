@@ -35,3 +35,16 @@ GET /get_data						controllers.GetData.get_data(user,password)
 # Store points in the database
 +nocsrf
 POST /store_data 					controllers.StoreData.store_data
+
+#Compute and send back habit of a user
+GET /get_habit 						controllers.GetHabit.get_habit(user,method)
+
+
+
+
+
+
+
+
+
+

@@ -5,32 +5,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.LinkedList;
-public class User
+public class UserGM
 {
     private ArrayList<Journey> unused_journeys;
     private String user_id;
-    private ArrayList<ArrayList<Habit>> habits;
+    private int mode;
 
-    public User(String user_id, ArrayList<Journey> journeys)
+    public UserGM(String user_id, ArrayList<Journey> journeys,int mode)
     {
         this.unused_journeys = journeys;
         this.user_id = user_id;
-        this.habits = new ArrayList<>(7);
-        for(int i=0; i<7;i++)
-        {
-            habits.add(new ArrayList<>());
-        }
+	this.mode = mode;
     }
 
     public void createHabits()
     {
-        //natan stuff
-        for(int i =0; i< unused_journeys.size();i++)
-        {
-            Calendar date_journey = unused_journeys.get(i).getFirstPointTime();
-            int dow = date_journey.get(Calendar.DAY_OF_WEEK)-1;
-            addHabits(this.habits.get(dow), unused_journeys.get(i));
-        }
 
         //cedric stuff without sorting by day
         HashMap<JourneyPath,ArrayList<Journey>> sorted_journey = sortJourneyByPath();
@@ -39,22 +28,25 @@ public class User
             Map.Entry pair = (Map.Entry)it.next();
             ArrayList<Journey> data = (ArrayList<Journey>)pair.getValue();
             ComputeHabit computer = new ComputeHabit(journeyToLong(data));
-            LinkedList<Habits> habits = computer.getHabit();
+            LinkedList<Habit> habits = computer.getHabit();
             printHabits(habits);
             //cedric stuff with sorting by day.
-            HashMap<Integer,ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
-            Iterator byday = journey_by_day.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry)it.next();
-                ArrayList<Journey> databyday = (ArrayList<Journey>)entry.getValue();
-                ComputeHabit ch = new ComputeHabit(journeyToLong(databyday));
-                LinkedList<Habits> habitsbyday = computer.getHabit();
-                printHabits(habitsbyday);
-            }       
+	    if(mode == 1){
+            	HashMap<Integer,ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
+            	Iterator byday = journey_by_day.entrySet().iterator();
+            	while (it.hasNext()) {
+                    Map.Entry entry = (Map.Entry)it.next();
+                    ArrayList<Journey> databyday = (ArrayList<Journey>)entry.getValue();
+                    ComputeHabit ch = new ComputeHabit(journeyToLong(databyday));
+                    LinkedList<Habit> habitsbyday = computer.getHabit();
+                    printHabits(habitsbyday);
+                }  
+	    }
+     
         }
     }
-    public void printHabits(LinkedList<Habits> habits){
-        for(Habits habit : habits){
+    public void printHabits(LinkedList<Habit> habits){
+        for(Habit habit : habits){
             System.out.println(habit.toString());
         }
     }
@@ -83,31 +75,6 @@ public class User
         }
         return out;
     }
-    public void addHabits(ArrayList<Habit> habits_day, Journey journey)
-    {
-        Habit h = new Habit(journey);
-        for(int j =0; j< habits_day.size();j++)
-        {
-            if(habits_day.get(j).isSame(h))
-            {
-                habits_day.get(j).addOccurence(journey.getFirstPointTime());
-                habits_day.get(j).updateReliability();
-                return;
-            }
-        }
-        habits_day.add(h);
-    }
-    public void updateReliability()
-    {
-        Calendar now = Calendar.getInstance();
-        now.setTimeInMillis(System.currentTimeMillis());
-        int dow = now.get(Calendar.DAY_OF_WEEK)-1;
-        dow = dow == 0 ? 6 : dow-1;
-        for(int i =0 ; i< habits.get(dow).size(); i++)
-        {
-            habits.get(dow).get(i).updateReliability();
-        }
-    }
 
     public HashMap<JourneyPath,ArrayList<Journey>> sortJourneyByPath(){
         HashMap<JourneyPath,ArrayList<Journey>> out = new HashMap<>();
@@ -123,23 +90,6 @@ public class User
             }            
         }
         return  out;
-    }
-
-    public void printHabits()
-    {
-        for(int i =0; i<7; i++)
-        {
-            String out = String.format("Habits of %s :", Constants.DAY_LIST.get(i));
-            System.out.println(out);
-            for(int j =0; j<habits.get(i).size();j++)
-            {
-                habits.get(i).get(j).print();
-                System.out.println("---");
-            }
-            if (habits.get(i).size() == 0)
-                System.out.println("No habits for this day yet!");
-            System.out.println("-----------------");
-        }
     }
 
 }

@@ -61,14 +61,14 @@ public class ComputeHabit {
         return this.signal;
     }
 
-    public LinkedList<Habits> getHabit() {
+    public LinkedList<Habit> getHabit() {
 
         //inititalization
         List<List<Cluster<DoublePoint>>> partitions = new ArrayList<List<Cluster<DoublePoint>>>();
         double best_score = Double.NEGATIVE_INFINITY;
         int best_score_index = -1;
         int best_period = 0;  
-        LinkedList<Habits> habits = new LinkedList<Habits>();         
+        LinkedList<Habit> habits = new LinkedList<Habit>();         
         List<Cluster<DoublePoint>> best_partition = new LinkedList<>();
 
         //get the possible period.
@@ -109,12 +109,11 @@ public class ComputeHabit {
         //write the finded habits
         while(part_ite.hasNext()){        
             Cluster<DoublePoint> cluster = part_ite.next();            
-            Habits h = new Habits();
+            Habit h = new Habit();
             h.period = (long) best_period;
             double[] mean_var = Stat.clusterStat(cluster,best_period); 
             h.offset = base + Math.round(mean_var[0]*scale);
             h.reliability = Math.max(1,(double)cluster.getPoints().size()/(index.length/best_period));
-            h.spread = mean_var[1];
             habits.add(h);
         }
         return habits;
