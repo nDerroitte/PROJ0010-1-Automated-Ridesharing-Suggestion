@@ -11,4 +11,9 @@ public class JourneyPath{
         lon = path.get(path.size()-1).getY();
         end = Constants.CoordinateTransformation(lat, lon);
     }
+
+    @Override
+    public String toString(){
+        return start.toString() + "_" + end.toString();
+    }
 }

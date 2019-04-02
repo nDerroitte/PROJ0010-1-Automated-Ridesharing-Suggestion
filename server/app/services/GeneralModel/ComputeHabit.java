@@ -109,11 +109,12 @@ public class ComputeHabit {
         //write the finded habits
         while(part_ite.hasNext()){        
             Cluster<DoublePoint> cluster = part_ite.next();            
-            Habit h = new Habit();
-            h.period = (long) best_period;
+            HabitGM h = new HabitGM();
+            h.period = (long) best_period/1440;
             double[] mean_var = Stat.clusterStat(cluster,best_period); 
             h.offset = base + Math.round(mean_var[0]*scale);
-            h.reliability = Math.max(1,(double)cluster.getPoints().size()/(index.length/best_period));
+            h.reliability = Math.min(1,(double)cluster.getPoints().size()/(index.length/best_period));
+            h.spread = mean_var[1];
             habits.add(h);
         }
         return habits;

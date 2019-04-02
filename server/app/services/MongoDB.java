@@ -21,9 +21,9 @@ import javax.inject.*;
 
 @Singleton
 public class MongoDB implements MongoInterface{
-	String connection = "mongodb://team2:team2@covoituliege-shard-00-00-kisp4.gcp.mongodb.net:27017,covoituliege-shard-00-01-kisp4.gcp.mongodb.net:27017,covoituliege-shard-00-02-kisp4.gcp.mongodb.net:27017/test?ssl=true&replicaSet=covoituliege-shard-0&authSource=admin&retryWrites=true";
-	MongoClientURI uri = new MongoClientURI(connection);
-	MongoClient mongoClient = new MongoClient(uri);
+	//String connection = "";
+	//MongoClientURI uri = new MongoClientURI(connection);
+	MongoClient mongoClient = new MongoClient();
 	MongoDatabase database = mongoClient.getDatabase("covoituliege");
 
 	@Override

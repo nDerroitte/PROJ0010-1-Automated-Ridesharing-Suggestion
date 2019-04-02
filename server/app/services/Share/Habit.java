@@ -3,7 +3,7 @@ import java.util.TreeSet;
 import org.bson.Document;
 import services.*;
 import java.text.ParseException;
-
+import java.util.Date;
 /*
 An habit is considered to be periodic.
 */
@@ -32,12 +32,21 @@ public class Habit
 	return h;
     }
     public String toString(){
-        return "period: " + period + " reliability: " + reliability + " offset: " + offset; 
+        return "period: " + period + " reliability: " + reliability + " offset: " + new Date(offset).toString(); 
     }
 
     public void print()
     {
         System.out.println(this.toString());
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if( o instanceof Habit){
+            Habit h = (Habit) o;
+            return h.offset == offset && h.period == period && h.reliability == reliability;
+        }
+        return false;
     }
     
 }

@@ -36,8 +36,11 @@ GET /get_data						controllers.GetData.get_data(user,password)
 +nocsrf
 POST /store_data 					controllers.StoreData.store_data
 
-#Compute and send back habit of a user
+#Compute habit of a user
 GET /get_habit 						controllers.GetHabit.get_habit(user,method)
+
+#Integrate geolife data to DB				s
+GET /geolife						controllers.IntegrateGeolife.integrate_geolife()
 
 
 
