@@ -1,6 +1,6 @@
 package services;
-public final class Coordinate
-{
+
+public final class Coordinate {
     private final double x;
     private final double y;
 
@@ -17,20 +17,21 @@ public final class Coordinate
         return y;
     }
 
-    public boolean isSame(Coordinate other)
-    {
-        double other_x = other.getX();
-        double other_y = other.getY();
-        if((other_x-Constants.COORDINATE_ERROR_ACCEPTED <= this.x
-                || this.x <= other_x+Constants.COORDINATE_ERROR_ACCEPTED)
-                &&(other_y-Constants.COORDINATE_ERROR_ACCEPTED <= this.y
-                || this.x <= other_y+Constants.COORDINATE_ERROR_ACCEPTED))
+    public boolean isSame(Coordinate other) {
+        double x = other.getX();
+        double y = other.getY();
+        if (x - Constants.COORDINATE_ERROR_ACCEPTED <= this.x 
+                && x + Constants.COORDINATE_ERROR_ACCEPTED >= this.x
+                && y - Constants.COORDINATE_ERROR_ACCEPTED <= this.y
+                && y + Constants.COORDINATE_ERROR_ACCEPTED >= this.y
+
+        )
             return true;
         return false;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return x + "," + y;
     }
 
