@@ -48,4 +48,13 @@ public class Journey
             meeting_point.add(Point.FromDoc(doc_point));
         return new Journey(meeting_point);
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Journey){
+            Journey j = (Journey) o;
+            return meeting_points.equals(j.meeting_points);
+        }
+        return false;
+    }
 }

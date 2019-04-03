@@ -52,5 +52,14 @@ public class Point
         return new Point(time,position);
 
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Point){
+            Point p = (Point) o;
+            return position.isSame(p.position) && time.equals(p.time);
+        }
+        return false;
+    }
 }
 

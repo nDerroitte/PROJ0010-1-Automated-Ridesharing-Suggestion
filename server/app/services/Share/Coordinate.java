@@ -20,12 +20,9 @@ public final class Coordinate {
     public boolean isSame(Coordinate other) {
         double x = other.getX();
         double y = other.getY();
-        if (x - Constants.COORDINATE_ERROR_ACCEPTED <= this.x 
-                && x + Constants.COORDINATE_ERROR_ACCEPTED >= this.x
+        if (x - Constants.COORDINATE_ERROR_ACCEPTED <= this.x && x + Constants.COORDINATE_ERROR_ACCEPTED >= this.x
                 && y - Constants.COORDINATE_ERROR_ACCEPTED <= this.y
-                && y + Constants.COORDINATE_ERROR_ACCEPTED >= this.y
-
-        )
+                && y + Constants.COORDINATE_ERROR_ACCEPTED >= this.y)
             return true;
         return false;
     }
