@@ -32,7 +32,7 @@ public class Point
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         String string_time = sdf.format(this.time.getTime());
 
-        ArrayList<Long> coordinates = new ArrayList<>();
+        ArrayList<Double> coordinates = new ArrayList<>();
         coordinates.add(position.getX());
         coordinates.add(position.getY());
 
@@ -46,7 +46,7 @@ public class Point
         String string_time = (String)doc.get("time");
         Calendar time = Constants.stringToCalendar(string_time);
 
-        ArrayList<Long> coordinates = (ArrayList<Long>)doc.get("position");
+        ArrayList<Double> coordinates = (ArrayList<Double>)doc.get("position");
         Coordinate position = new Coordinate(coordinates.get(0),coordinates.get(1));
 
         return new Point(time,position);

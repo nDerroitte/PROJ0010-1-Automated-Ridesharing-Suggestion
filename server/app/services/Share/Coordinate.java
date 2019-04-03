@@ -1,26 +1,26 @@
 package services;
 public final class Coordinate
 {
-    private final long x;
-    private final long y;
+    private final double x;
+    private final double y;
 
-    public Coordinate(long first, long second) {
+    public Coordinate(double first, double second) {
         this.x = first;
         this.y = second;
     }
 
-    public long getX() {
+    public double getX() {
         return x;
     }
 
-    public long getY() {
+    public double getY() {
         return y;
     }
 
     public boolean isSame(Coordinate other)
     {
-        long other_x = other.getX();
-        long other_y = other.getY();
+        double other_x = other.getX();
+        double other_y = other.getY();
         if((other_x-Constants.COORDINATE_ERROR_ACCEPTED <= this.x
                 || this.x <= other_x+Constants.COORDINATE_ERROR_ACCEPTED)
                 &&(other_y-Constants.COORDINATE_ERROR_ACCEPTED <= this.y

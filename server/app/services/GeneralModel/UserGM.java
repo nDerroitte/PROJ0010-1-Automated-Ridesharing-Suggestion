@@ -30,7 +30,7 @@ public class UserGM {
             Map.Entry pair = (Map.Entry) it.next();
             LinkedList<Habit> habits = new LinkedList<>();
             ArrayList<Journey> data = (ArrayList<Journey>) pair.getValue();
-            System.out.println(data.size());
+            System.out.println("data size: " + data.size());
             if (mode == 0) {
                 ComputeHabit computer = new ComputeHabit(journeyToLong(data));
                 habits = computer.getHabit();
@@ -98,9 +98,11 @@ public class UserGM {
         for (Journey journey : unused_journeys) {
             JourneyPath key = new JourneyPath(journey.getPath());
             if (out.containsKey(key)) {
+                System.out.println("Journey added ");
                 out.get(key).add(journey);
             } else {
                 ArrayList<Journey> array = new ArrayList<>();
+                System.out.println("New key: " + key.toString());
                 array.add(journey);
                 out.put(key, array);
             }

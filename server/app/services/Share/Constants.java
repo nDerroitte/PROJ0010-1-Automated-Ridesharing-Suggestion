@@ -11,8 +11,8 @@ public final class Constants
     }
     public static final List<String> DAY_LIST = Arrays.asList("SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
 
-    public static final double DECIMALS_ROUNDING_POSITION = 4;
-    public static final int COORDINATE_ERROR_ACCEPTED =5;
+    public static final double ROUNDING = 1;
+    public static final double COORDINATE_ERROR_ACCEPTED =0.001;
 
     public static final int MIN_DIFF_SAME_JOURNEY = 30;
 
@@ -26,13 +26,11 @@ public final class Constants
     }
     public static Coordinate CoordinateTransformation(double lat, double lon)
     {
-        long x = 0;
-        long y = 0;
-        double tmp_x = Math.floor(lat*Math.pow(10,DECIMALS_ROUNDING_POSITION));
-        double tmp_y = Math.floor(lon*Math.pow(10,DECIMALS_ROUNDING_POSITION));
+        double x = 0;
+        double y = 0;
+        x = Math.round(lat/ROUNDING);
+        y = Math.round(lon/ROUNDING);
 
-        x = (long)Math.floor(tmp_x - 50 * Math.pow(10,DECIMALS_ROUNDING_POSITION));
-        y = (long)Math.floor(tmp_y - 50 * Math.pow(10,DECIMALS_ROUNDING_POSITION));
 
         return new Coordinate(x,y);
     }

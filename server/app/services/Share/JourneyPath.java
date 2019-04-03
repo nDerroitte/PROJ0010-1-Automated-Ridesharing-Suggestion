@@ -14,6 +14,20 @@ public class JourneyPath{
 
     @Override
     public String toString(){
-        return start.toString() + "_" + end.toString();
+        return start.toString() + "___" + end.toString();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof JourneyPath){
+            JourneyPath j = (JourneyPath) o;
+            return ((JourneyPath)o).end.equals(this) && ((JourneyPath)o).start.equals(this);
+        }
+        return false;
+    }
+
+    @Override 
+    public int hashCode(){
+        return toString().hashCode();
     }
 }
