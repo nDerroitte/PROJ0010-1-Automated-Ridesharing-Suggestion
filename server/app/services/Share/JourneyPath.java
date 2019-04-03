@@ -1,9 +1,10 @@
 package services;
 import java.util.ArrayList;
+
 public class JourneyPath{
     Coordinate start;
     Coordinate end;
-    JourneyPath( ArrayList<Coordinate> path){
+    public JourneyPath( ArrayList<Coordinate> path){
         double lat = path.get(0).getX();
         double lon = path.get(0).getY();
         start = Constants.CoordinateTransformation(lat, lon);
@@ -21,7 +22,7 @@ public class JourneyPath{
     public boolean equals(Object o){
         if(o instanceof JourneyPath){
             JourneyPath j = (JourneyPath) o;
-            return ((JourneyPath)o).end.equals(this) && ((JourneyPath)o).start.equals(this);
+            return j.end.isSame(end) && j.start.isSame(start);
         }
         return false;
     }

@@ -11,7 +11,7 @@ public final class Constants
     }
     public static final List<String> DAY_LIST = Arrays.asList("SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
 
-    public static final double ROUNDING = 1;
+    public static final double ROUNDING = 0.001;
     public static final double COORDINATE_ERROR_ACCEPTED =0.001;
 
     public static final int MIN_DIFF_SAME_JOURNEY = 30;
@@ -30,8 +30,9 @@ public final class Constants
         double y = 0;
         x = Math.round(lat/ROUNDING);
         y = Math.round(lon/ROUNDING);
-
-
+        x *= ROUNDING;
+        y *= ROUNDING;
+        
         return new Coordinate(x,y);
     }
 }
