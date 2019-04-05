@@ -27,19 +27,14 @@ import com.google.common.util.concurrent.*;
 @Singleton
 public class ThreadExecutor implements HabitGenerator{
 	private final MongoDatabase database ;
-    private final ThreadFactoryBuilder factoryBuilder;
-    private final ThreadFactory factory;
     private final ExecutorService worker;
     private final MongoCollection<Document> users;
     private final MongoCollection<Document> habits;
 
 
     @Inject
-	public ThreadExecutor  (MongoInterface db){
-        this.factoryBuilder = new ThreadFactoryBuilder();
-        this.factoryBuilder.setPriority(1);
-        this.factory = factoryBuilder.build();
-        this.worker = Executors.newSingleThreadExecutor(factory);
+	public ThreadExecutor(MongoInterface db){
+        this.worker = Executors.newSingleThreadExecutor();
         this.database = db.get_database();
         this.users = database.getCollection("users");
         this.habits = database.getCollection("habits");
@@ -48,7 +43,12 @@ public class ThreadExecutor implements HabitGenerator{
    @Override 
     public void submitTask(String userID, ArrayList<Document> journeys,int method) 
     {
+        try{
            this.worker.submit(new ComputationUnit(userID, journeys, users,method));
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }
@@ -57,6 +57,7 @@ class ComputationUnit implements Runnable{
     private final ArrayList<Journey> journeys;
     private final MongoCollection<Document> users;
     private final int method;
+
     ComputationUnit(String userID, ArrayList<Document> journeys, MongoCollection<Document> users, int method)
     {  
         this.user_id = userID;

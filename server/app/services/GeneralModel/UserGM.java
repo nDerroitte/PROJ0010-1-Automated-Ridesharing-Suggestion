@@ -32,7 +32,6 @@ public class UserGM {
             Map.Entry pair = (Map.Entry) it.next();
             LinkedList<Habit> habits = new LinkedList<>();
             ArrayList<Journey> data = (ArrayList<Journey>) pair.getValue();
-            System.out.println("data size: " + data.size());
             if (mode == 0) {
                 ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440);
                 habits.addAll(computer.getHabit());
@@ -44,7 +43,6 @@ public class UserGM {
             // Compute habit on day subset.
             else {
                 HashMap<Integer, ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
-                System.out.println(data.size());
                 Iterator byday = journey_by_day.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry entry = (Map.Entry) it.next();
@@ -54,6 +52,7 @@ public class UserGM {
                 }
             }                    
             habitsTofile(habits, (JourneyPath) pair.getKey());
+            System.out.println("User: " + user_id + "done");
         }
     }
 

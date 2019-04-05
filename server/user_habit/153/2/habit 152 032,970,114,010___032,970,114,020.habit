@@ -1,0 +1,8 @@
+
+ period: 60
+ reliability: 0.8
+ offset: Tue Jun 14 07:34:13 CEST 2011
+ spread: 4316.999999999999
+ end: Wed Apr 11 17:17:04 CEST 2012
+ nb point: 4
+ nb_realisation: 5

@@ -1,0 +1,8 @@
+
+ period: 7
+ reliability: 0.8
+ offset: Fri Aug 22 08:50:22 CEST 2008
+ spread: 3242.3333333333335
+ end: Sun Sep 21 09:03:21 CEST 2008
+ nb point: 4
+ nb_realisation: 4

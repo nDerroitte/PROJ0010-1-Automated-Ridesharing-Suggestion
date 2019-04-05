@@ -36,8 +36,7 @@ public class GetHabit extends Controller {
 	@Inject
 	public GetHabit (MongoInterface db, HabitGenerator habit_generator){
         this.database = db.get_database();
-        this.hb = habit_generator;
-
+		this.hb = habit_generator;
 	}
 
 	public Result get_habit(String a_user,String method) {
@@ -47,10 +46,9 @@ public class GetHabit extends Controller {
 			MongoCursor<Document> cursor = users.find().iterator();
 			try {
 				while (cursor.hasNext()) {
-					Document user = cursor.next();
-					for(int i=0; i < 3; i++){
-						hb.submitTask((String) user.get("user"),(ArrayList<Document>) user.get("journeys"),i);
-					}					
+					Document user = cursor.next();						
+					hb.submitTask((String) user.get("user"),(ArrayList<Document>) user.get("journeys"),Integer.parseInt(method));
+					System.out.println("User: " + user.get("user") + " is submit");
 				}
 			} 
 			catch(Exception e){
