@@ -11,8 +11,8 @@ public final class Constants
     }
     public static final List<String> DAY_LIST = Arrays.asList("SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY");
 
-    public static final double ROUNDING = 0.001;
-    public static final double COORDINATE_ERROR_ACCEPTED =0.001;
+    public static final double ROUNDING = 0.01;
+    public static final double COORDINATE_ERROR_ACCEPTED =0.01;
 
     public static final int MIN_DIFF_SAME_JOURNEY = 30;
 

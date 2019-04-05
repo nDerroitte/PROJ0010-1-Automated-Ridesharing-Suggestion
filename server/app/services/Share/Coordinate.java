@@ -1,4 +1,6 @@
 package services;
+ import java.text.DecimalFormat;
+ import java.text.NumberFormat;
 
 public final class Coordinate {
     private final double x;
@@ -29,7 +31,8 @@ public final class Coordinate {
 
     @Override
     public String toString() {
-        return x + "," + y;
+        NumberFormat formatter = new DecimalFormat("000.000");
+        return formatter.format(x) + "," + formatter.format(y);
     }
 
 }

@@ -21,11 +21,12 @@ public class ComputeHabit {
     ArrayList<Long> raw_data;
     Long[] index;
     Long base;
+    Long end;
     double[] signal;
     long scale = 60000;
     int minimal_period = 1440;
 
-    public ComputeHabit(ArrayList<Long> array) {
+    public ComputeHabit(ArrayList<Long> array,int min_period) {
 
         //init some internal variable
         Collections.sort(array);
@@ -33,8 +34,10 @@ public class ComputeHabit {
         int signal_size = 0;
         if(array.size() > 0){
             base = array.get(0);
+            end = array.get(array.size()-1);
             signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;            
         }
+        this.minimal_period = min_period;
         index = new Long[array.size()];
         Iterator<Long> ite = array.iterator();
         signal = new double[signal_size];
@@ -113,8 +116,10 @@ public class ComputeHabit {
             h.period = (long) best_period/1440;
             double[] mean_var = Stat.clusterStat(cluster,best_period); 
             h.offset = base + Math.round(mean_var[0]*scale);
-            h.reliability = Math.min(1,(double)cluster.getPoints().size()/(index.length/best_period));
+            h.reliability = Math.min(1,(double)cluster.getPoints().size()/(signal.length/best_period));
             h.spread = mean_var[1];
+            h.point_in_habit = cluster.getPoints().size();
+            h.end = end;
             habits.add(h);
         }
         return habits;

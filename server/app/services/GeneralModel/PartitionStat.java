@@ -60,16 +60,16 @@ public class PartitionStat {
         if (!ite.hasNext()) {
             return;
         }
-        point_in_clusters = 0;
+        int point_explained = 0;
         for (int i = 0; ite.hasNext(); i++) {
             Cluster<DoublePoint> c = ite.next();
             double[] tmp = Stat.clusterStat(c, (int) period);
             mean[i] = tmp[0];
             std[i] = tmp[1];
             reliability[i] = Math.max(1,(double) c.getPoints().size() / (double) realisation);
-            point_in_clusters += c.getPoints().size();
+            point_explained += Math.min(c.getPoints().size(), realisation);
         }
-        this.noise = (total_point - point_in_clusters) / (double) total_point;
+        this.noise = (total_point - point_explained) / (double) total_point;
         return;
     }
 }

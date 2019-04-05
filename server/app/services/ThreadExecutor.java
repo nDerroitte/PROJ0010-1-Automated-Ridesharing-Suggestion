@@ -75,16 +75,22 @@ class ComputationUnit implements Runnable{
     {   
         switch(this.method){
             case 0:
-            UserGM usergm0 = new UserGM(user_id,journeys,0);
-            usergm0.createHabits();
+            
+            UserGM usergm = new UserGM(user_id,journeys,0);
+            usergm.createHabits();
             break;
 
             case 1:
-            UserGM usergm1 = new UserGM(user_id,journeys,1);
-            usergm1.createHabits();
+            usergm = new UserGM(user_id,journeys,1);
+            usergm.createHabits();
             break;
 
             case 2:
+            usergm = new UserGM(user_id,journeys,2);
+            usergm.createHabits();  
+            break;          
+
+            case 3:
             UserSimpleModel user = new UserSimpleModel(user_id,journeys);
             user.createHabits();
             break;

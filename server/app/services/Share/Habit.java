@@ -32,7 +32,7 @@ public class Habit
 	return h;
     }
     public String toString(){
-        return "period: " + period + " reliability: " + reliability + " offset: " + new Date(offset).toString(); 
+        return "\n period: " + period + "\n reliability: " + reliability + "\n offset: " + new Date(offset).toString(); 
     }
 
     public void print()

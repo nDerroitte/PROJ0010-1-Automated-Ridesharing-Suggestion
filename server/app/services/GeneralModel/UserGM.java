@@ -8,7 +8,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.LinkedList;
 import java.io.PrintWriter;
-
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class UserGM {
     private ArrayList<Journey> unused_journeys;
@@ -32,20 +34,25 @@ public class UserGM {
             ArrayList<Journey> data = (ArrayList<Journey>) pair.getValue();
             System.out.println("data size: " + data.size());
             if (mode == 0) {
-                ComputeHabit computer = new ComputeHabit(journeyToLong(data));
-                habits = computer.getHabit();
+                ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440);
+                habits.addAll(computer.getHabit());
+            }
+            if (mode == 1){
+                ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440*7);
+                habits.addAll(computer.getHabit());                
             }
             // Compute habit on day subset.
             else {
                 HashMap<Integer, ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
+                System.out.println(data.size());
                 Iterator byday = journey_by_day.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry entry = (Map.Entry) it.next();
                     ArrayList<Journey> databyday = (ArrayList<Journey>) entry.getValue();
-                    ComputeHabit computer = new ComputeHabit(journeyToLong(databyday));
-                    habits = computer.getHabit();
+                    ComputeHabit computer = new ComputeHabit(journeyToLong(databyday),1440);
+                    habits.addAll(computer.getHabit());
                 }
-            }
+            }                    
             habitsTofile(habits, (JourneyPath) pair.getKey());
         }
     }
@@ -58,15 +65,19 @@ public class UserGM {
 
     public void habitsTofile(LinkedList<Habit> habits, JourneyPath path) {
         try {
-            PrintWriter writer = new PrintWriter(path.toString() + ".habit", "UTF-8");
+            File root = new File("user_habit/" + user_id + "/" + mode);
+            root.mkdirs();
+            int i= 0;
             for (Habit habit : habits) {
-                writer.println(habit.toString());
+                File file = new File(root.getPath(),"habit "+ i +" " + path.toString() + ".habit");
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                writer.write( habit.toString() + "\n" );
+                i++;            
+                writer.close();
             }
-            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     HashMap<Integer, ArrayList<Journey>> sortJourneyByDay(ArrayList<Journey> journeys) {
@@ -98,11 +109,9 @@ public class UserGM {
         for (Journey journey : unused_journeys) {
             JourneyPath key = new JourneyPath(journey.getPath());
             if (out.containsKey(key)) {
-                System.out.println("Journey added ");
                 out.get(key).add(journey);
             } else {
                 ArrayList<Journey> array = new ArrayList<>();
-                System.out.println("New key: " + key.toString());
                 array.add(journey);
                 out.put(key, array);
             }
