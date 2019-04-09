@@ -1,5 +1,3 @@
-package cryptodecrtyptoGreg;
-
 import java.io.IOException;
 
 public class Encrypt {

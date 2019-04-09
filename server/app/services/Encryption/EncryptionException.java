@@ -1,4 +1,4 @@
-package cryptodecrtyptoGreg;
+package services;
 
 public class EncryptionException extends Exception {
 	/**
