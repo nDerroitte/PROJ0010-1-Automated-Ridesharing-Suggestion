@@ -8,6 +8,7 @@ class GDPRScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
+      backgroundColor: Colors.lightBlue[50],
       body: gdprText,
     );
   }

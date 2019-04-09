@@ -17,11 +17,16 @@ class TextInput extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final bool emailAddress;
+  //final ShapeBorder shape;
+  final InputDecoration decoration;
 
   TextInput({
     @required this.messageToUser,
     @required this.color,
     @required this.controller,
+    //@required this.shape,
+    @required this.decoration,
+
     this.obscureText = false,
     this.emailAddress = false,
   })  : assert(messageToUser != null),
@@ -41,16 +46,40 @@ class TextInput extends StatelessWidget {
       child: Padding(
         padding: _padding,
         child: Row(
+
           children: <Widget>[
-            Text(
+
+            /*Text(
               this.messageToUser + ': ',
               style: textStyle,
-            ),
+            ),*/
+
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white),
-                child: TextField(
+                /*decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius : BorderRadius.circular(25.0)
+              ),*/
+                child: TextFormField(
+                    obscureText: this.obscureText,
+                    keyboardType: type,
+                    //style: textStyle,
+                    style: TextStyle(fontSize: 18.0, color: Colors.black),
+                    controller: controller,
+                    inputFormatters: <TextInputFormatter> [
+                      BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
+                    ] ,
+                  decoration: new InputDecoration(
+                  labelText: this.messageToUser,
+                  fillColor: Colors.black,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(
+                      ),
+                    ),
+
+                  )),
+                /*child: TextField(
                   obscureText: this.obscureText,
                   keyboardType: type,
                   style: textStyle,
@@ -58,9 +87,11 @@ class TextInput extends StatelessWidget {
                   inputFormatters: <TextInputFormatter> [
                     BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
                   ] ,
-                ),
+                ), */
               ),
             ),
+
+
           ],
         ),
       ),

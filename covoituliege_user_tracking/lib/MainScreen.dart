@@ -10,6 +10,7 @@ import 'Cst.dart';
 import 'UserInfo.dart';
 import 'FileHandler.dart';
 import 'serverCommunication.dart';
+import 'PrintDataScreen.dart';
 
 /// This class represents the main screen of the application. It allows the user to launch the position capturing,
 /// as well as printing and deleting the buffered data.
@@ -173,10 +174,17 @@ class _MainScreenState extends State<MainScreen> {
     }
     setState(() {
       _data = Text(
-        "(appuyer à nouveau pour recharger)\n" + toPrint.toString(),
+        "(Appuyer pour recharger)\n" + toPrint.toString(),
         style: textStyle,
       );
     });
+  }
+
+  _printDataScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PrintDataScreen()),
+    );
   }
 
   @override
@@ -188,10 +196,10 @@ class _MainScreenState extends State<MainScreen> {
     _pressedDataButton = _printData;
     _onOffIcon = Icons.play_arrow;
     _capturePosIndex = 0;
-    _data = Text(
-      'afficher les données',
+    /*_data = Text(
+      'Afficher les données',
       style: textStyle,
-    );
+    );*/
     _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
     _onLocationChanged = Geolocator()
         .getPositionStream(LocationOptions(
@@ -204,29 +212,82 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: AppBar(
+        title: Center(child: Text('Ugo              ')), //LET THE SPACE, IT IS FOR CENTERING
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [
+                  const Color(0xFF3366FF),
+                  const Color(0xFF00CCFF),
+                ],
+                begin: Alignment.topRight,
+                end: Alignment.topLeft,
+                //begin: const FractionalOffset(0.0, 0.0),
+                //end: const FractionalOffset(1.0, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp),
+          ),
+        ),),
       body: Container(
-        color: Colors.green,
+        color: Colors.lightBlue[50],
+        //width: 400.0,
+        //height: 200.0,
+        //decoration: new BoxDecoration(
+        //  image: new DecorationImage(image: new AssetImage("localisation2.png"), fit: BoxFit.cover,),
+        //),
         child: Center(
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
+
+              IconButton(
+                icon: Icon(_onOffIcon),
+                color: Colors.lightGreen,
+                onPressed: _pressedOnOff,
+                iconSize: 120.0,
+              ),
+              /*
+              Divider(),
+              ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Effacer les données'),
+                  onTap: clearFile ),
+              ListTile(
+                  leading: Icon(Icons.help),
+                  title: Text('Afficher les données'),
+                  //child: _data,
+                  //subtitle : _data,
+                  //onTap: _pressedDataButton
+                  onTap: _printDataScreen
+              ),
+              */
+
+
               RaisedButton(
+                textColor: Colors.white,
+                color: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+
                 child: Text(
                   "Effacer les données",
                   style: textStyle,
                 ),
                 onPressed: clearFile,
               ),
-              IconButton(
-                icon: Icon(_onOffIcon),
-                onPressed: _pressedOnOff,
-                iconSize: 120.0,
-              ),
-              RaisedButton(
+
+             RaisedButton(
+                textColor: Colors.white,
+                color: Colors.orange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
                 child: _data,
                 onPressed: _pressedDataButton,
               ),
+
             ],
           ),
         ),

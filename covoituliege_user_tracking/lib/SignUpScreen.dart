@@ -16,7 +16,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  static final _backgroundColor = Colors.lightBlue;
+  static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _listViewContent;
   TextInput _usernameInput;
   TextEditingController _username = TextEditingController();
@@ -203,7 +203,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       controller: _username,
     );
     _passwordInput = TextInput(
-      messageToUser: 'Mot de passe',
+      messageToUser: 'Mot de passe: 4 à 16 caractères',
       color: _backgroundColor,
       controller: _password,
       obscureText: true,
@@ -224,9 +224,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _signUpButton = Padding(
       padding: EdgeInsets.symmetric(horizontal: 75.0),
       child: RaisedButton(
+        textColor: Colors.white,
+        color: Colors.lightBlue[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: Text(
           'S\'inscrire',
-          style: textStyle,
+          //style: textStyle,
+          style: TextStyle(fontSize: 18.0),
         ),
         onPressed: _signUp,
       ),
@@ -235,11 +241,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _listViewContent = <Widget>[
       _usernameInput,
       _passwordInput,
-      Text(
+      /*Text(
         'Entre 4 et 16 caractères',
         style: smallInfoStyle,
         textAlign: TextAlign.right,
-      ),
+      ),*/
       _passwordConfirmationInput,
       _emailInput,
       _signUpButton,
@@ -250,11 +256,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       text: TextSpan(
         text: 'Cette application utilise vos données, en particulier votre localisation.' +
             ' En cliquant sur s\'inscrire, vous marquez votre accord avec notre ',
-        style: textStyle,
+        //style: textStyle,
+        style: TextStyle(fontSize: 18.0, color: Colors.black),
         children: <TextSpan>[
           TextSpan(
             text: 'politique de confidentialité.',
-            style: linkStyle,
+            //style: linkStyle,
+            style: TextStyle(fontSize: 18.0, color: Colors.blue),
             recognizer: _gdprRecognizer,
           ),
         ],

@@ -34,14 +34,34 @@ const forgottenPasswordOK = 5;
 const storeDataOK = 6;
 
 /// The appBar is the same for all screens.
-final _appBarColor = Colors.green;
+final _appBarColor = Colors.orange[300];
 final appBar = AppBar(
-  title: Text(
-    'User Tracking CovoitULiège',
-    style: textStyle,
-  ),
-  centerTitle: true,
-  backgroundColor: _appBarColor,
+    title: Center(child: Text('Ugo')), //LET THE SPACE, IT IS FOR CENTERING
+    flexibleSpace: Container(
+      decoration: new BoxDecoration(
+        gradient: new LinearGradient(
+            colors: [
+              const Color(0xFF3366FF),
+              const Color(0xFF00CCFF),
+            ],
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+            //begin: const FractionalOffset(0.0, 0.0),
+            //end: const FractionalOffset(1.0, 0.0),
+            stops: [0.0, 1.0],
+            tileMode: TileMode.clamp),
+      ),
+    ),
+
+
+
+  //title: Text(
+   // 'Ugo',
+   // style: textStyle,
+
+
+  //centerTitle: true,
+  //backgroundColor: _appBarColor,
 );
 
 /// Text relative to the users' personal data usage.
@@ -72,7 +92,8 @@ final gdprText = Padding(
         "(dpo@uliege.be – Monsieur le Délégué à la Protection des Données, Bât. B9 Cellule « GDPR », Quartier Village 3, " +
         "Boulevard de Colonster 2, 4000 Liège, Belgique). Vous disposez également du droit d’introduire une réclamation " +
         "auprès de l’Autorité de protection des données (https://www.autoriteprotectiondonnees.be, contact@apd-gba.be).",
-        style: textStyle,
+        style: TextStyle(fontSize: 22.0, fontStyle: FontStyle.italic),
+
         textAlign: TextAlign.justify,
       ),
     ],

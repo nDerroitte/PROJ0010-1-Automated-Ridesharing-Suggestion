@@ -14,7 +14,7 @@ class ForgottenPasswordScreen extends StatefulWidget {
 }
 
 class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
-  static final _backgroundColor = Colors.lightBlue;
+  static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _listViewContent;
   TextInput _usernameInput;
   TextEditingController _username = TextEditingController();
@@ -112,6 +112,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
           Text(
             "Adresse email invalide",
             style: smallWarningStyle,
+
             textAlign: TextAlign.right,
           )
         ];
@@ -128,12 +129,24 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
     super.initState();
 
     /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
-    _usernameInput = TextInput(
+    _usernameInput = /*TextFormField(
+      controller: _username,
+      decoration: new InputDecoration(
+        labelText: "Identifiant",
+
+        fillColor: Colors.white,
+        border: new OutlineInputBorder(
+          borderRadius: new BorderRadius.circular(25.0),
+          borderSide: new BorderSide(
+          ),
+        ),),);*/
+
+    TextInput(
       messageToUser: 'Identifiant',
       color: _backgroundColor,
       controller: _username,
     );
-    _emailInput = TextInput(
+     _emailInput = TextInput(
       messageToUser: 'Adresse email',
       color: _backgroundColor,
       controller: _email,
@@ -143,9 +156,15 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
     _askNewPasswordButton = Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.0),
       child: RaisedButton(
+        textColor: Colors.white,
+        color: Colors.lightBlue[800],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: Text(
-          'Demander un nouveau mot de passe',
-          style: textStyle,
+          'Nouveau mot de passe',
+          //style: textStyle,
+          style: TextStyle(fontSize: 18.0),
           textAlign: TextAlign.center,
         ),
         onPressed: _askNewPassword,

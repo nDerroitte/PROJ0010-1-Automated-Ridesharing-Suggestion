@@ -10,7 +10,7 @@ class UserTracking extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'User Tracking CovoitULiège',
+      title: 'Ugo',
       home: Container(
         child: LoginPage(),
       ),
