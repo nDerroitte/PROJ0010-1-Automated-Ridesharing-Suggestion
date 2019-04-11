@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Encrypt {
 	public static String encrypt(String toEncrypt) throws EncryptionException {
 		try {
-			return getAES(getKey()).encrypt(toEncrypt);
+			return Decrypt.getAES(Decrypt.getKey()).encrypt(toEncrypt);
 		} catch (Exception e) {
 			throw new EncryptionException("error during encryption");
 		}
