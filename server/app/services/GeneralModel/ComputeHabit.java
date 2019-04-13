@@ -110,10 +110,10 @@ public class ComputeHabit {
         while(part_ite.hasNext()){        
             Cluster<DoublePoint> cluster = part_ite.next();            
             Habit h = new Habit();
-            h.period = (long) best_period;
+            h.period = (long) best_period/1440;
             double[] mean_var = Stat.clusterStat(cluster,best_period); 
             h.offset = base + Math.round(mean_var[0]*scale);
-            h.reliability = Math.max(1,(double)cluster.getPoints().size()/(index.length/best_period));
+            h.reliability = Math.min(1,(double)cluster.getPoints().size()/(index.length/best_period));
             habits.add(h);
         }
         return habits;

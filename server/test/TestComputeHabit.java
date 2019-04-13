@@ -3,14 +3,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import services.ComputeHabit;
-import services.Habits;
-
+import services.Habit;
 import java.util.Arrays;
+
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
-
 import akka.dispatch.forkjoin.ThreadLocalRandom;
-import jdk.jfr.Timestamp;
 
 import static org.junit.Assert.*;
 import services.CircularDist;
@@ -60,15 +58,14 @@ public class TestComputeHabit {
         int noise = 0;
         long range = 5*period;
         int offset = 1440;
-        Habits expected_out = new Habits();     
+        Habit expected_out = new Habit();     
         ArrayList<Long> data = new_data(period,spread,reliability,offset,noise,range);
         expected_out.offset = data.get(0);
         expected_out.period = period/1440;
-        expected_out.spread = spread;
         expected_out.reliability = reliability;          
 
         ComputeHabit ch = new ComputeHabit(data);
-        LinkedList<Habits> habits = ch.getHabit(); 
+        LinkedList<Habit> habits = ch.getHabit(); 
         assertTrue(habits.size() == 1);
         assertEquals(expected_out,habits.getFirst());
     }
@@ -94,7 +91,7 @@ public class TestComputeHabit {
                     raw_data.addAll(new_data(10080,60,0.7,10080/7*i,0,range));
                 }
                 ComputeHabit c = new ComputeHabit(raw_data);
-                LinkedList<Habits> habits = c.getHabit();
+                LinkedList<Habit> habits = c.getHabit();
                 if(habits.size() > 0 && habits.getFirst().period % 10080 == 0){
                     hit[j] ++;
                 }                

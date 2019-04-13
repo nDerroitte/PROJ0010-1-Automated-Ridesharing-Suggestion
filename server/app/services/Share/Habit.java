@@ -39,5 +39,14 @@ public class Habit
     {
         System.out.println(this.toString());
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Habit){
+            Habit h = (Habit) o;
+            return h.offset == offset && h.period == period && h.reliability == reliability;
+        }
+        return false;
+    }
     
 }

@@ -29,4 +29,8 @@ public final class Coordinate
         return false;
     }
 
+    public String toString(){
+        return x + "," + y;
+    }
+
 }

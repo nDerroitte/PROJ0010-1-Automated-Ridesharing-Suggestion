@@ -44,7 +44,14 @@ public class GetHabit extends Controller {
 		Document user = users.find(and(eq("user", a_user))).first();
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-            hb.submitTask(a_user, journeys,Integer.parseInt(method));
+			switch(method){
+				case "simple": 
+					hb.submitTask(a_user, journeys,2);
+				case "general":
+					hb.submitTask(a_user, journeys,0);
+				case "general_weekly":
+					hb.submitTask(a_user, journeys,1);
+			}
             return ok("computing...");
 		}
 		if (users.find(eq("user",a_user)).first() == null){

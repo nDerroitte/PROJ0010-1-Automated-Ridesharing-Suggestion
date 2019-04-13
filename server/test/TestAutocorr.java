@@ -1,14 +1,11 @@
 import services.Autocorr;
 
 import java.util.Arrays;
-import static org.assertj.core.api.Assertions.*;
-import org.junit.Test;
-import akka.dispatch.forkjoin.ThreadLocalRandom;
-import jdk.jfr.Timestamp;
 
 import static org.junit.Assert.*;
+import org.junit.Test;
 
-public class AutocorrTest{
+public class TestAutocorr{
 
     @Test //autocorr on periodic data.   
     public void periodic(){
