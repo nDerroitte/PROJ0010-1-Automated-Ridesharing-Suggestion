@@ -1,0 +1,44 @@
+period: 
+DescriptiveStatistics:
+n: 1260
+min: 1.0
+max: 562.0
+mean: 37.446031746031515
+std dev: 43.3936790578458
+median: 22.0
+skewness: 3.0077201237618825
+kurtosis: 20.27779884048157
+
+ reliability: 
+ DescriptiveStatistics:
+n: 1260
+min: 0.3333333333333333
+max: 1.0
+mean: 0.7715601559841756
+std dev: 0.17428341277317363
+median: 0.75
+skewness: 0.08683078580541748
+kurtosis: -1.359624486913084
+
+ spread: 
+ DescriptiveStatistics:
+n: 1260
+min: 2.6666633759471945
+max: 46865.10237590539
+mean: 3249.1032473827063
+std dev: 4259.266496724718
+median: 1830.8652737346952
+skewness: 3.694085436170017
+kurtosis: 19.49234393928633
+
+ point_explained 
+DescriptiveStatistics:
+n: 1260
+min: 0.0
+max: 1.0
+mean: 0.8047619047619048
+std dev: 0.3965412702459615
+median: 1.0
+skewness: -1.539544283520094
+kurtosis: 0.3707826239782226
+

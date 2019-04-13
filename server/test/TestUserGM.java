@@ -4,16 +4,13 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-s
 import services.Journey;
 import services.JourneyPath;
 import services.Point;
 import services.Coordinate;
 
 public class TestUserGM{
-
-    private UserGM user;
-
+/*
     @Test
     public void sortByPath(){
         String userID = "test";
@@ -41,5 +38,5 @@ public class TestUserGM{
     @Test 
     public void sortJourneyByPath(){
 
-    }
+    }*/
 }

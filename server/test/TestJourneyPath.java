@@ -1,10 +1,9 @@
-import services.Constants;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
+import services.Constants;
 import services.JourneyPath;
 import services.Coordinate;
 

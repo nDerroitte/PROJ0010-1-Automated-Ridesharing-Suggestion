@@ -48,7 +48,7 @@ public class TestComputeHabit {
     @Test 
     public void EmptyInput(){
         ArrayList<Long> empty = new ArrayList<Long>();
-        ComputeHabit ch = new ComputeHabit(empty);
+        ComputeHabit ch = new ComputeHabit(empty,1440);
         assertTrue(ch.getHabit().size() == 0);
     } 
 
@@ -66,7 +66,7 @@ public class TestComputeHabit {
         expected_out.period = period/1440;
         expected_out.reliability = reliability;          
 
-        ComputeHabit ch = new ComputeHabit(data);
+        ComputeHabit ch = new ComputeHabit(data,1440);
         LinkedList<Habit> habits = ch.getHabit(); 
         assertTrue(habits.size() == 1);
         assertEquals(expected_out,habits.getFirst());
@@ -92,7 +92,7 @@ public class TestComputeHabit {
                 for(int i=0; i < j; i++){
                     raw_data.addAll(new_data(10080,60,0.7,10080/7*i,0,range));
                 }
-                ComputeHabit c = new ComputeHabit(raw_data);
+                ComputeHabit c = new ComputeHabit(raw_data,1440);
                 LinkedList<Habit> habits = c.getHabit();
                 if(habits.size() > 0 && habits.getFirst().period % 10080 == 0){
                     hit[j] ++;
