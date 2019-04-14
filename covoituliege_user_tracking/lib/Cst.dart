@@ -4,13 +4,13 @@ const _fontSize = 24.0;
 const _smallSize = 18.0;
 
 /// Different text styles.
-const textStyle = TextStyle(fontSize: _fontSize, color: Colors.black);
-const warningStyle = TextStyle(fontSize: _fontSize, color: Colors.red);
-const linkStyle = TextStyle(fontSize: _fontSize, color: Colors.lightBlue);
-const underlinedStyle = TextStyle(fontSize: _fontSize, color: Colors.black, decoration: TextDecoration.underline);
-const smallInfoStyle = TextStyle(fontSize: _smallSize, color: Colors.black);
-const smallWarningStyle = TextStyle(fontSize: _smallSize, color: Colors.red);
-const confirmationStyle = TextStyle(fontSize: _fontSize, color: Colors.lightGreenAccent);
+const textStyle = TextStyle(fontSize: 18.0, color: Colors.black);
+const warningStyle = TextStyle(fontSize: 18.0, color: Colors.red);
+const linkStyle = TextStyle(fontSize: 18.0, color: Colors.lightBlue);
+const underlinedStyle = TextStyle(fontSize: 18.0, color: Colors.black, decoration: TextDecoration.underline);
+const smallInfoStyle = TextStyle(fontSize: 18.0, color: Colors.black);
+const smallWarningStyle = TextStyle(fontSize: 18.0, color: Colors.red);
+const confirmationStyle = TextStyle(fontSize: 18.0, color: Colors.lightGreenAccent);
 
 
 const serverURL = "https://spem2.montefiore.ulg.ac.be/";

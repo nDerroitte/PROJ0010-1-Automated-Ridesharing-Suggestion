@@ -175,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _data = Text(
         "(Appuyer pour recharger)\n" + toPrint.toString(),
-        style: textStyle,
+        style: TextStyle(fontSize: 18.0),
       );
     });
   }
@@ -247,7 +247,7 @@ class _MainScreenState extends State<MainScreen> {
                 onPressed: _pressedOnOff,
                 iconSize: 120.0,
               ),
-              /*
+
               Divider(),
               ListTile(
                   leading: Icon(Icons.settings),
@@ -261,9 +261,9 @@ class _MainScreenState extends State<MainScreen> {
                   //onTap: _pressedDataButton
                   onTap: _printDataScreen
               ),
-              */
 
 
+/*
               RaisedButton(
                 textColor: Colors.white,
                 color: Colors.red,
@@ -287,7 +287,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: _data,
                 onPressed: _pressedDataButton,
               ),
-
+*/
             ],
           ),
         ),
