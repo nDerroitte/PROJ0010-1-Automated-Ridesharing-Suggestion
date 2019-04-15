@@ -60,10 +60,13 @@ public class ComputeHabit {
             i++;
         }
     }
-    public double[] getSignal() {
-        return this.signal;
-    }
 
+    //return the signal form of the input given in the constructor.
+    public double[] getSignal() {
+        return this.signal.clone();
+    }
+    
+    //compute and give back the habit.
     public LinkedList<Habit> getHabit() {
 
         //inititalization
@@ -123,28 +126,16 @@ public class ComputeHabit {
             habits.add(h);
         }
         return habits;
-    }
+    }    
+    
+    //score a partition (partition is an output of clustering)
     private double partitionScore(List<Cluster<DoublePoint>> part, int period,int nb_point){
         PartitionStat stat = new PartitionStat(part,signal.length/period ,period,nb_point);
         stat.compute();
         return  Stat.mean(stat.getReliability())  / ((stat.getNoise()+ 0.0000001) * Stat.mean(stat.getStd()));
     }
-    public static void partitionToString(List<Cluster<DoublePoint>> c){
-        Iterator< Cluster<DoublePoint>> ite = c.iterator();
-        int i =0;
-        String string = new String();
-        while(ite.hasNext()){
-            string.concat("\n Cluster: " + i);
-            List<DoublePoint> l = ite.next().getPoints();
-            Iterator<DoublePoint> p = l.iterator();
-            while(p.hasNext()){
-                DoublePoint d = p.next();
-                string.concat(Arrays.toString(d.getPoint()) + ",");
-            }
-            i++;
-        }
-        string.concat("\n");
-    }
+
+    //convert an ArrayList of DoublePoint to an ArrayRealVector
     private ArrayRealVector toRealVector(ArrayList<DoublePoint> d){
         double[] array = new double[d.size()];
         for(int i=0;i<d.size();i++){
@@ -153,6 +144,7 @@ public class ComputeHabit {
         return new ArrayRealVector(array);
     }
 
+    //find lausible period with autocorrelation.
     private HashSet<Integer> find_period() {
         // perform the autocorrelation
         Autocorr autocorr = new Autocorr();

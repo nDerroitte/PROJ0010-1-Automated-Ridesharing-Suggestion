@@ -1,6 +1,6 @@
 package services;
 
-import com.mongodb.MongoClientURI ;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoClient;
 
 import com.mongodb.client.MongoDatabase;
@@ -25,76 +25,68 @@ import javax.inject.*;
 import com.google.common.util.concurrent.*;
 
 @Singleton
-public class ThreadExecutor implements HabitGenerator{
-	private final MongoDatabase database ;
+public class ThreadExecutor implements HabitGenerator {
+    private final MongoDatabase database;
     private final ExecutorService worker;
     private final MongoCollection<Document> users;
-    private final MongoCollection<Document> habits;
-
 
     @Inject
-	public ThreadExecutor(MongoInterface db){
+    public ThreadExecutor(MongoInterface db) {
         this.worker = Executors.newSingleThreadExecutor();
         this.database = db.get_database();
         this.users = database.getCollection("users");
-        this.habits = database.getCollection("habits");
-	}
+    }
 
-   @Override 
-    public void submitTask(String userID, ArrayList<Document> journeys,int method) 
-    {
-        try{
-           this.worker.submit(new ComputationUnit(userID, journeys, users,method));
-        } catch(Exception e){
+    @Override
+    public void submitTask(String userID, int method) {
+        try {
+            this.worker.submit(new ComputationUnit(userID, method, users));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
 }
-class ComputationUnit implements Runnable{
-    private final String user_id;
-    private final ArrayList<Journey> journeys;
-    private final MongoCollection<Document> users;
-    private final int method;
 
-    ComputationUnit(String userID, ArrayList<Document> journeys, MongoCollection<Document> users, int method)
-    {  
+class ComputationUnit implements Runnable {
+    private final String user_id;
+    private final int method;
+    private final MongoCollection<Document> database;
+
+    ComputationUnit(String userID, int method, MongoCollection<Document> database) {
         this.user_id = userID;
-        this.journeys = new ArrayList<>();
         this.method = method;
-        try{
-            for (Document i :journeys)
-                this.journeys.add(Journey.fromDoc(i));
-        }
-        catch(ParseException e){
-            e.printStackTrace();
-        }
-        this.users = users;
+        this.database = database;
     }
-    public void run() 
-    {   
-        switch(this.method){
+
+    public void run() {
+        try {
+            switch (this.method) {
             case 0:
-            
-            UserGM usergm = new UserGM(user_id,journeys,0);
-            usergm.createHabits();
-            break;
+
+                UserGM usergm = new UserGM(user_id, database, 0);
+                usergm.createHabits();
+                break;
 
             case 1:
-            usergm = new UserGM(user_id,journeys,1);
-            usergm.createHabits();
-            break;
+                usergm = new UserGM(user_id, database, 1);
+                usergm.createHabits();
+                break;
 
             case 2:
-            usergm = new UserGM(user_id,journeys,2);
-            usergm.createHabits();  
-            break;          
+                usergm = new UserGM(user_id, database, 2);
+                usergm.createHabits();
+                break;
 
             case 3:
-            UserSimpleModel user = new UserSimpleModel(user_id,journeys);
-            user.createHabits();
-            break;
-        }  
+                UserSimpleModel user = new UserSimpleModel(user_id, database);
+                user.createHabits();
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

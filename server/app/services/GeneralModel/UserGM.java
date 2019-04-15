@@ -12,15 +12,33 @@ import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
+import com.mongodb.client.MongoCollection;
+import java.text.ParseException;
+
+import org.bson.Document;
+import static com.mongodb.client.model.Filters.*;
+
 public class UserGM {
     private ArrayList<Journey> unused_journeys;
     private String user_id;
     private int mode;
 
-    public UserGM(String user_id, ArrayList<Journey> journeys, int mode) {
-        this.unused_journeys = journeys;
+    public UserGM(String user_id, MongoCollection<Document> database, int mode) throws ParseException {
         this.user_id = user_id;
         this.mode = mode;
+        this.unused_journeys = new ArrayList<>();
+
+        //get user journey from database
+        Document user = database.find(eq("user", user_id)).first();
+        if (user == null ) {
+            System.err.println("User: " + user_id + " not in DB");
+        }
+        else{
+            ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
+            for(Document journey : journeys){
+                unused_journeys.add(Journey.fromDoc(journey));
+            }
+        }
     }
 
     public void createHabits() {

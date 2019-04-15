@@ -92,7 +92,7 @@ public class StoreData extends Controller {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
 			journeys.add(current_journey.toDoc());
 			users.updateOne(eq("user", user.get("user")),set("journeys", journeys));
-			hb.submitTask((String)(user.get("user")), journeys,1);
+			hb.submitTask((String)(user.get("user")),1);
 		}
 		return ok();
 	}

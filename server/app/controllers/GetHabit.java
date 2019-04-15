@@ -47,7 +47,7 @@ public class GetHabit extends Controller {
 			try {
 				while (cursor.hasNext()) {
 					Document user = cursor.next();						
-					hb.submitTask((String) user.get("user"),(ArrayList<Document>) user.get("journeys"),Integer.parseInt(method));
+					hb.submitTask((String) user.get("user"),1);
 					System.out.println("User: " + user.get("user") + " is submit");
 				}
 			} 
@@ -58,18 +58,16 @@ public class GetHabit extends Controller {
 				cursor.close();
 			}
 			return ok("computing...");
+		}
+		else{
+			Document user = users.find(and(eq("user", a_user))).first();
+			if(user != null) {
+				hb.submitTask(a_user,Integer.parseInt(method));
+				return ok("computing...");
+			}
+			return ok("user does not exist");
 		}		
-		Document user = users.find(and(eq("user", a_user))).first();
-		if(user != null) {
-			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-            hb.submitTask(a_user, journeys,Integer.parseInt(method));
-            return ok("computing...");
-		}
 
-		if (users.find(eq("user",a_user)).first() == null){
-			return ok("user: " + a_user + " doesn't exist");		
-		}
-		return ok("incorrect pasword");
 	}
 
 

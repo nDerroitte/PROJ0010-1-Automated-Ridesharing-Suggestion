@@ -23,12 +23,10 @@ public class Journey
         return path;
     }
 
-
     public Calendar getFirstPointTime()
     {
         return meeting_points.get(0).getTime();
     }
-
 
     public  Document toDoc()
     {

@@ -1,6 +1,9 @@
 package services;
 import java.util.ArrayList;
-
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+import static com.mongodb.client.model.Filters.*;
+import java.text.ParseException;
 
 public class UserSimpleModel
 {
@@ -8,11 +11,23 @@ public class UserSimpleModel
     private String user_id;
     private ArrayList<Habit> habits;
 
-    public UserSimpleModel(String user_id, ArrayList<Journey> journeys)
+    public UserSimpleModel(String user_id, MongoCollection<Document> database) throws ParseException
     {
-        this.unused_journeys = journeys;
         this.user_id = user_id;
         this.habits = new ArrayList<>();
+        this.unused_journeys = new ArrayList<>();
+        
+        //get user journey from database
+        Document user = database.find(eq("user", user_id)).first();
+        if (user == null ) {
+            System.err.println("User: " + user_id + " not in DB");
+        }
+        else{
+            ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
+            for(Document journey : journeys){
+                unused_journeys.add(Journey.fromDoc(journey));
+            }
+        }
     }
 
     public void createHabits()
