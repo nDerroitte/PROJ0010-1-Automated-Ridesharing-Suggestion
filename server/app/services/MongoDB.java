@@ -21,8 +21,8 @@ import javax.inject.*;
 
 @Singleton
 public class MongoDB implements MongoInterface{
-	//String connection = "";
-	//MongoClientURI uri = new MongoClientURI(connection);
+	String connection = "mongodb://localhost:27017";
+	MongoClientURI uri = new MongoClientURI(connection);
 	MongoClient mongoClient = new MongoClient();
 	MongoDatabase database = mongoClient.getDatabase("covoituliege");
 
