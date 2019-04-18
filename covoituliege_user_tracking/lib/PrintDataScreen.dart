@@ -23,8 +23,8 @@ class _PrintDataScreenState extends State<PrintDataScreen> {
     List<String> dataUnit = data.split("data_splitter");
     StringBuffer toPrint = StringBuffer();
     for (String userInfo in dataUnit) {
-
-      /// The split method returns an empty String if there is nothing after the last regex (argument)
+      /// The split method returns an empty String if there is nothing after the last regex (argument),
+      /// but the json.decode can't handle empty string
       if (userInfo == "") {
         break;
       }

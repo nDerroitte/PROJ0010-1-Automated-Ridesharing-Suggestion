@@ -58,4 +58,8 @@ class UserInfo {
   void clear() {
     _points = <_Point>[];
   }
+
+  String getId() {
+    return _userId;
+  }
 }

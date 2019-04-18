@@ -46,7 +46,7 @@ public class GetData extends Controller {
 				for (Document doc_point : doc_meeting_point) {
 					data.append("datetime: ");
 					data.append((String)doc_point.get("time") + "\n");
-					ArrayList<Long> coordinates = (ArrayList<Long>)doc_point.get("position");
+					ArrayList<Number> coordinates = (ArrayList<Number>)doc_point.get("position");
 					data.append("latitude: ");
 					data.append(coordinates.get(0).toString() + "\n");
 					data.append("longitude: ");

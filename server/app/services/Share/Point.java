@@ -17,13 +17,12 @@ public class Point
     }
 
     public Calendar getTime() {
-        return time;
+        return (Calendar) time.clone();
     }
 
     public Coordinate getPosition() {
         return position;
     }
-
 
     public Document toDoc()
     {
@@ -57,9 +56,17 @@ public class Point
     public boolean equals(Object o){
         if(o instanceof Point){
             Point p = (Point) o;
-            return position.isSame(p.position) && time.equals(p.time);
+            if(time.getTime().after(p.time.getTime())){
+                return position.isSame(p.position) && (time.getTime().getTime() - p.time.getTime().getTime() < 1000);
+            }
+            return position.isSame(p.position) && (p.time.getTime().getTime() - time.getTime().getTime() < 1000);
         }
         return false;
+    }
+
+    @Override
+    public String toString(){
+        return "time: " + time.toString() + " position: " + position.toString();
     }
 }
 
