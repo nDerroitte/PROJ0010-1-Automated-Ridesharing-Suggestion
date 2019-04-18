@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:intl/intl.dart';
+import 'package:geofencing/geofencing.dart';
 import 'dart:async';
-import 'dart:convert';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
@@ -27,82 +27,76 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Function _pressedOnOff;
-  Function _pressedDataButton;
   IconData _onOffIcon;
-  int _capturePosIndex;
-  UserInfo _user;
-  Text _data;
+  static UserInfo _user;
   Stream<ConnectivityResult> _onConnectivityChanged;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  Stream<Position> _onLocationChanged;
-  StreamSubscription<Position> _locationSubscription;
-  int _nbSameLocationPoints;
-  bool _waitingForWifi;
+  bool _waitingForWifi = false;
   ServerCommunication _serverCommunication;
-  int _minDist = 1000;
-  Map<String, dynamic> _lastPos;
   bool _anonymous;
 
-  /// This function gets the current user's location and adds it in a buffer,
-  /// in an easy-to-parse way.
-  Future<void> _newPos() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-
+  static Future<void> outOfGeofenceCallback(
+      List<String> ids, Location location, GeofenceEvent event) async {
+    /// Note : int are 64-bits in Flutter, which means that even if we triggered
+    /// 1000 geofences per second, il would take more that 500 millions years to overflow
+    DateTime curTime = DateTime.now();
     String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
-
-    Map<String, dynamic> previousPos = _lastPos;
-    if (previousPos != null &&
-        await Geolocator().distanceBetween(double.parse(previousPos["lat"]),
-                double.parse(previousPos["long"]), latitude, longitude) <
-            _minDist) {
-      _nbSameLocationPoints += 1;
-      if (_nbSameLocationPoints > 7) {
-        await _stop();
-        _start();
+    String expectedId = await getLastGeofenceId();
+    print("ids in ids : " + ids.toString());
+    if (ids.contains(expectedId)) {
+      String prevCalendar = await getLastCalendar();
+      if (prevCalendar != null && curTime
+          .subtract(minPauseTimeBetweenJourneys)
+          .isAfter(DateFormat('yyyy-MM-dd HH-mm-ss').parse(prevCalendar))) {
+        writeJourneyFromBufferedPoints(_user);
       }
-    } else {
-      _nbSameLocationPoints = 0;
-      _lastPos = _user.addData(calendar, latitude.toString(), longitude.toString());
-    }
-  }
+      storePoint(calendar, location.latitude.toString(),
+          location.longitude.toString());
 
-  /// This function launches periodically the newPos function. The index handle the situation
-  /// in which the user presses multiple times on the start button : only one instance can be active simultaneously.
-  _capturePos(index) {
-    if (index == _capturePosIndex) {
-      _newPos();
-      Future.delayed(Duration(minutes: 2, seconds: 30), () {
-        _capturePos(index);
-      });
-    }
-  }
+      String newId = (int.parse(expectedId) + 1).toString();
+      GeofenceRegion newGeofence = GeofenceRegion(
+          newId,
+          location.latitude,
+          location.longitude,
+          distBetweenPoints,
+          <GeofenceEvent>[GeofenceEvent.exit],
+          androidSettings: androidSettings);
 
-  _onLocationEvent(Position pos) async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-    if (_lastPos == null || await Geolocator().distanceBetween(double.parse(_lastPos["lat"]),
-        double.parse(_lastPos["long"]), latitude, longitude) >=
-        _minDist) { /// Only if this is not a false trigger
-      _nbSameLocationPoints = 0;
-      _locationSubscription.pause();
-      _capturePos(_capturePosIndex);
+      /// No volatile state can be stored in background because the application
+      /// may get killed at anytime (and reopened when needed)
+      storeGeofenceById(newId);
+      GeofencingManager.registerGeofence(newGeofence, outOfGeofenceCallback);
+    }
+    for (String id in ids) {
+      GeofencingManager.removeGeofenceById(id);
     }
   }
 
   /// This function clear the buffer and starts a new capturePos process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
+  /// //TODO rewrite doc
   void _start() async {
-    if (_locationSubscription == null) {
-        _locationSubscription = _onLocationChanged.listen(_onLocationEvent);
-    } else {
-      _locationSubscription.resume();
-    }
+    /*Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    double latitude = position.latitude;
+    double longitude = position.longitude;
+    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
+    clearBuffer();
+    storePoint(calendar, latitude.toString(), longitude.toString());*/
+    clearBuffer();
+
+    GeofenceRegion newGeofence = GeofenceRegion('0', 0, 0,
+        distBetweenPoints, <GeofenceEvent>[GeofenceEvent.exit],
+        androidSettings: androidSettings);
+
+    /// No volatile state can be stored in background because the application
+    /// may get killed at anytime (and reopened when needed)
+    storeGeofenceById('0');
+
+    await GeofencingManager.initialize();
+    await GeofencingManager.registerGeofence(
+        newGeofence, outOfGeofenceCallback);
     setState(() {
       _pressedOnOff = _stop;
       _onOffIcon = Icons.stop;
@@ -113,28 +107,21 @@ class _MainScreenState extends State<MainScreen> {
   /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
   /// and updates the button so that it becomes a start button.
   _stop() async {
-    Position position = await Geolocator()
+    /*Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     double latitude = position.latitude;
     double longitude = position.longitude;
 
     String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
+    storePoint(calendar, latitude.toString(), longitude.toString());*/
+    writeJourneyFromBufferedPoints(_user);
 
-    _lastPos = _user.addData(calendar, latitude.toString(), longitude.toString());
+    String lastGeofence = await getLastGeofenceId();
+    if (lastGeofence != null) {
+      GeofencingManager.removeGeofenceById(lastGeofence);
+      clearGeofence();
+    }
 
-    _capturePosIndex += 1;
-    /// Can happen if the stop button is pressed before the location has changed at least once
-    if (!_locationSubscription.isPaused) {
-      _locationSubscription.pause();
-    }
-    String jSon = json.encode(_user);
-    await writeInFile(jSon);
-    await _printData();
-    _user.clear();
-    if (!_waitingForWifi && !_anonymous) {
-      _waitingForWifi = true;
-      _sendPoints();
-    }
     setState(() {
       _pressedOnOff = _start;
       _onOffIcon = Icons.play_arrow;
@@ -146,8 +133,11 @@ class _MainScreenState extends State<MainScreen> {
 
     /// We try to send the data, if it fails (likely because wifi is not available),
     /// we wait for the state of the connectivity to change and we retry.
+    /// If a data unit was collected anonymously, it is filled with the current username.
     if (connectivity == ConnectivityResult.wifi &&
-        await _serverCommunication.sendPoints(await readFile())) {
+        await _serverCommunication.sendPoints((await readFile()).replaceAll(
+            RegExp("\"UserId\":\"\""),
+            "\"UserId\":\"" + _user.getId() + "\""))) {
       clearFile();
       _waitingForWifi = false;
     } else {
@@ -159,27 +149,6 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  /// This function is called when the user taps on the print data button.
-  /// It prints the points that are in the application local file.
-  _printData() async {
-    String data = await readFile();
-    List<String> dataUnit = data.split("data_splitter");
-    StringBuffer toPrint = StringBuffer();
-    for (String userInfo in dataUnit) {
-      /// The split method returns an empty String if there is nothing after the last regex (argument)
-      if (userInfo == "") {
-        break;
-      }
-      toPrint.write(UserInfo.toPrint(json.decode(userInfo)));
-    }
-    setState(() {
-      _data = Text(
-        "(Appuyer pour recharger)\n" + toPrint.toString(),
-        style: TextStyle(fontSize: 18.0),
-      );
-    });
-  }
-
   _printDataScreen() {
     Navigator.push(
       context,
@@ -187,33 +156,39 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  _playOrStop() async {
+    if (await getLastGeofenceId() == null) {
+      _pressedOnOff = _start;
+      _onOffIcon = Icons.play_arrow;
+    } else {
+      _pressedOnOff = _stop;
+      _onOffIcon = Icons.stop;
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     _user = widget.user;
     _anonymous = widget.anonymous;
-    _pressedOnOff = _start;
-    _pressedDataButton = _printData;
-    _onOffIcon = Icons.play_arrow;
-    _capturePosIndex = 0;
-    /*_data = Text(
-      'Afficher les données',
-      style: textStyle,
-    );*/
+    if (!_anonymous && !_waitingForWifi) {
+      _sendPoints();
+      _waitingForWifi = true;
+    }
+
     _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
-    _onLocationChanged = Geolocator()
-        .getPositionStream(LocationOptions(
-            distanceFilter: _minDist, accuracy: LocationAccuracy.high))
-        .skip(1);
     _waitingForWifi = false;
     _serverCommunication = widget.serverCommunication;
+    _playOrStop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Ugo              ')), //LET THE SPACE, IT IS FOR CENTERING
+        title: Center(child: Text('Ugo              ')),
+        // Please do not delete whitespaces
         flexibleSpace: Container(
           decoration: new BoxDecoration(
             gradient: new LinearGradient(
@@ -228,7 +203,8 @@ class _MainScreenState extends State<MainScreen> {
                 stops: [0.0, 1.0],
                 tileMode: TileMode.clamp),
           ),
-        ),),
+        ),
+      ),
       body: Container(
         color: Colors.lightBlue[50],
         //width: 400.0,
@@ -240,28 +216,24 @@ class _MainScreenState extends State<MainScreen> {
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-
               IconButton(
                 icon: Icon(_onOffIcon),
                 color: Colors.lightGreen,
                 onPressed: _pressedOnOff,
                 iconSize: 120.0,
               ),
-
               Divider(),
               ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Effacer les données'),
-                  onTap: clearFile ),
+                  onTap: clearFile),
               ListTile(
                   leading: Icon(Icons.help),
-                  title: Text('Afficher les données'),
+                  title: Text('Afficher les données locales'),
                   //child: _data,
                   //subtitle : _data,
                   //onTap: _pressedDataButton
-                  onTap: _printDataScreen
-              ),
-
+                  onTap: _printDataScreen),
 
 /*
               RaisedButton(

@@ -15,3 +15,7 @@ K2=Kencryption=Kprime : e9e581807a79003b6aca9d53d9b959f57798c16be0a2dbf48dbb603a
 kill $(cat ~/play-working-13th-april/target/universal/stage/RUNNING_PID)
 
 2 3 6 7
+
+telnet localhost 5554
+
+geo fix <longitude> <latitude>
