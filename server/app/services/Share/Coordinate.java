@@ -25,14 +25,16 @@ public final class Coordinate {
         if (x - Constants.COORDINATE_ERROR_ACCEPTED <= this.x && x + Constants.COORDINATE_ERROR_ACCEPTED >= this.x
                 && y - Constants.COORDINATE_ERROR_ACCEPTED <= this.y
                 && y + Constants.COORDINATE_ERROR_ACCEPTED >= this.y)
-            return true;
+                {
+                    return true;
+                }
         return false;
     }
 
     @Override
     public String toString() {
         NumberFormat formatter = new DecimalFormat("000.000");
-        return formatter.format(x) + "," + formatter.format(y);
+        return "[" + formatter.format(x) + ";" + formatter.format(y) + "]";
     }
 
 }

@@ -62,7 +62,8 @@ public class GetHabit extends Controller {
 		Document user = users.find(and(eq("user", a_user))).first();
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-            hb.submitTask(a_user, journeys,Integer.parseInt(method));
+			hb.submitTask(a_user, journeys,Integer.parseInt(method));
+			System.out.println("User: " + user.get("user") + " is submit");
             return ok("computing...");
 		}
 

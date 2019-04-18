@@ -1,12 +1,16 @@
 package services;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.FileWriter;
 
 
 public class CreationHabitSM
 {
-    public static ArrayList<Habit> createHabitSM(ArrayList<Journey> journeys)
+    public static ArrayList<Habit> createHabitSM(ArrayList<Journey> journeys, String user)
     {
+        System.out.println("Habits being created");
         ArrayList<ArrayList<SimpleHabit>> habits = new ArrayList<>(7);
         for(int i=0; i<7;i++)
             habits.add(new ArrayList<>());
@@ -22,9 +26,26 @@ public class CreationHabitSM
         {
             for(int j =0; j<habits.get(i).size();j++)
             {
-                out.add(habits.get(i).get(j));
+                if(habits.get(i).get(j).getOccurences().size() > 1 && habits.get(i).get(j).getPath().size()> 3)
+                    out.add(habits.get(i).get(j));
             }
         }
+        System.out.printf("Habits of %s created\n", user);
+        //System.out.println(out);
+        try
+        {
+            FileWriter fw = new FileWriter("app/services/SimpleModel/results.txt", true);
+            PrintWriter writer = new PrintWriter(fw);
+            writer.printf("User %s.\n\n", user);
+            writer.println(out);
+            writer.printf("========================================================================================\n");
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            System.err.println("Error writing in file.");
+        }
+        
         return out;
     }
 

@@ -14,7 +14,7 @@ public final class Constants
     public static final double ROUNDING = 0.01;
     public static final double COORDINATE_ERROR_ACCEPTED =0.01;
 
-    public static final int MIN_DIFF_SAME_JOURNEY = 30;
+    public static final int MIN_DIFF_SAME_JOURNEY = 60*3;
 
     public static  Calendar stringToCalendar(String str_date) throws ParseException
     {
