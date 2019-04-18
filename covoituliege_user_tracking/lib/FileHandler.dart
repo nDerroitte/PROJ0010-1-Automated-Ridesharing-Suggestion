@@ -91,12 +91,10 @@ Future<String> getLastGeofenceId() async {
   String id;
   try {
     id = await _readFile(await _geofenceFile);
-    print("id in getLastGeofenceId : " + id);
   } catch (e) {
     return null;
   }
   if (id == "") {
-    print("id == empty string");
     return null;
   }
   return id;
@@ -118,7 +116,6 @@ writeJourneyFromBufferedPoints(UserInfo user) async {
   points = points.sublist(0, points.length - 1);
   List<String> calendarAndPos;
   for (String point in points) {
-    print("point in writeJourney : " + point);
     calendarAndPos = point.split(",");
     user.addData(calendarAndPos[0], calendarAndPos[1], calendarAndPos[2]);
   }

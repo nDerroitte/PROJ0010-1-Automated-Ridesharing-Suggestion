@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:geolocator/geolocator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:intl/intl.dart';
@@ -77,15 +76,12 @@ class _MainScreenState extends State<MainScreen> {
   /// It is called when the user taps on the start button.
   /// //TODO rewrite doc
   void _start() async {
-    /*Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
-    clearBuffer();
-    storePoint(calendar, latitude.toString(), longitude.toString());*/
     clearBuffer();
 
+    /// Either the user is currently out of this geofence, in which case
+    /// it will be triggered directly, giving the process the current location,
+    /// either it will be triggered after the user has moved. In both cases,
+    /// there is no problem "hard-coding" a 0,0 location.
     GeofenceRegion newGeofence = GeofenceRegion('0', 0, 0,
         distBetweenPoints, <GeofenceEvent>[GeofenceEvent.exit],
         androidSettings: androidSettings);
@@ -107,13 +103,6 @@ class _MainScreenState extends State<MainScreen> {
   /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
   /// and updates the button so that it becomes a start button.
   _stop() async {
-    /*Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-
-    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
-    storePoint(calendar, latitude.toString(), longitude.toString());*/
     writeJourneyFromBufferedPoints(_user);
 
     String lastGeofence = await getLastGeofenceId();
@@ -198,8 +187,6 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 begin: Alignment.topRight,
                 end: Alignment.topLeft,
-                //begin: const FractionalOffset(0.0, 0.0),
-                //end: const FractionalOffset(1.0, 0.0),
                 stops: [0.0, 1.0],
                 tileMode: TileMode.clamp),
           ),
@@ -207,11 +194,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Container(
         color: Colors.lightBlue[50],
-        //width: 400.0,
-        //height: 200.0,
-        //decoration: new BoxDecoration(
-        //  image: new DecorationImage(image: new AssetImage("localisation2.png"), fit: BoxFit.cover,),
-        //),
         child: Center(
           child: ListView(
             shrinkWrap: true,
@@ -230,36 +212,7 @@ class _MainScreenState extends State<MainScreen> {
               ListTile(
                   leading: Icon(Icons.help),
                   title: Text('Afficher les données locales'),
-                  //child: _data,
-                  //subtitle : _data,
-                  //onTap: _pressedDataButton
                   onTap: _printDataScreen),
-
-/*
-              RaisedButton(
-                textColor: Colors.white,
-                color: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-
-                child: Text(
-                  "Effacer les données",
-                  style: textStyle,
-                ),
-                onPressed: clearFile,
-              ),
-
-             RaisedButton(
-                textColor: Colors.white,
-                color: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: _data,
-                onPressed: _pressedDataButton,
-              ),
-*/
             ],
           ),
         ),
