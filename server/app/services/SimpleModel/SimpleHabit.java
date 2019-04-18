@@ -54,10 +54,7 @@ public class SimpleHabit extends Habit
         long diff = this.occurences.get(nbHabits-1).getTimeInMillis() - this.occurences.get(0).getTimeInMillis();
         c.setTimeInMillis(diff);
         float mDay = c.get(Calendar.DAY_OF_MONTH);
-        System.out.println("Diff day "+mDay);
-        System.out.print(mDay/7);
         this.oldness = Math.round(mDay/7);
-        System.out.println("Oldness" +oldness);
         double r = 100*this.occurences.size()/this.oldness;
         this.reliability =  r> 100? 100 :r ;
     }
