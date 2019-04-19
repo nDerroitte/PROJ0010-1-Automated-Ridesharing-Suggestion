@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geofencing/geofencing.dart';
 
 /// Geofences parameters
-const distBetweenPoints = 1000.0;
+const distBetweenPoints = 250.0;
 final androidSettings = AndroidGeofencingSettings(
     initialTrigger: [GeofenceEvent.exit],
     notificationResponsiveness: 0,

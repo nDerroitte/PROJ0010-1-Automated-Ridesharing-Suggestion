@@ -97,14 +97,6 @@ class GeofencingService : MethodCallHandler, JobIntentService() {
                     sServiceStarted.set(true)
                 }
             }
-            "GeofencingService.promoteToForeground" -> {
-                mContext.startForegroundService(Intent(mContext, IsolateHolderService::class.java))
-            }
-            "GeofencingService.demoteToBackground" -> {
-                val intent = Intent(mContext, IsolateHolderService::class.java)
-                intent.setAction(IsolateHolderService.ACTION_SHUTDOWN)
-                mContext.startForegroundService(intent)
-            }
             else -> result.notImplemented()
         }
         result.success(null)

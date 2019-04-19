@@ -13,7 +13,7 @@ import io.flutter.view.FlutterMain
 
 class GeofencingBroadcastReceiver : BroadcastReceiver() {
     companion object {
-        private const val TAG = "GeofencingBroadcastReceiver"
+        private const val TAG = "GeoBroadcastReceiver"
     }
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "received geofence event")
