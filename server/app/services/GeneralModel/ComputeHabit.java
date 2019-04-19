@@ -16,26 +16,35 @@ import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
 import org.apache.commons.math3.ml.clustering.Cluster;
 
+/**
+ * Class for finding the habit of a user for a set journey with the same path.
+ * 
+ *
+ * @see [[Habit]]
+ * @see [[Journey]]
+ */
 public class ComputeHabit {
 
-    ArrayList<Long> raw_data;
-    Long[] index;
-    Long base;
-    Long end;
-    double[] signal;
-    long scale = 60000;
-    int minimal_period = 1440;
+    private Long[] index; // internal represeantation of the input data
+    private Long base; // first date where a journey occured
+    private Long end; // last date where a journey occured
+    private double[] signal; // signal representation of the data
+    private long scale = 60000; // scale millisecond to minut
+    private int minimal_period = 1440; // minimal period in minute
+/**
+ * 
+ * @param array All date where the journeys with the same path occured
+ * @param min_period All habit find by the class will have a period which is amultiple of min_period. min_period has minute unit.
+ */
+    public ComputeHabit(ArrayList<Long> array, int min_period) {
 
-    public ComputeHabit(ArrayList<Long> array,int min_period) {
-
-        //init some internal variable
+        // init some internal variable
         Collections.sort(array);
-        raw_data = array;
         int signal_size = 0;
-        if(array.size() > 0){
+        if (array.size() > 0) {
             base = array.get(0);
-            end = array.get(array.size()-1);
-            signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;            
+            end = array.get(array.size() - 1);
+            signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;
         }
         this.minimal_period = min_period;
         index = new Long[array.size()];
@@ -61,127 +70,133 @@ public class ComputeHabit {
         }
     }
 
-    //return the signal form of the input given in the constructor.
+    /**
+     * 
+     * @return the signal rpresentation of the data
+     */
     public double[] getSignal() {
         return this.signal.clone();
     }
-    
-    //compute and give back the habit.
+
+    /**
+     * 
+     * @return the habits given the date pass to the constructor
+     */
     public LinkedList<Habit> getHabit() {
 
-        //inititalization
+        // inititalization
         List<List<Cluster<DoublePoint>>> partitions = new ArrayList<List<Cluster<DoublePoint>>>();
         double best_score = Double.NEGATIVE_INFINITY;
         int best_score_index = -1;
-        int best_period = 0;  
-        LinkedList<Habit> habits = new LinkedList<Habit>();         
+        int best_period = 0;
+        LinkedList<Habit> habits = new LinkedList<Habit>();
         List<Cluster<DoublePoint>> best_partition = new LinkedList<>();
 
-        //get the possible period.
+        // get the possible period.
         HashSet<Integer> periods = find_period();
         Iterator<Integer> ite = periods.iterator();
 
-        //iterate over the finded period.
+        // iterate over the finded period.
         for (int i = 0; ite.hasNext(); i++) {
             Integer period = ite.next();
 
-            //format input for clustering
+            // format input for clustering
             ArrayList<DoublePoint> index = format_signal(period);
 
-            //perform the clustering
-            List<Cluster<DoublePoint>> partition = cluster(index,period);
+            // perform the clustering
+            List<Cluster<DoublePoint>> partition = cluster(index, period);
 
-            //evaluate the partition quality
-            double score = partitionScore(partition,period,index.size());
-            
-            if(score > best_score){
+            // evaluate the partition quality
+            double score = partitionScore(partition, period, index.size());
 
-                //select the best partition.
+            if (score > best_score) {
+
+                // select the best partition.
                 best_score = score;
                 best_score_index = i;
                 best_period = period;
                 best_partition = partition;
             }
-        } 
+        }
 
-        //if no habit detected, return an empty list.
-        if(best_period == 0){
+        // if no habit detected, return an empty list.
+        if (best_period == 0) {
             return habits;
         }
 
-        //get the best partition
+        // get the best partition
         Iterator<Cluster<DoublePoint>> part_ite = best_partition.iterator();
 
-        //write the finded habits
-        while(part_ite.hasNext()){        
-            Cluster<DoublePoint> cluster = part_ite.next();            
+        // write the finded habits
+        while (part_ite.hasNext()) {
+            Cluster<DoublePoint> cluster = part_ite.next();
             HabitGM h = new HabitGM();
-            h.period = (long) best_period/1440;
-            double[] mean_var = Stat.clusterStat(cluster,best_period); 
-            h.offset = base + Math.round(mean_var[0]*scale);
-            h.reliability = Math.min(1,(double)cluster.getPoints().size()/(signal.length/best_period));
+            h.period = (long) best_period / 1440;
+            double[] mean_var = Stat.clusterStat(cluster, best_period);
+            h.offset = base + Math.round(mean_var[0] * scale);
+            h.reliability = Math.min(1, (double) cluster.getPoints().size() / (signal.length / best_period));
             h.spread = mean_var[1];
             h.point_in_habit = cluster.getPoints().size();
             h.end = end;
             habits.add(h);
         }
         return habits;
-    }    
-    
-    //score a partition (partition is an output of clustering)
-    private double partitionScore(List<Cluster<DoublePoint>> part, int period,int nb_point){
-        PartitionStat stat = new PartitionStat(part,signal.length/period ,period,nb_point);
-        stat.compute();
-        return  Stat.mean(stat.getReliability())  / ((stat.getNoise()+ 0.0000001) * Stat.mean(stat.getStd()));
     }
 
-    //convert an ArrayList of DoublePoint to an ArrayRealVector
-    private ArrayRealVector toRealVector(ArrayList<DoublePoint> d){
+    // score a partition (partition is an output of clustering)
+    private double partitionScore(List<Cluster<DoublePoint>> part, int period, int nb_point) {
+        PartitionStat stat = new PartitionStat(part, signal.length / period, period, nb_point);
+        stat.compute();
+        return Stat.mean(stat.getReliability()) / ((stat.getNoise() + 0.0000001) * Stat.mean(stat.getStd()));
+    }
+
+    // convert an ArrayList of DoublePoint to an ArrayRealVector
+    private ArrayRealVector toRealVector(ArrayList<DoublePoint> d) {
         double[] array = new double[d.size()];
-        for(int i=0;i<d.size();i++){
+        for (int i = 0; i < d.size(); i++) {
             array[i] = d.get(i).getPoint()[0];
         }
         return new ArrayRealVector(array);
     }
 
-    //find lausible period with autocorrelation.
+    // find plausible period with autocorrelation.
     private HashSet<Integer> find_period() {
         // perform the autocorrelation
         Autocorr autocorr = new Autocorr();
-        if(signal == null){
+        if (signal == null) {
             return new HashSet<Integer>();
         }
 
         double[] result = autocorr.compute(signal, signal.length / 2);
-        if(result.length == 0){
+        if (result.length == 0) {
             return new HashSet<Integer>();
         }
-        //remove useless result
+        // remove useless result
         result[0] = 0.0;
 
-        //sort period from the most probable to the less one.
+        // sort period from the most probable to the less one.
         IndexSorter is = new IndexSorter(result);
         is.sort(false);
         Integer[] ranked_period = is.getIndexes();
         HashSet<Integer> periods = new HashSet<>();
 
-        //only consider the top 0.001 most probable period and forget the other.
+        // only consider the top 0.001 most probable period and forget the other.
         for (int i = 0; i < (int) ranked_period.length * 0.001 + 1; i++) {
 
-            //round the period to the closest multiple of a day.
+            // round the period to the closest multiple of a day.
             int candidate = Math.round(ranked_period[i] / minimal_period) * minimal_period;
-            if(candidate != 0 && !periods.contains(candidate)) {
+            if (candidate != 0 && !periods.contains(candidate)) {
                 periods.add(candidate);
             }
         }
         return periods;
     }
 
-    //prepare data for clustering algorithm.
+    // prepare data for clustering algorithm.
     private ArrayList<DoublePoint> format_signal(int period) {
         ArrayList<DoublePoint> out = new ArrayList<DoublePoint>();
-        for (int i = 0; i <index.length; i++) {
-            double[] p = {(double) index[i] % period };
+        for (int i = 0; i < index.length; i++) {
+            double[] p = { (double) index[i] % period };
             out.add(new DoublePoint(p));
         }
         return out;
@@ -196,26 +211,28 @@ public class ComputeHabit {
         // try to get an idea of a good epsilon value for dbscan.
         ArrayRealVector original = toRealVector(index);
         ArrayRealVector shift = (ArrayRealVector) original.getSubVector(1, original.getDimension() - 1);
-        shift = (ArrayRealVector) shift.append(original.getEntry(0)+period);
+        shift = (ArrayRealVector) shift.append(original.getEntry(0) + period);
         ArrayRealVector diff = (ArrayRealVector) shift.subtract(original);
-        double epsilon = Stat.mean(diff.toArray())*2;
+        double epsilon = Stat.mean(diff.toArray()) * 2;
         CircularDist measure = new CircularDist(period);
 
-        //perform clustering
-        DBSCANClusterer<DoublePoint> dbscan = new DBSCANClusterer<DoublePoint>(epsilon, min_point,measure);
+        // perform clustering
+        DBSCANClusterer<DoublePoint> dbscan = new DBSCANClusterer<DoublePoint>(epsilon, min_point, measure);
         List<Cluster<DoublePoint>> result = dbscan.cluster(index);
         ListIterator<Cluster<DoublePoint>> ite = result.listIterator();
 
-        //correct clustering output, apache dbscan cannot write several time the same point in the same cluster.
-        //if it has to cluster [10 10 11 10 2 3 1 2 ] => a possible output will be [[10 11] [1 2 3]], but we want [[10 10 10 11][1 2 2 3]]
-        while(ite.hasNext()){
+        // correct clustering output, apache dbscan cannot write several time the same
+        // point in the same cluster.
+        // if it has to cluster [10 10 11 10 2 3 1 2 ] => a possible output will be [[10
+        // 11] [1 2 3]], but we want [[10 10 10 11][1 2 2 3]]
+        while (ite.hasNext()) {
             Cluster<DoublePoint> cluster = ite.next();
             ListIterator<DoublePoint> ite2 = cluster.getPoints().listIterator();
             double[] array = original.toArray();
-            while(ite2.hasNext()){
+            while (ite2.hasNext()) {
                 DoublePoint point = ite2.next();
-                int c = Stat.count(array, (int) point.getPoint()[0], array.length)-1;
-                while(c >0){
+                int c = Stat.count(array, (int) point.getPoint()[0], array.length) - 1;
+                while (c > 0) {
                     ite2.add(new DoublePoint(point.getPoint()));
                     c--;
                 }

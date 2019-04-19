@@ -15,14 +15,28 @@ import jdk.jfr.Timestamp;
 import static org.junit.Assert.*;
 import services.CircularDist;
 
-public class TestComputeHabit {
+import org.apache.commons.math3.ml.clustering.DoublePoint;
+import org.apache.commons.math3.ml.clustering.Cluster;
 
-    //all in minutes; Generate fake data
-    public ArrayList<Long> new_data(int period, int spread, double reliability, int offset,int noise, long range){
+/**
+ * Test the ComputeHabit classe
+ */
+public class TestComputeHabit {
+/**
+ * 
+ * @param period the habit period
+ * @param spread the habit spread
+ * @param reliability the habit reliability
+ * @param offset the first date the habit occur
+ * @param noise the number of journey with the same start and end point which is not part of the habit
+ * @param range a long 
+ * @return the date at which the habit occur after collecting data during range minute plus noise date.
+ * @see [[HabitGM]]
+ */
+    public ArrayList<Long> new_data(int period, int spread, double reliability, long base_date,int noise, long range){
         long scale = 1000*60;
         ArrayList<Long> out = new ArrayList<Long>();
-        long base_date = new Date().getTime();
-        long curent_date = base_date + offset * scale;
+        long curent_date = base_date;
         while(curent_date < base_date + scale*range){
             double proba = Math.random();
             if(proba < reliability){
@@ -45,13 +59,34 @@ public class TestComputeHabit {
         return out;
     }
 
+    /**
+     * Test if ComputeHabit crash on empty entry.
+     */
     @Test 
-    public void EmptyInput(){
+    public void emptyInput(){
         ArrayList<Long> empty = new ArrayList<Long>();
         ComputeHabit ch = new ComputeHabit(empty,1440);
         assertTrue(ch.getHabit().size() == 0);
     } 
 
+    /**
+     * Check the internal signal rpresentation of the data.
+     */
+    @Test 
+    public void signal(){
+        ArrayList<Long> data = new ArrayList<>();
+        data.add(Long.valueOf(6*60000));
+        data.add(Long.valueOf(2*60000));
+        data.add(Long.valueOf(8*60000));
+        ComputeHabit ch = new ComputeHabit(data,1);
+        double[] out = ch.getSignal();
+        double[] expected_out = {1,0,0,0,1,0,1};
+        assertTrue(Arrays.equals(expected_out,out));
+    }
+
+    /**
+     * Check if the habit find is the expected one.
+     */
     @Test 
     public void simpleHabit(){
         int period = 10080;
@@ -71,16 +106,11 @@ public class TestComputeHabit {
         assertTrue(habits.size() == 1);
         assertEquals(expected_out,habits.getFirst());
     }
-    
-    public void testCircDist(){
-        int period = 44640;
-        double[] a = {5754};
-        double[] b = {1435};
-        CircularDist c = new CircularDist(period);
-        System.out.println(c.compute(a,b));
-    }
 
-    //realistic case.
+    /**
+     * evaluate the computeHabit performence.
+     * @throws IOException
+     */
     public void testSignal() throws IOException{
 
         int[] hit = new int[6];
@@ -89,7 +119,9 @@ public class TestComputeHabit {
                 //generate fake data:
                 long range = 10080*3;
                 ArrayList<Long> raw_data = new ArrayList<Long>();
+                long base_date = new Date().getTime();
                 for(int i=0; i < j; i++){
+                    base_date += 1440;
                     raw_data.addAll(new_data(10080,60,0.7,10080/7*i,0,range));
                 }
                 ComputeHabit c = new ComputeHabit(raw_data,1440);

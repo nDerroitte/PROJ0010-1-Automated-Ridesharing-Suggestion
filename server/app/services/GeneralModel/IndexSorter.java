@@ -32,6 +32,9 @@ public class IndexSorter implements Comparator<Integer> {
     }
 
     /**
+     * @param ascendant
+     * if ascendant = True, the sorting is ascendant; otherwise descendant.
+     * 
      * Sorts the underlying index array based upon the values provided in the
      * constructor. The underlying value array is not sorted.
      */
@@ -52,10 +55,6 @@ public class IndexSorter implements Comparator<Integer> {
      */
     public Integer[] getIndexes() {
         return indexes;
-    }
-
-    public double[] get_value(){
-        return this.values;
     }
 
     /**

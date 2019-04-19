@@ -17,10 +17,21 @@ import java.text.ParseException;
 
 import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
-
+/**
+ * Class for generating all habit of an user
+ */
 public class UserGM {
+    /**
+     * All journeys of the user.
+     */
     private ArrayList<Journey> unused_journeys;
+    /**
+     * id of the user
+     */
     private String user_id;
+    /**
+     * Tell which method to use when calling [[createHabits]]
+     */
     private int mode;
 
     public UserGM(String user_id, MongoCollection<Document> database, int mode) throws ParseException {
@@ -96,7 +107,11 @@ public class UserGM {
             e.printStackTrace();
         }
     }
-
+    /**
+     * 
+     * @param journeys: list of journey
+     * @return hash set with 7 key
+     */
     HashMap<Integer, ArrayList<Journey>> sortJourneyByDay(ArrayList<Journey> journeys) {
         HashMap<Integer, ArrayList<Journey>> out = new HashMap<>();
         for (Journey journey : journeys) {

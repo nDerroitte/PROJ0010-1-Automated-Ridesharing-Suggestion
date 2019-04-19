@@ -35,7 +35,8 @@ public final class Coordinate {
 
     @Override
     public String toString() {
-        NumberFormat formatter = new DecimalFormat("000.000");
+        //NumberFormat formatter = new DecimalFormat("000.000");
+        NumberFormat formatter = DecimalFormat.getInstance(Locale.ENGLISH);
         return "[" + formatter.format(x) + ";" + formatter.format(y) + "]";
     }
 

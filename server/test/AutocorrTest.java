@@ -7,7 +7,9 @@ import akka.dispatch.forkjoin.ThreadLocalRandom;
 import jdk.jfr.Timestamp;
 
 import static org.junit.Assert.*;
-
+/**
+ * Test the autocorrelation Class
+ */
 public class AutocorrTest{
 
     @Test //autocorr on periodic data.   
@@ -24,7 +26,6 @@ public class AutocorrTest{
                 expected_out &= (0.99 < out[i] && out[i] < 1.01) ;
             }
        }
-       System.out.println(Arrays.toString(out));
        assertTrue(max_index %4 == 0);
     }
 

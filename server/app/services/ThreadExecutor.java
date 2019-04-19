@@ -23,13 +23,28 @@ import java.util.concurrent.*;
 
 import javax.inject.*;
 import com.google.common.util.concurrent.*;
-
+/**
+ * <b> Implement the thread pool for computing the habits of an user </b>
+ * 
+ * The thread pool is an unbouded single thread.
+ * @see submitTask(String,int) for requesting the computation of the habit of an user.
+ * @author Cedric
+ */
 @Singleton
 public class ThreadExecutor implements HabitGenerator {
+    /**
+     * Entry point to the database
+     */
     private final MongoDatabase database;
     private final ExecutorService worker;
+    /**
+     * Entry point to the the collection users of the database.
+     */
     private final MongoCollection<Document> users;
 
+    /**
+     * @param db: entry point to the database.
+     */
     @Inject
     public ThreadExecutor(MongoInterface db) {
         this.worker = Executors.newSingleThreadExecutor();
@@ -37,6 +52,20 @@ public class ThreadExecutor implements HabitGenerator {
         this.users = database.getCollection("users");
     }
 
+    /**
+     * 
+     * @param userID : id of the user for who we want to compute its habits.
+     * @param method : an integer saying which method to use. 
+     * <ul>
+     * <li> method = 0: use of the general model with a period which is a multiple of 1 day
+     * <li> method = 1: use of the general model with a period which is a multiple of 7 day
+     * <li> method = 2: use of general model with period multiple of 1 and sort the journey by day
+     * <li> method = 3: use of the simple model
+     * </ul>
+     * @see services.UserGM for general model
+     * @see services.UserSimpleModel for the simple model
+     *                  
+     */
     @Override
     public void submitTask(String userID, int method) {
         try {
@@ -48,7 +77,9 @@ public class ThreadExecutor implements HabitGenerator {
     }
 
 }
-
+/**
+ * Worker of ThreadExecutor
+ */
 class ComputationUnit implements Runnable {
     private final String user_id;
     private final int method;

@@ -5,8 +5,14 @@ import org.junit.Test;
 import services.Coordinate;
 import static org.junit.Assert.*;
 
+/**
+ * Class for testing Constants
+ */
 public class TestConstants{
 
+    /**
+     * Test is the Coordinate rounding is well performed
+     */
     @Test
     public void CoordinateTransfo(){
         double lat = 1;
