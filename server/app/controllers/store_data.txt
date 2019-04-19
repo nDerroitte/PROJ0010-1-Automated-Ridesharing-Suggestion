@@ -28,6 +28,9 @@ import java.util.Optional;
 import java.util.Calendar;
 import services.*;
 
+
+
+
 @Singleton
 public class StoreData extends Controller {
 	
@@ -48,18 +51,22 @@ public class StoreData extends Controller {
 		String[] data = request().body().asText().split("data_splitter");
 		JsonReader reader;
 		JsonObject dataUnit;
-		Http.Cookie cookie = request().cookies().get("user");
-		if (cookie == null) {
+		Optional cookie = request().header("cookie");
+		if (!cookie.isPresent()) {
 			return badRequest("Cookie required");
 		}
-		String cookieValue = cookie.value();
+		String cookieValue = cookie.get().toString().split(";")[0];
+		if (!cookieValue.split("=")[0].equals("user") || cookieValue.split("=").length != 2) {
+			return badRequest("Cookie badly set");
+		}
+
 		for (String jSonString : data) {
 			reader = Json.createReader(new StringReader(jSonString));
 			dataUnit = reader.readObject();
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
 			Document user = users.find(eq("user", dataUnit.getString("UserId"))).first();
-			if (user == null || !user.get("key").equals(cookieValue)) {
+			if (user == null || !user.get("key").equals(cookieValue.split("=")[1])) {
 				continue;
 			}
 			ArrayList<Point> point_list = new ArrayList<>();

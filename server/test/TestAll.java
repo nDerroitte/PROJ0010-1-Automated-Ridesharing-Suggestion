@@ -172,15 +172,15 @@ public class TestAll {
         dates.addAll(new TestComputeHabit().new_data(period, spread, reliability, base_date, noise, range));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         for (long date : dates) {
-            out += "{\"UserInfo\":{\"UserID\": " + user + "Data\": {\"Point\" : [";
+            out += "{\"UserId\": \"" + user + "\",\"Points\" : [";
             ArrayList<Point> journey = journey(new Coordinate(50.575, 5.5399), new Coordinate(50.592, 5.494), date);
             for (Point point : journey) {
 
-                out += "{\"calendar\":" + sdf.format(date) + ",";
-                out += "\"lat\":" + point.getPosition().getX() + ",";
-                out += "\"lat\":" + point.getPosition().getY() + "}";
+                out += "{\"calendar\": \"" + sdf.format(date) + "\",";
+                out += "\"lat\":\"" + point.getPosition().getX() + "\",";
+                out += "\"long\":\"" + point.getPosition().getY() + "\"}";
             }
-            out += "]}}}";
+            out += "]}";
             out += "data_splitter";
         }
         return out;
@@ -188,6 +188,8 @@ public class TestAll {
 
     public void store_data() {
         String body = json();
+        System.out.println(body);
+
         RequestBuilder request = Helpers.fakeRequest("POST", "/store_data?user=" + user + "&password=" + password)
                 .header(Http.HeaderNames.HOST, "localhost:9000").cookie(cookie);
         request.bodyText(body);

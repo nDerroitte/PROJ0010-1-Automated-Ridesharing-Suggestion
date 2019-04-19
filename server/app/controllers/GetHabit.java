@@ -47,7 +47,7 @@ public class GetHabit extends Controller {
 			try {
 				while (cursor.hasNext()) {
 					Document user = cursor.next();						
-					hb.submitTask((String) user.get("user"),1);
+					hb.submitTask((String) user.get("user"),Integer.parseInt(method));
 					System.out.println("User: " + user.get("user") + " is submit");
 				}
 			} 
