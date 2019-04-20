@@ -19,6 +19,7 @@ import play.twirl.api.Content;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 public class TestAll {
 
     Application fakeApp;
@@ -35,7 +36,7 @@ public class TestAll {
     }
 
     @Test
-    public void integrate_test() {
+    public void integrate_test() throws InterruptedException {
         erase_user(false);
         sign_up();
         sign_in();
@@ -207,6 +208,8 @@ public class TestAll {
         RequestBuilder request = Helpers.fakeRequest("GET", "/get_habit?user=" + user + "&method=" + 0)
                 .header(Http.HeaderNames.HOST, "localhost:9000");
         Result result = Helpers.route(fakeApp, request);
+       System.out.println( Helpers.contentAsString(result));
         assertEquals(OK, result.status());
+        assertTrue(Helpers.contentAsString(result).contains("computing"));
     }
 }

@@ -17,6 +17,9 @@ libraryDependencies += "com.h2database" % "h2" % "1.4.197"
 libraryDependencies += "org.assertj" % "assertj-core" % "3.6.2" % Test
 libraryDependencies += "org.awaitility" % "awaitility" % "2.0.0" % Test
 
+//ws client for testing
+libraryDependencies += ws
+
 // Java driver for mongoDB
 libraryDependencies ++= Seq(
     "org.mongodb" % "mongodb-driver" % "3.8.2"
@@ -29,6 +32,7 @@ libraryDependencies += "org.apache.commons" % "commons-math3" % "3.6.1"
 // JSon parsing
 libraryDependencies += "org.glassfish" % "javax.json" % "1.0.4"
 
+//mailing
 libraryDependencies += "com.typesafe.play" %% "play-mailer" % "6.0.1"
 libraryDependencies += "com.typesafe.play" %% "play-mailer-guice" % "6.0.1"
 

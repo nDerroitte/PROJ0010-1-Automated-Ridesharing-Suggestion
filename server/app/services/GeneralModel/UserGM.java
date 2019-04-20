@@ -93,7 +93,7 @@ public class UserGM {
 
     public void habitsTofile(LinkedList<Habit> habits, JourneyPath path) {
         try {
-            File root = new File("user_habit/" + user_id + "/" + mode);
+            File root = new File("C:/Users/cedri/PI/server/user_habit/" + user_id + "/" + mode);
             root.mkdirs();
             int i= 0;
             for (Habit habit : habits) {
