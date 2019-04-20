@@ -3,7 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:intl/intl.dart';
 import 'package:geofencing/geofencing.dart';
+import 'package:latlong/latlong.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
@@ -37,16 +41,16 @@ class _MainScreenState extends State<MainScreen> {
   static Future<void> outOfGeofenceCallback(
       List<String> ids, Location location, GeofenceEvent event) async {
     /// Note : int are 64-bits in Flutter, which means that even if we triggered
-    /// 1000 geofences per second, il would take more that 500 millions years to overflow
+    /// 1000 geofences per second, it would take more that 500 millions years to overflow
     DateTime curTime = DateTime.now();
-    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
+    String calendar = DateFormat(dateFormat).format(DateTime.now());
     String expectedId = await getLastGeofenceId();
-    print("ids in ids : " + ids.toString());
     if (ids.contains(expectedId)) {
       String prevCalendar = await getLastCalendar();
-      if (prevCalendar != null && curTime
-          .subtract(minPauseTimeBetweenJourneys)
-          .isAfter(DateFormat('yyyy-MM-dd HH-mm-ss').parse(prevCalendar))) {
+      if (prevCalendar != null &&
+          curTime
+              .subtract(minPauseTimeBetweenJourneys)
+              .isAfter(DateFormat(dateFormat).parse(prevCalendar))) {
         writeJourneyFromBufferedPoints(_user);
       }
       storePoint(calendar, location.latitude.toString(),
@@ -71,28 +75,98 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  static Future<void> newPointsBatchCallback(
+      List<TimedLocation> locations) async {
+    String lastCalendar;
+    double lastLat;
+    double lastLon;
+    List<String> lastTimedLoc = await getLastTimedLoc();
+    if (lastTimedLoc == null) {
+      if (locations.length > 0) {
+        lastCalendar = locations[0].calendar;
+        lastLat = double.parse(locations[1].latitude);
+        lastLon = double.parse(locations[2].longitude);
+        await storePoint(lastCalendar, locations[1].latitude, locations[2].longitude);
+      }
+    } else {
+      lastCalendar = lastTimedLoc[0];
+      lastLat = double.parse(lastTimedLoc[1]);
+      lastLon = double.parse(lastTimedLoc[2]);
+    }
+    String newCalendar;
+    double distance;
+
+    for (TimedLocation loc in locations) {
+      distance = DistanceVincenty().distance(LatLng(lastLat, lastLon),
+          LatLng(double.parse(loc.latitude), double.parse(loc.longitude)));
+      print("long but not infinite vincenty");
+      if (await hasJourneyStarted()) {
+        print("journey has started");
+        if (DateFormat(dateFormat)
+            .parse(lastCalendar)
+            .add(minPauseTimeBetweenJourneys)
+            .isBefore(DateFormat(dateFormat).parse(loc.calendar))) {
+          if (distance < minDistanceNewJourney) {
+            newCalendar = DateFormat(dateFormat).format(DateFormat(dateFormat)
+                .parse(lastCalendar)
+                .add(Duration(minutes: 2, seconds: 30)));
+            await storePoint(newCalendar, loc.latitude, loc.longitude);
+          }
+          await writeJourneyFromBufferedPoints(_user);
+          await storeGeofenceCenter(loc.latitude, loc.longitude);
+          lastLat = double.parse(loc.latitude);
+          lastLon = double.parse(loc.longitude);
+        } else if (distance > minDistanceNewJourney) {
+          await storePoint(loc.calendar, loc.latitude, loc.longitude);
+          lastCalendar = loc.calendar;
+          lastLat = double.parse(loc.latitude);
+          lastLon = double.parse(loc.longitude);
+        }
+      } else if (distance > minDistanceNewJourney) {
+        print("journey has not started");
+        await storePoint(loc.calendar, loc.latitude, loc.longitude);
+        lastCalendar = loc.calendar;
+        lastLat = double.parse(loc.latitude);
+        lastLon = double.parse(loc.longitude);
+      }
+    }
+  }
+
   /// This function clear the buffer and starts a new capturePos process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
   /// //TODO rewrite doc
   void _start() async {
-    clearBuffer();
+    if (Platform.isIOS) {
+      //TODO implement location batches on IOs side
+      clearBuffer();
 
-    /// Either the user is currently out of this geofence, in which case
-    /// it will be triggered directly, giving the process the current location,
-    /// either it will be triggered after the user has moved. In both cases,
-    /// there is no problem "hard-coding" a 0,0 location.
-    GeofenceRegion newGeofence = GeofenceRegion('0', 0, 0,
-        distBetweenPoints, <GeofenceEvent>[GeofenceEvent.exit],
-        androidSettings: androidSettings);
+      /// Either the user is currently out of this geofence, in which case
+      /// it will be triggered directly, giving the process the current location,
+      /// either it will be triggered after the user has moved. In both cases,
+      /// there is no problem "hard-coding" a 0,0 location.
+      GeofenceRegion newGeofence = GeofenceRegion(
+          '0', 0, 0, distBetweenPoints, <GeofenceEvent>[GeofenceEvent.exit],
+          androidSettings: androidSettings);
 
-    /// No volatile state can be stored in background because the application
-    /// may get killed at anytime (and reopened when needed)
-    storeGeofenceById('0');
+      /// No volatile state can be stored in background because the application
+      /// may get killed at anytime (and reopened when needed)
+      storeGeofenceById('0');
 
-    await GeofencingManager.initialize();
-    await GeofencingManager.registerGeofence(
-        newGeofence, outOfGeofenceCallback);
+      await GeofencingManager.initialize();
+      await GeofencingManager.registerGeofence(
+          newGeofence, outOfGeofenceCallback);
+    } else {
+      final List<dynamic> args = <dynamic>[
+        PluginUtilities.getCallbackHandle(newPointsBatchCallback).toRawHandle()
+      ];
+      args.add(timeIntervalBetweenPoints);
+      args.add(maxWaitTimeForUpdates);
+      args.add(minDistanceBetweenPoints);
+      MethodChannel('plugins.flutter.io/geofencing_plugin')
+          .invokeMethod('GeofencingPlugin.registerLocationListener', args);
+      await startedLocListener();
+    }
     setState(() {
       _pressedOnOff = _stop;
       _onOffIcon = Icons.stop;
@@ -105,10 +179,19 @@ class _MainScreenState extends State<MainScreen> {
   _stop() async {
     writeJourneyFromBufferedPoints(_user);
 
-    String lastGeofence = await getLastGeofenceId();
-    if (lastGeofence != null) {
-      GeofencingManager.removeGeofenceById(lastGeofence);
-      clearGeofence();
+    if (Platform.isIOS) {
+      String lastGeofence = await getLastGeofenceId();
+      if (lastGeofence != null) {
+        GeofencingManager.removeGeofenceById(lastGeofence);
+        clearGeofence();
+      }
+    } else {
+      final List<dynamic> args = <dynamic>[
+        PluginUtilities.getCallbackHandle(newPointsBatchCallback).toRawHandle()
+      ];
+      MethodChannel('plugins.flutter.io/geofencing_plugin')
+          .invokeMethod('GeofencingPlugin.removeLocationListener', args);
+      await stoppedLocListener();
     }
 
     setState(() {
@@ -146,12 +229,22 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _playOrStop() async {
-    if (await getLastGeofenceId() == null) {
-      _pressedOnOff = _start;
-      _onOffIcon = Icons.play_arrow;
+    if (Platform.isIOS) { //TODO should be removed soon
+      if (await getLastGeofenceId() == null) {
+        _pressedOnOff = _start;
+        _onOffIcon = Icons.play_arrow;
+      } else {
+        _pressedOnOff = _stop;
+        _onOffIcon = Icons.stop;
+      }
     } else {
-      _pressedOnOff = _stop;
-      _onOffIcon = Icons.stop;
+      if (await isLocListenerStarted()) {
+        _pressedOnOff = _stop;
+        _onOffIcon = Icons.stop;
+      } else {
+        _pressedOnOff = _start;
+        _onOffIcon = Icons.play_arrow;
+      }
     }
     setState(() {});
   }

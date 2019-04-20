@@ -16,9 +16,9 @@ class ForgottenPasswordScreen extends StatefulWidget {
 class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
   static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _listViewContent;
-  TextInput _usernameInput;
+  InputText _usernameInput;
   TextEditingController _username = TextEditingController();
-  TextInput _emailInput;
+  InputText _emailInput;
   TextEditingController _email = TextEditingController();
   Padding _askNewPasswordButton;
 
@@ -128,7 +128,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
   void initState() {
     super.initState();
 
-    /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
+    /// We wrap the InputTexts in variables so that we can insert messages between them without having them rebuilt.
     _usernameInput = /*TextFormField(
       controller: _username,
       decoration: new InputDecoration(
@@ -141,12 +141,12 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
           ),
         ),),);*/
 
-    TextInput(
+    InputText(
       messageToUser: 'Identifiant',
       color: _backgroundColor,
       controller: _username,
     );
-     _emailInput = TextInput(
+     _emailInput = InputText(
       messageToUser: 'Adresse email',
       color: _backgroundColor,
       controller: _email,

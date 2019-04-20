@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.UUID
 
 import com.google.android.gms.location.GeofencingEvent
+import com.google.android.gms.location.LocationResult
 
 class GeofencingService : MethodCallHandler, JobIntentService() {
     private val queue = ArrayDeque<List<Any>>()
@@ -108,37 +109,55 @@ class GeofencingService : MethodCallHandler, JobIntentService() {
     }
 
     override fun onHandleWork(intent: Intent) {
-        val callbackHandle = intent.getLongExtra(GeofencingPlugin.CALLBACK_HANDLE_KEY, 0)
-        val geofencingEvent = GeofencingEvent.fromIntent(intent)
-        if (geofencingEvent.hasError()) {
-            Log.e(TAG, "Geofencing error: ${geofencingEvent.errorCode}")
-            return
-        }
+        val callbackHandleLL = intent.type
+        if (callbackHandleLL == null) {
+            val callbackHandle = intent.getLongExtra(GeofencingPlugin.CALLBACK_HANDLE_GEO_KEY, 0)
 
-        // Get the transition type.
-        val geofenceTransition = geofencingEvent.geofenceTransition
+            val geofencingEvent = GeofencingEvent.fromIntent(intent)
+            if (geofencingEvent.hasError()) {
+                Log.e(TAG, "Geofencing error: ${geofencingEvent.errorCode}")
+                return
+            }
 
-        // Get the geofences that were triggered. A single event can trigger
-        // multiple geofences.
-        val triggeringGeofences = geofencingEvent.triggeringGeofences.map {
-            it.requestId
-        }
+            // Get the transition type.
+            val geofenceTransition = geofencingEvent.geofenceTransition
 
-        val location = geofencingEvent.triggeringLocation
-        val locationList = listOf(location.latitude,
-                location.longitude)
-        val geofenceUpdateList = listOf(callbackHandle,
-                triggeringGeofences,
-                locationList,
-                geofenceTransition)
+            // Get the geofences that were triggered. A single event can trigger
+            // multiple geofences.
+            val triggeringGeofences = geofencingEvent.triggeringGeofences.map {
+                it.requestId
+            }
 
-        synchronized(sServiceStarted) {
-            if (!sServiceStarted.get()) {
-                // Queue up geofencing events while background isolate is starting
-                queue.add(geofenceUpdateList)
-            } else {
-                // Callback method name is intentionally left blank.
-                mBackgroundChannel.invokeMethod("", geofenceUpdateList)
+            val location = geofencingEvent.triggeringLocation
+            val locationList = listOf(location.latitude,
+                    location.longitude)
+            val geofenceUpdateList = listOf(callbackHandle,
+                    triggeringGeofences,
+                    locationList,
+                    geofenceTransition)
+
+            synchronized(sServiceStarted) {
+                if (!sServiceStarted.get()) {
+                    // Queue up geofencing events while background isolate is starting
+                    queue.add(geofenceUpdateList)
+                } else {
+                    // Callback method name is intentionally left blank.
+                    mBackgroundChannel.invokeMethod("", geofenceUpdateList)
+                }
+            }
+        } else {
+            if (LocationResult.hasResult(intent)) {
+                val locations = LocationResult.extractResult(intent).locations.map {
+                    listOf(it.latitude, it.longitude, it.time)
+                }
+                val locListenerUpdateList = listOf(callbackHandleLL.toLong(), "LL", locations)
+                synchronized(sServiceStarted) {
+                    if (!sServiceStarted.get()) {
+                        queue.add(locListenerUpdateList)
+                    } else {
+                        mBackgroundChannel.invokeMethod("", locListenerUpdateList)
+                    }
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ import 'Cst.dart';
 /// to get the current input, without having to call a function each time the input is changed.
 /// The obscureText argument tells whether the text should be hidden or not (on the screen), it defaults to false.
 ///	The emailAddress argument tells whether the keyboard should be optimized for an email address input, it defaults to false.
-class TextInput extends StatelessWidget {
+class InputText extends StatelessWidget {
   static const _padding = EdgeInsets.symmetric(vertical: 15.0);
 
   final String messageToUser;
@@ -17,16 +17,13 @@ class TextInput extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final bool emailAddress;
-  //final ShapeBorder shape;
   final InputDecoration decoration;
 
-  TextInput({
+  InputText({
     @required this.messageToUser,
     @required this.color,
     @required this.controller,
-    //@required this.shape,
     @required this.decoration,
-
     this.obscureText = false,
     this.emailAddress = false,
   })  : assert(messageToUser != null),
@@ -46,14 +43,7 @@ class TextInput extends StatelessWidget {
       child: Padding(
         padding: _padding,
         child: Row(
-
           children: <Widget>[
-
-            /*Text(
-              this.messageToUser + ': ',
-              style: textStyle,
-            ),*/
-
             Expanded(
               child: Container(
                 /*decoration: BoxDecoration(
@@ -61,37 +51,25 @@ class TextInput extends StatelessWidget {
                     borderRadius : BorderRadius.circular(25.0)
               ),*/
                 child: TextFormField(
-                    obscureText: this.obscureText,
-                    keyboardType: type,
-                    //style: textStyle,
-                    style: TextStyle(fontSize: 18.0, color: Colors.black),
-                    controller: controller,
-                    inputFormatters: <TextInputFormatter> [
-                      BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
-                    ] ,
-                  decoration: new InputDecoration(
-                  labelText: this.messageToUser,
-                  fillColor: Colors.black,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(25.0),
-                      borderSide: new BorderSide(
-                      ),
-                    ),
-
-                  )),
-                /*child: TextField(
                   obscureText: this.obscureText,
                   keyboardType: type,
                   style: textStyle,
                   controller: controller,
-                  inputFormatters: <TextInputFormatter> [
-                    BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
-                  ] ,
-                ), */
+                  inputFormatters: <TextInputFormatter>[
+                    BlacklistingTextInputFormatter(
+                        RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
+                  ],
+                  decoration: new InputDecoration(
+                    labelText: this.messageToUser,
+                    fillColor: Colors.black,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+                  ),
+                ),
               ),
             ),
-
-
           ],
         ),
       ),

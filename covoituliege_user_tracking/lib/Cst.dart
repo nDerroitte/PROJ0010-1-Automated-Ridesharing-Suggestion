@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:geofencing/geofencing.dart';
 
 /// Geofences parameters
+/// TODO should be deleted soon
 const distBetweenPoints = 250.0;
 final androidSettings = AndroidGeofencingSettings(
     initialTrigger: [GeofenceEvent.exit],
     notificationResponsiveness: 0,
     loiteringDelay: 0);
-final minPauseTimeBetweenJourneys = Duration(minutes: 20);
 
-const _fontSize = 18.0;
+/// Tracking algorithm parameters
+const minDistanceNewJourney = 1000.0; // 1000 meters
+final minPauseTimeBetweenJourneys = Duration(minutes: 20);
+const dateFormat = 'yyyy-MM-dd HH-mm-ss';
+
+/// Location Listener parameters
+const timeIntervalBetweenPoints = 150000;  // 2 min 30
+const maxWaitTimeForUpdates = 3600000;  // 1 hour
+const minDistanceBetweenPoints = 100.0; // 100 meters
 
 /// Different text styles.
+const _fontSize = 18.0;
 const textStyle = TextStyle(fontSize: _fontSize, color: Colors.black);
 const warningStyle = TextStyle(fontSize: _fontSize, color: Colors.red);
 const linkStyle = TextStyle(fontSize: _fontSize, color: Colors.lightBlue);
@@ -42,9 +51,8 @@ const forgottenPasswordOK = 5;
 const storeDataOK = 6;
 
 /// The appBar is the same for all screens.
-final _appBarColor = Colors.orange[300];
 final appBar = AppBar(
-    title: Center(child: Text('Ugo')), //LET THE SPACE, IT IS FOR CENTERING
+    title: Center(child: Text('Ugo')),
     flexibleSpace: Container(
       decoration: new BoxDecoration(
         gradient: new LinearGradient(
@@ -54,22 +62,10 @@ final appBar = AppBar(
             ],
             begin: Alignment.topRight,
             end: Alignment.topLeft,
-            //begin: const FractionalOffset(0.0, 0.0),
-            //end: const FractionalOffset(1.0, 0.0),
             stops: [0.0, 1.0],
             tileMode: TileMode.clamp),
       ),
     ),
-
-
-
-  //title: Text(
-   // 'Ugo',
-   // style: textStyle,
-
-
-  //centerTitle: true,
-  //backgroundColor: _appBarColor,
 );
 
 /// Text relative to the users' personal data usage.

@@ -18,13 +18,13 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _listViewContent;
-  TextInput _usernameInput;
+  InputText _usernameInput;
   TextEditingController _username = TextEditingController();
-  TextInput _passwordInput;
+  InputText _passwordInput;
   TextEditingController _password = TextEditingController();
-  TextInput _passwordConfirmationInput;
+  InputText _passwordConfirmationInput;
   TextEditingController _passwordConfirmation = TextEditingController();
-  TextInput _emailInput;
+  InputText _emailInput;
   TextEditingController _email = TextEditingController();
   RichText _bottomNavigationBar;
   Padding _signUpButton;
@@ -196,25 +196,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
 
-    /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
-    _usernameInput = TextInput(
+    /// We wrap the InputTexts in variables so that we can insert messages between them without having them rebuilt.
+    _usernameInput = InputText(
       messageToUser: 'Identifiant',
       color: _backgroundColor,
       controller: _username,
     );
-    _passwordInput = TextInput(
+    _passwordInput = InputText(
       messageToUser: 'Mot de passe: 4 à 16 caractères',
       color: _backgroundColor,
       controller: _password,
       obscureText: true,
     );
-    _passwordConfirmationInput = TextInput(
+    _passwordConfirmationInput = InputText(
       messageToUser: 'Confirmation',
       color: _backgroundColor,
       controller: _passwordConfirmation,
       obscureText: true,
     );
-    _emailInput = TextInput(
+    _emailInput = InputText(
       messageToUser: 'Adresse email',
       color: _backgroundColor,
       controller: _email,

@@ -12,6 +12,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
@@ -28,6 +30,7 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
     private val mContext = context
     private val mActivity = activity
     private val mGeofencingClient = LocationServices.getGeofencingClient(mContext)
+    private val mLocListenerClient = FusedLocationProviderClient(mContext)
 
     companion object {
         @JvmStatic
@@ -35,7 +38,9 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
         @JvmStatic
         val SHARED_PREFERENCES_KEY = "geofencing_plugin_cache"
         @JvmStatic
-        val CALLBACK_HANDLE_KEY = "callback_handle"
+        val CALLBACK_HANDLE_GEO_KEY = "callback_handle_geo"
+        @JvmStatic
+        val CALLBACK_HANDLE_LL_KEY = "callback_handle_ll"
         @JvmStatic
         val CALLBACK_DISPATCHER_HANDLE_KEY = "callback_dispatch_handler"
         @JvmStatic
@@ -79,11 +84,47 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
         }
 
         @JvmStatic
+        private fun registerLocationListener(context: Context,
+                                             fusedLocationProviderClient: FusedLocationProviderClient,
+                                             args: ArrayList<*>?,
+                                             result: Result?) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_DENIED)) {
+                val msg = "'registerLocationListener' requires the ACCESS_FINE_LOCATION permission."
+                Log.w(TAG, msg)
+                result?.error(msg, null, null)
+                return
+            }
+            val callbackHandle = args!![0] as Long
+            val interval = args[1] as Int
+            val maxWaitTime = args[2] as Int
+            val smallestDisplacement = args[3] as Double
+            val locRequest = LocationRequest().setInterval(interval.toLong()) // 2 min 30
+                    .setMaxWaitTime(maxWaitTime.toLong())    //1 hour
+                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                    .setSmallestDisplacement(smallestDisplacement.toFloat()) // 100 meters
+            val intent = Intent(context, GeofencingBroadcastReceiver::class.java)
+                    .setType(callbackHandle.toString())
+            val pIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            fusedLocationProviderClient.requestLocationUpdates(locRequest, pIntent).run {
+                addOnSuccessListener {
+                    Log.d(TAG, "successfully added location listener")
+                    result?.success(true)
+                }
+                addOnFailureListener {
+                    Log.e(TAG, "Failed to add location listener: $it")
+                    result?.error(it.toString(), null, null)
+                }
+            }
+        }
+
+        @JvmStatic
         private fun registerGeofence(context: Context,
-                                    geofencingClient: GeofencingClient,
-                                    args: ArrayList<*>?,
-                                    result: Result?,
-                                    cache: Boolean) {
+                                     geofencingClient: GeofencingClient,
+                                     args: ArrayList<*>?,
+                                     result: Result?,
+                                     cache: Boolean) {
             val callbackHandle = args!![0] as Long
             val id = args[1] as String
             val lat = args[2] as Double
@@ -137,10 +178,10 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
 
                 persistentGeofences.add(id)
                 context.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
-                    .edit()
-                    .putStringSet(PERSISTENT_GEOFENCES_IDS, persistentGeofences)
-                    .putString(getPersistentGeofenceKey(id), obj.toString())
-                    .apply()
+                        .edit()
+                        .putStringSet(PERSISTENT_GEOFENCES_IDS, persistentGeofences)
+                        .putString(getPersistentGeofenceKey(id), obj.toString())
+                        .apply()
             }
         }
 
@@ -166,8 +207,29 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
         @JvmStatic
         private fun getGeofencePendingIndent(context: Context, callbackHandle: Long): PendingIntent {
             val intent = Intent(context, GeofencingBroadcastReceiver::class.java)
-                    .putExtra(CALLBACK_HANDLE_KEY, callbackHandle)
+                    .putExtra(CALLBACK_HANDLE_GEO_KEY, callbackHandle)
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        @JvmStatic
+        private fun removeLocationListener(context : Context,
+                                           fusedLocationProviderClient: FusedLocationProviderClient,
+                                           args: ArrayList<*>?,
+                                           result: Result) {
+            val callbackHandle = args!![0] as Long
+            val intent = Intent(context, GeofencingBroadcastReceiver::class.java)
+                    .setType(callbackHandle.toString())
+            val pIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            fusedLocationProviderClient.removeLocationUpdates(pIntent).run {
+                addOnSuccessListener {
+                    result.success(true)
+                    Log.d(TAG, "Successfully removed location listener")
+                }
+                addOnFailureListener {
+                    result.error(it.toString(), null, null)
+                    Log.e(TAG, "Failed to remove location listener : $it")
+                }
+            }
         }
 
         @JvmStatic
@@ -201,9 +263,9 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
                 }
                 persistentGeofences.remove(id)
                 p.edit()
-                .remove(getPersistentGeofenceKey(id))
-                .putStringSet(PERSISTENT_GEOFENCES_IDS, persistentGeofences)
-                .apply()
+                        .remove(getPersistentGeofenceKey(id))
+                        .putStringSet(PERSISTENT_GEOFENCES_IDS, persistentGeofences)
+                        .apply()
             }
         }
 
@@ -215,7 +277,7 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         val args = call.arguments() as? ArrayList<*>
-        when(call.method) {
+        when (call.method) {
             "GeofencingPlugin.initializeService" -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     mActivity?.requestPermissions(REQUIRED_PERMISSIONS, 12312)
@@ -223,15 +285,23 @@ class GeofencingPlugin(context: Context, activity: Activity?) : MethodCallHandle
                 initializeService(mContext, args)
                 result.success(true)
             }
+            "GeofencingPlugin.registerLocationListener" -> registerLocationListener(mContext,
+                    mLocListenerClient,
+                    args,
+                    result)
+            "GeofencingPlugin.removeLocationListener" -> removeLocationListener(mContext,
+                    mLocListenerClient,
+                    args,
+                    result)
             "GeofencingPlugin.registerGeofence" -> registerGeofence(mContext,
-                                                                    mGeofencingClient,
-                                                                    args,
-                                                                    result,
-                                                                    true)
+                    mGeofencingClient,
+                    args,
+                    result,
+                    true)
             "GeofencingPlugin.removeGeofence" -> removeGeofence(mContext,
-                                                                mGeofencingClient,
-                                                                args,
-                                                                result)
+                    mGeofencingClient,
+                    args,
+                    result)
             else -> result.notImplemented()
         }
     }

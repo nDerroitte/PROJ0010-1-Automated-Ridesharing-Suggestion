@@ -20,7 +20,8 @@ dependencies:
       FlutterGeofencing
   path_provider: '^0.4.1'
   http:
-  #geolocator: '^2.1.1'
+  latlong: ^0.6.1
+
   connectivity: '^0.3.2'
   simple_permissions:
   intl:
