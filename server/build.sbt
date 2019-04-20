@@ -2,7 +2,8 @@ name := """Covoituliege"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file(".")).enablePlugins(PlayJava).
+  enablePlugins(JavaUnidocPlugin).enablePlugins(GenJavadocPlugin)
 
 scalaVersion := "2.12.8"
 
@@ -39,7 +40,7 @@ libraryDependencies += "com.typesafe.play" %% "play-mailer-guice" % "6.0.1"
 // Make verbose tests
 testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))
 
-// Avoid generating doc for some classes:
 
-sources in (Compile,doc) := Seq(new File("/app/services"))
-sources in (Compile,doc) += new File("/app/controllers")
+
+
+
