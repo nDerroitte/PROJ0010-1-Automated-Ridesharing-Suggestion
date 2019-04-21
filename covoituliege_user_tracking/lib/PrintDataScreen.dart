@@ -3,22 +3,21 @@ import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'UserInfo.dart';
 import 'FileHandler.dart';
+import 'Cst.dart';
 
-/// This class represents the main screen of the application. It allows the user to launch the position capturing,
-/// as well as printing and deleting the buffered data.
+/// This class represents a simple screen showing the buffered journeys.
 class PrintDataScreen extends StatefulWidget {
   @override
   _PrintDataScreenState createState() => new _PrintDataScreenState();
 }
 
 class _PrintDataScreenState extends State<PrintDataScreen> {
-  List list = List();
-  var isLoading = false;
-  Function generateData;
-  Text _data;
+  Text _data = Text(
+    "",
+    style: textStyle,
+  );
 
-
-  void printData() async {
+  void _printData() async {
     String data = await readFile();
     List<String> dataUnit = data.split("data_splitter");
     StringBuffer toPrint = StringBuffer();
@@ -33,7 +32,7 @@ class _PrintDataScreenState extends State<PrintDataScreen> {
     setState(() {
       _data = Text(
         toPrint.toString(),
-        style: TextStyle(fontSize: 18.0),
+        style: textStyle,
       );
     });
   }
@@ -41,37 +40,15 @@ class _PrintDataScreenState extends State<PrintDataScreen> {
   @override
   void initState() {
     super.initState();
-    printData();
-   _data = Text(
-      '',
-      style: TextStyle(fontSize: 18.0),
-    );
+    _printData();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('Ugo              ')), //LET THE SPACE, IT IS FOR CENTERING
-        flexibleSpace: Container(
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-                colors: [
-                  const Color(0xFF3366FF),
-                  const Color(0xFF00CCFF),
-                ],
-                begin: Alignment.topRight,
-                end: Alignment.topLeft,
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp),
-          ),
-        ),),
-
-
-
+      appBar: appBar,
       body: Container(
-        color: Colors.lightBlue[50],
+        color: backgroundColor,
         child: Center(
           child: ListView(
             shrinkWrap: true,

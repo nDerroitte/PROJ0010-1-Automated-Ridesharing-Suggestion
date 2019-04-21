@@ -1,7 +1,3 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 package io.flutter.plugins.geofencing
 
 import android.app.NotificationChannel
@@ -20,8 +16,6 @@ class IsolateHolderService : Service() {
         val ACTION_SHUTDOWN = "SHUTDOWN"
         @JvmStatic
         private val WAKELOCK_TAG = "IsolateHolderService::WAKE_LOCK"
-        @JvmStatic
-        private val TAG = "IsolateHolderService"
         @JvmStatic
         private var sBackgroundFlutterView: FlutterNativeView? = null
 

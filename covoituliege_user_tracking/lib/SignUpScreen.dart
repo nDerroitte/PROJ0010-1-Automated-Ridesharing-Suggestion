@@ -8,15 +8,14 @@ import 'serverCommunication.dart';
 
 /// This class represents the sign up screen of the application.
 /// It allows the user to create a new account that will be directly usable.
-/// The screen also contains a link to the GDPR screen, because signing up implies giving consent
-/// for the data collection and usage.
+/// The screen also contains a link to the GDPR screen, because signing up
+/// implies giving consent for the data collection and usage.
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => new _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _listViewContent;
   InputText _usernameInput;
   TextEditingController _username = TextEditingController();
@@ -198,25 +197,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     /// We wrap the InputTexts in variables so that we can insert messages between them without having them rebuilt.
     _usernameInput = InputText(
-      messageToUser: 'Identifiant',
-      color: _backgroundColor,
+      labelText: 'Identifiant',
+      color: backgroundColor,
       controller: _username,
     );
     _passwordInput = InputText(
-      messageToUser: 'Mot de passe: 4 à 16 caractères',
-      color: _backgroundColor,
+      labelText: 'Mot de passe: 4 à 16 caractères',
+      color: backgroundColor,
       controller: _password,
       obscureText: true,
     );
     _passwordConfirmationInput = InputText(
-      messageToUser: 'Confirmation',
-      color: _backgroundColor,
+      labelText: 'Confirmation',
+      color: backgroundColor,
       controller: _passwordConfirmation,
       obscureText: true,
     );
     _emailInput = InputText(
-      messageToUser: 'Adresse email',
-      color: _backgroundColor,
+      labelText: 'Adresse email',
+      color: backgroundColor,
       controller: _email,
       emailAddress: true,
     );
@@ -225,14 +224,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       padding: EdgeInsets.symmetric(horizontal: 75.0),
       child: RaisedButton(
         textColor: Colors.white,
-        color: Colors.lightBlue[800],
+        color: buttonColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: Text(
           'S\'inscrire',
-          //style: textStyle,
-          style: TextStyle(fontSize: 18.0),
+          style: textStyle,
         ),
         onPressed: _signUp,
       ),
@@ -241,11 +239,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _listViewContent = <Widget>[
       _usernameInput,
       _passwordInput,
-      /*Text(
-        'Entre 4 et 16 caractères',
-        style: smallInfoStyle,
-        textAlign: TextAlign.right,
-      ),*/
       _passwordConfirmationInput,
       _emailInput,
       _signUpButton,
@@ -256,13 +249,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       text: TextSpan(
         text: 'Cette application utilise vos données, en particulier votre localisation.' +
             ' En cliquant sur s\'inscrire, vous marquez votre accord avec notre ',
-        //style: textStyle,
-        style: TextStyle(fontSize: 18.0, color: Colors.black),
+        style: textStyle,
         children: <TextSpan>[
           TextSpan(
             text: 'politique de confidentialité.',
-            //style: linkStyle,
-            style: TextStyle(fontSize: 18.0, color: Colors.blue),
+            style: linkStyle,
             recognizer: _gdprRecognizer,
           ),
         ],
@@ -275,7 +266,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar: appBar,
       body: Container(
-        color: _backgroundColor,
+        color: backgroundColor,
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(

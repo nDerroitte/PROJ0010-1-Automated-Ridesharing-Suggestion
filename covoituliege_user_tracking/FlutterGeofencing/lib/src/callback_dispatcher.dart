@@ -1,19 +1,13 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:geofencing/src/geofencing.dart';
-import 'package:geofencing/src/location.dart';
 import 'package:geofencing/src/timed_location.dart';
 
 void callbackDispatcher() {
   const MethodChannel _backgroundChannel =
-      MethodChannel('plugins.flutter.io/geofencing_plugin_background');
+  MethodChannel('plugins.flutter.io/loc_listener_plugin_background');
   WidgetsFlutterBinding.ensureInitialized();
 
   _backgroundChannel.setMethodCallHandler((MethodCall call) async {
@@ -21,23 +15,10 @@ void callbackDispatcher() {
     final Function callback = PluginUtilities.getCallbackFromHandle(
         CallbackHandle.fromRawHandle(args[0]));
     assert(callback != null);
-    if (args[1].toString() == "LL") {  //TODO should be removed soon
-      List<TimedLocation> locations = List<TimedLocation>();
-      args[2].forEach((dynamic e) => locations.add(TimedLocation(e)));
-      await callback(locations);
-    } else {
-      final List<String> triggeringGeofences = args[1].cast<String>();
-      final List<double> locationList = <double>[];
-      // 0.0 becomes 0 somewhere during the method call, resulting in wrong
-      // runtime type (int instead of double). This is a simple way to get
-      // around casting in another complicated manner.
-      args[2]
-          .forEach((dynamic e) => locationList.add(double.parse(e.toString())));
-      final Location triggeringLocation = locationFromList(locationList);
-      final GeofenceEvent event = intToGeofenceEvent(args[3]);
-      callback(triggeringGeofences, triggeringLocation, event);
-    }
+    List<TimedLocation> locations = List<TimedLocation>();
+    args[1].forEach((dynamic e) => locations.add(TimedLocation(e)));
+    await callback(locations);
   });
 
-  _backgroundChannel.invokeMethod('GeofencingService.initialized');
+  _backgroundChannel.invokeMethod('LocationListenerService.initialized');
 }

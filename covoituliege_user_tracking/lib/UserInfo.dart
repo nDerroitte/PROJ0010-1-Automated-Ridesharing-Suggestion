@@ -37,6 +37,7 @@ class UserInfo {
     _points = <_Point>[];
   }
 
+  /// Converts a json map representing a userInfo to a pretty-printable string
   static String toPrint(Map<String, dynamic> userInfo) {
     StringBuffer res = StringBuffer();
     res.writeln("UserId: ${userInfo["UserId"]}\n");
@@ -47,18 +48,22 @@ class UserInfo {
     return res.toString();
   }
 
+  /// Adds a point to this userInfo
   Map<String, dynamic> addData(String calendar, String lat, String long) {
     _Point point = _Point(calendar, lat, long);
     _points += <_Point>[point];
     return point.toJson();
   }
 
+  /// Converts this userInfo to a json map
   Map<String, dynamic> toJson() => {'UserId': _userId, 'Points': _points};
 
+  /// Deletes the points of this userInfo
   void clear() {
     _points = <_Point>[];
   }
 
+  /// Getter for the username of this userInfo
   String getId() {
     return _userId;
   }
