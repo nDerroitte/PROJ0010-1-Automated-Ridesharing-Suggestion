@@ -107,6 +107,8 @@ public class SimpleHabit extends Habit
         c.setTimeInMillis(diff);
         float mDay = c.get(Calendar.DAY_OF_MONTH);
         this.oldness = Math.round(mDay/7);
+        if(oldness == 0)
+            return;
         
         // Update the reliability
         double r = 100*this.occurences.size()/this.oldness;
