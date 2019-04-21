@@ -18,7 +18,7 @@ import java.text.ParseException;
 import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
 /**
- * Class for generating all habit of an user
+ * Compute all habit of an user
  */
 public class UserGM {
     /**
@@ -30,10 +30,17 @@ public class UserGM {
      */
     private String user_id;
     /**
-     * Tell which method to use when calling [[createHabits]]
+     * Tell which method to use when computing the habits
      */
     private int mode;
 
+    /**
+     * Extract the data of user_id and set the method used for computing habits.
+     * @param user_id ID of the user
+     * @param database Entry point to DB containt user journey.
+     * @param mode Tell which method to use for computing all habit.
+     * @throws ParseException if the document from the DB cannot be instance in a java class.
+     */
     public UserGM(String user_id, MongoCollection<Document> database, int mode) throws ParseException {
         this.user_id = user_id;
         this.mode = mode;
@@ -52,6 +59,9 @@ public class UserGM {
         }
     }
 
+    /**
+     * Launch the computation of the habits.
+     */
     public void createHabits() {
 
         // Compute habit on all data
@@ -85,12 +95,21 @@ public class UserGM {
         }
     }
 
+    /**
+     * Print a list of habits.
+     * @param habits
+     */
     public void printHabits(LinkedList<Habit> habits) {
         for (Habit habit : habits) {
             System.out.println(habit.toString());
         }
     }
 
+    /**
+     * Write a list of habit into file.
+     * @param habits List of habits
+     * @param path Path of the habit.
+     */
     public void habitsTofile(LinkedList<Habit> habits, JourneyPath path) {
         try {
             File root = new File("C:/Users/cedri/PI/server/user_habit/" + user_id + "/" + mode);
@@ -108,9 +127,11 @@ public class UserGM {
         }
     }
     /**
-     * 
-     * @param journeys: list of journey
-     * @return hash set with 7 key
+     * Sort journey by day.
+     * @param journeys: list of journey to sort.
+     * @return An hash set. Each value store the journey that start at same week day.
+     * The mapping key,day is given by the class Calendar.
+     * @see Calendar
      */
     HashMap<Integer, ArrayList<Journey>> sortJourneyByDay(ArrayList<Journey> journeys) {
         HashMap<Integer, ArrayList<Journey>> out = new HashMap<>();
@@ -128,6 +149,11 @@ public class UserGM {
         return out;
     }
 
+    /**
+     * Extract the date the journey begin as a long.
+     * @param journeys List of journey.
+     * @return List of long, each long represent the date at which the journey begin.
+     */
     ArrayList<Long> journeyToLong(ArrayList<Journey> journeys) {
         ArrayList<Long> out = new ArrayList<Long>();
         for (Journey journey : journeys) {
@@ -136,6 +162,10 @@ public class UserGM {
         return out;
     }
 
+    /**
+     * Sort journey by the GPS coordinate of their start and end point.
+     * @return An hashmap. Each value is list of journey which start an end at a similar GPS point.
+     */
     public HashMap<JourneyPath, ArrayList<Journey>> sortJourneyByPath() {
         HashMap<JourneyPath, ArrayList<Journey>> out = new HashMap<>();
         for (Journey journey : unused_journeys) {

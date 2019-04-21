@@ -29,7 +29,7 @@ public class JourneyPath{
 
      /**
      * Override the toString method
-     * @return: the string correspinding to this class
+     * @return  the string correspinding to this class
      */
     @Override
     public String toString(){
@@ -37,8 +37,8 @@ public class JourneyPath{
     }
 
     /**
-     * Override the equals method to check if two journeys re similar
-     * @return: true if they are similar. False otherwise
+     * Override the equals method to check if two journeys are similar
+     * @return  true if they are similar. False otherwise
      */
     @Override
     public boolean equals(Object o){
@@ -49,6 +49,9 @@ public class JourneyPath{
         return false;
     }
 
+    /**
+     * Override the hash code.
+     */
     @Override 
     public int hashCode(){
         return toString().hashCode();

@@ -36,7 +36,7 @@ public final class Constants
     public static final int MIN_DIFF_SAME_JOURNEY = 60*3;
 
     /**
-     * Static methid that allow to transform a string (yyyy-MM-dd HH-mm-ss) to a Calendar class
+     * Static method that allow to transform a string (yyyy-MM-dd HH-mm-ss) to a Calendar class
      * @param str_date the string to transform
      * @return the corresponding Calendar
      * @throws ParseException if the parse of the string failed

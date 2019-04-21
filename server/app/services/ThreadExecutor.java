@@ -24,7 +24,7 @@ import java.util.concurrent.*;
 import javax.inject.*;
 import com.google.common.util.concurrent.*;
 /**
- * <b> Implement the thread pool for computing the habits of an user </b>
+ * Implement the thread pool for computing the habits of an user 
  * 
  * The thread pool is an unbouded single thread.
  * @see submitTask(String,int) for requesting the computation of the habit of an user.
@@ -36,6 +36,9 @@ public class ThreadExecutor implements HabitGenerator {
      * Entry point to the database
      */
     private final MongoDatabase database;
+    /**
+     * task executor
+     */
     private final ExecutorService worker;
     /**
      * Entry point to the the collection users of the database.
@@ -85,6 +88,12 @@ class ComputationUnit implements Runnable {
     private final int method;
     private final MongoCollection<Document> database;
 
+    /**
+     * 
+     * @param userID A user 
+     * @param method method use for computing habit of UserID
+     * @param database entry point to the database
+     */
     ComputationUnit(String userID, int method, MongoCollection<Document> database) {
         this.user_id = userID;
         this.method = method;

@@ -70,7 +70,7 @@ public class Point
      * Create a Point from a Document object reprensenting it. Used to read a journey from
      * the database
      * @param doc: the Document object to read from
-     * @return: a Point object corresponding to the Document.
+     * @return  a Point object corresponding to the Document.
      */
     static public Point FromDoc(Document doc) throws ParseException
     {
@@ -86,7 +86,7 @@ public class Point
 
     /**
      * Override the equals method to check if two journeys re similar
-     * @return: true if they are similar. False otherwise
+     * @return  true if they are similar. False otherwise
      */
     @Override
     public boolean equals(Object o){
@@ -102,7 +102,7 @@ public class Point
 
     /**
      * Override the toString method
-     * @return: the string correspinding to this class
+     * @return  the string correspinding to this class
      */
     @Override
     public String toString(){

@@ -83,7 +83,7 @@ public class SimpleHabit extends Habit
 
     /**
      * Getter of the day of the habit
-     * @return: the day of the week of the habit in int [0-6]
+     * @return the day of the week of the habit in int [0-6]
      */
     public int getDay()
     {
@@ -169,7 +169,7 @@ public class SimpleHabit extends Habit
 
     /**
      * Average the departure time of the habit
-     * @return: the average departure time
+     * @return the average departure time
      */
     private double meanStarting ()
     {
@@ -186,7 +186,7 @@ public class SimpleHabit extends Habit
 
     /**
      * Overwrite the toString method
-     * @return: the string correspinding to this class
+     * @return the string correspinding to this class
      */
     @Override
     public String toString()

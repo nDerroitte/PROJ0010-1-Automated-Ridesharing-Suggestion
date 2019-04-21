@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 public final class Coordinate {
     /**
-     * Lattitude coordinate rounded
+     * Latitude coordinate rounded
      */
     private final double x;
     /**
@@ -20,7 +20,7 @@ public final class Coordinate {
 
     /**
      * Constructor
-     * @param first lattitude coordinate rounded
+     * @param first Latitude coordinate rounded
      * @param second Longitude coordinate rounded
      */
     public Coordinate(double first, double second) {
@@ -47,7 +47,7 @@ public final class Coordinate {
     /**
      * Check if another coordinates object is the same as this one with
      * the precision given in Constants.COORDINATE_ERROR_ACCEPTED
-     * @param other: other coordinate object
+     * @param other : other coordinate object
      * @return true if they are similar. False otherwise
      */
     public boolean isSame(Coordinate other) {
@@ -64,11 +64,10 @@ public final class Coordinate {
 
     /**
      * Overwrite the toString method
-     * @return: the string correspinding to this class
+     * @return The string correspinding to this class
      */
     @Override
     public String toString() {
-        //NumberFormat formatter = new DecimalFormat("000.000");
         NumberFormat formatter = DecimalFormat.getInstance(Locale.ENGLISH);
         return "[" + formatter.format(x) + ";" + formatter.format(y) + "]";
     }

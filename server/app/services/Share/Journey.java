@@ -6,7 +6,7 @@ import org.bson.Document;
 import java.text.ParseException;
 
 /**
- * Jounrey class representing a jounrey of the habit (from a time and path perspective)
+ * Journey class representing a journey of the habit (from a time and path perspective)
  */
 public class Journey
 {
@@ -65,8 +65,8 @@ public class Journey
     /**
      * Create a Journey from a Document object reprensenting it. Used to read a journey from
      * the database
-     * @param doc: the Document object to read from
-     * @return: a Jounrey object corresponding to the Document.
+     * @param doc the Document object to read from
+     * @return  a Jounrey object corresponding to the Document.
      */
     public static Journey fromDoc(Document doc) throws ParseException
     {
@@ -78,8 +78,8 @@ public class Journey
     }
 
     /**
-     * Override the equals method to check if two journeys re similar
-     * @return: true if they are similar. False otherwise
+     * Override the equals method to check if two journeys are similar
+     * @return True if they are similar. False otherwise
      */
     @Override
     public boolean equals(Object o){

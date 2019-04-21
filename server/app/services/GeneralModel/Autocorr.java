@@ -9,18 +9,22 @@ import org.apache.commons.math3.transform.DftNormalization ;
 import org.apache.commons.math3.transform.TransformType;
 import org.apache.commons.math3.util.FastMath;
 /**
- * Class for computating the autocorrelation of a signal
+ * Compute the autocorrelation of a signal.
  * 
+ * The autocorrelation is computed with two FFT in O(nlog(n))
+ * See <a href="https://en.wikipedia.org/wiki/Autocorrelation#Efficient_computation">wikipedia</a>
  */
 public class Autocorr{
-    //the autocorrelation is computed with the Wiener–Khinchin theorem
+
+    /**
+     * Fourier transform used for computeing the autocorrelation.
+     */
     private FastFourierTransformer fourier = new FastFourierTransformer(DftNormalization.STANDARD);
 /**
  * 
- * @param data: signal from which the autocorrelation is computed.
- * @param max_lag: The maximum time delay for which the autocorrelatin is computed.
- * max_lag must be an integer in the range [0 signal.length]
- * @return the autocorrelation function for lag = 0 up to max_lag
+ * @param data: Input signal
+ * @param max_lag: A time delay in range [0 signal.length]
+ * @return double[max_lag], the autocorrelation function for a delay of 0 up to max_lag
  */
     public double[] compute(double[] data, int max_lag){
 
