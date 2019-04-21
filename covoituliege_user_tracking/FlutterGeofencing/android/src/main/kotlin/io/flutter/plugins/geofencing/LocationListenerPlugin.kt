@@ -40,7 +40,7 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
 
         @JvmStatic
         private fun initializeService(context: Context, args: ArrayList<*>?) {
-            Log.d(TAG, "Initializing location listener service")
+            Log.i(TAG, "Initializing location listener service")
             val callbackHandle = args!![0] as Long
             context.getSharedPreferences(SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE)
                     .edit()
@@ -72,7 +72,7 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
             val pIntent = getLocListenerPendingIntent(context, callbackHandle)
             fusedLocationProviderClient.requestLocationUpdates(locRequest, pIntent).run {
                 addOnSuccessListener {
-                    Log.d(TAG, "successfully added location listener")
+                    Log.i(TAG, "successfully added location listener")
                     result?.success(true)
                 }
                 addOnFailureListener {
@@ -92,7 +92,7 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
             fusedLocationProviderClient.removeLocationUpdates(pIntent).run {
                 addOnSuccessListener {
                     result.success(true)
-                    Log.d(TAG, "Successfully removed location listener")
+                    Log.i(TAG, "Successfully removed location listener")
                 }
                 addOnFailureListener {
                     result.error(it.toString(), null, null)

@@ -6,8 +6,8 @@ final minPauseTimeBetweenJourneys = Duration(minutes: 20);
 const dateFormat = 'yyyy-MM-dd HH-mm-ss';
 
 /// Location Listener parameters
-const timeIntervalBetweenPoints = 1000; // 2 min 30
-const maxWaitTimeForUpdates = 5000; // 1 hour
+const timeIntervalBetweenPoints = 150000; // 2 min 30
+const maxWaitTimeForUpdates = 3600000; // 1 hour
 const minDistanceBetweenPoints = 100.0; // 100 meters
 
 /// Different text styles.
