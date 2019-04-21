@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.File;
 import java.io.FileWriter;
 
 /**
@@ -50,7 +51,13 @@ public class CreationHabitSM
         // Writing in files
         try
         {
-            FileWriter fw = new FileWriter("app/services/SimpleModel/results.txt", true);
+            String folderString = "user_habit/"+user;
+            File newFile = new File(folderString);
+            if(!newFile.exists())
+                newFile.mkdir();
+            File method3 = new File(folderString+"/3");
+            method3.mkdir();
+            FileWriter fw = new FileWriter(folderString+"/3/results.txt", false);
             PrintWriter writer = new PrintWriter(fw);
             writer.printf("User %s.\n\n", user);
             writer.println(out);
