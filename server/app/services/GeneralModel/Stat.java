@@ -10,10 +10,11 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.complex.ComplexUtils;
 
 /**
- * Class for computing some statistic on array of double.
+ * Class containing static method for calculating stat on array of double.
  */
 public class Stat {
     /**
+     * Return the number of occurence of x in the subarray arr[0:n]
      * 
      * @param arr an array
      * @param x   the number we look for in array
@@ -34,7 +35,7 @@ public class Stat {
 
         /* If x doesn't exist in arr[] then return -1 */
         if (i == -1)
-            return i;
+            return 0;
 
         /*
          * Else get the index of last occurrence of x. Note that we are only looking in
@@ -47,14 +48,15 @@ public class Stat {
     }
 
     /**
+     * Returns the index of FIRST occurrence of x in arr[low,hight] or -1 if x is
+     * not in arr[low,height]
      * 
      * @param arr  a SORTED array
      * @param low  a valid index in array
      * @param high a valid index in array
      * @param x    number we look for
-     * @param n    a valid index of the array
      * @return returns the index of FIRST occurrence of x in arr[low,hight], or -1
-     *         if low > high
+     *         if low is greater than high
      */
     static public int first(double arr[], int low, int high, int x) {
         if (high >= low) {
@@ -71,19 +73,17 @@ public class Stat {
     }
 
     /**
+     * Returns the index of LAST occurrence of x in arr[low:high] or -1 if x is not
+     * in arr[low:high]
      * 
-     * @param arr  a SORTED array
-     * @param low  a valid index of array
-     * @param high a valid index of array
-     * @param x    a number
-     * @param n
-     * @return
+     * @param arr  A SORTED array
+     * @param low  A valid index of array
+     * @param high A valid index of array
+     * @param x    A number
+     * @param n    A valid index of array
+     * @return Returns the index of LAST occurrence of x in arr[low:high] or -1 if x
+     *         is not in arr[low:high]
      */
-    /*
-     * if x is present in arr[] then returns the index of LAST occurrence of x in
-     * arr[0..n-1], otherwise returns -1
-     */
-
     public static int last(double arr[], int low, int high, int x, int n) {
         if (high >= low) {
             /* low + (high - low)/2; */
@@ -99,9 +99,10 @@ public class Stat {
     }
 
     /**
+     * Compute the mean and standard deviation of an array.
      * 
      * @param array
-     * @return return the mean and standard deviation of array
+     * @return Return the mean and standard deviation of array
      */
     public static double[] meanStd(int[] array) {
         double mean = 0;
@@ -119,12 +120,11 @@ public class Stat {
     }
 
     /**
-     * Make directional statistic on point inside a cluster.
+     * Computer the cricular mean and standard deviation of a cluster.
      * 
-     * @param c      a cluster
-     * @param period a positive integer
-     * @return the circular of the cluster for point lying in a circular space of
-     *         cadinality period.
+     * @param c      A cluster
+     * @param period Parameter of the circular space. The circular domain is [0,period], all point in x R are map to mod(x,period) 
+     * @return the circular mean in out[0] and standard deviation in out[1]
      */
     public static double[] clusterStat(Cluster<DoublePoint> c, int period) {
         CircularDist comparator = new CircularDist(period);
@@ -164,6 +164,7 @@ public class Stat {
     }
 
     /**
+     * Return the mean of an array.
      * 
      * @param array
      * @return return the mean of array

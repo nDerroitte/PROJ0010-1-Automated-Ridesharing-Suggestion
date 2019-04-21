@@ -19,6 +19,9 @@ import java.util.List;
 
 import javax.inject.*;
 
+/**
+ * Entry point to the database.
+ */
 @Singleton
 public class MongoDB implements MongoInterface{
 	String connection = "mongodb://localhost:27017";

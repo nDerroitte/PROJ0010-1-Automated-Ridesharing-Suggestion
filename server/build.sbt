@@ -40,11 +40,15 @@ libraryDependencies += "com.typesafe.play" %% "play-mailer-guice" % "6.0.1"
 // Make verbose tests
 testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))
 
-//private class documentation
+//documentation generation setting.
 javacOptions in (Compile,doc) += "-linksource"
 javacOptions in (Compile,doc) += "-private"
-javacOptions in (Compile,unidoc) += "-private"
-javacOptions in (Compile,unidoc) += "-help"
+javacOptions in (Compile,doc) ++= Seq("-link","https://docs.oracle.com/en/java/javase/11/docs/api/")
+javacOptions in (Compile,doc) ++= Seq("-link","http://mongodb.github.io/mongo-java-driver/3.8/javadoc/")
+javacOptions in (Compile,doc) ++= Seq("-link","https://commons.apache.org/proper/commons-math/javadocs/api-3.3/")
+javacOptions in (Compile,doc) ++= Seq("-link","https://www.playframework.com/documentation/2.7.x/api/java/")
+
+
 
 
 
