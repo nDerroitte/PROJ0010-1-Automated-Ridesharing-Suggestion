@@ -4,15 +4,30 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import org.bson.Document;
 import java.text.ParseException;
+
+/**
+ * Jounrey class representing a jounrey of the habit (from a time and path perspective)
+ */
 public class Journey
 {
+    /**
+     * ArrayList of meeting_points containing the Date and Coordinate of each point
+     */
     private final ArrayList<Point> meeting_points;
 
+    /**
+     * Constructor
+     * @param meeting_point the initial arrayist of meeting_points.
+     */
     public Journey(ArrayList<Point> meeting_point)
     {
         this.meeting_points = meeting_point;
     }
 
+    /**
+     * Get the path of the journey
+     * @return the Arralylist of Coordinate corresponding to the path of the habit
+     */
     public ArrayList<Coordinate> getPath()
     {
         ArrayList<Coordinate> path = new ArrayList<>();
@@ -23,11 +38,19 @@ public class Journey
         return path;
     }
 
+    /**
+     * Get the time of the first point
+     * @return
+     */
     public Calendar getFirstPointTime()
     {
         return meeting_points.get(0).getTime();
     }
 
+    /**
+     * Allow to transform this object to a Document. Used to store the Jounrey in the database
+     * @return a Document object corresponding to this class
+     */
     public  Document toDoc()
     {
         Document doc = new Document();
@@ -38,6 +61,13 @@ public class Journey
         return doc;
 
     }
+
+    /**
+     * Create a Journey from a Document object reprensenting it. Used to read a journey from
+     * the database
+     * @param doc: the Document object to read from
+     * @return: a Jounrey object corresponding to the Document.
+     */
     public static Journey fromDoc(Document doc) throws ParseException
     {
         ArrayList<Document> doc_meeting_point = (ArrayList<Document>)doc.get("meeting_point");
@@ -47,6 +77,10 @@ public class Journey
         return new Journey(meeting_point);
     }
 
+    /**
+     * Override the equals method to check if two journeys re similar
+     * @return: true if they are similar. False otherwise
+     */
     @Override
     public boolean equals(Object o){
         if(o instanceof Journey){
