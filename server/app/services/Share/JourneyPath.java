@@ -27,6 +27,13 @@ public class JourneyPath{
         end = Constants.CoordinateTransformation(lat, lon);
     }
 
+    public Coordinate getStart(){
+        return start;
+    }
+
+    public Coordinate getEnd(){
+        return end;
+    }
      /**
      * Override the toString method
      * @return  the string correspinding to this class

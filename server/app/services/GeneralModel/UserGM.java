@@ -91,8 +91,8 @@ public class UserGM {
                 }
             }
             for(Habit habit : habits){
-                habit.firstLocation = (JourneyPath) pair.getKey().start;
-                habit.lastLocation = (JourneyPath) pair.getKey().end;
+                habit.firstLocation = ((JourneyPath) pair.getKey()).start;
+                habit.lastLocation = ((JourneyPath) pair.getKey()).end;
             }                    
             habitsTofile(habits, (JourneyPath) pair.getKey());
             System.out.println("User: " + user_id + "done");
