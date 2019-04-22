@@ -89,6 +89,10 @@ public class UserGM {
                     ComputeHabit computer = new ComputeHabit(journeyToLong(databyday),1440);
                     habits.addAll(computer.getHabit());
                 }
+            }
+            for(Habit habit : habits){
+                habit.firstLocation = (JourneyPath) pair.getKey().start;
+                habit.lastLocation = (JourneyPath) pair.getKey().end;
             }                    
             habitsTofile(habits, (JourneyPath) pair.getKey());
             System.out.println("User: " + user_id + "done");
