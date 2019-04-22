@@ -31,7 +31,11 @@ public class Habit
      * Reliability of the habit
      */
     public double reliability;
- 
+    /**
+     * Number of occurences
+     */
+    public int nbPoints;
+
     /**
      * Transform the habit to the Document format
      * @return the document correspondng to the habit
@@ -42,6 +46,9 @@ public class Habit
         doc.put("period",this.period);
         doc.put("offset",this.offset);
         doc.put("reliability",this.reliability);
+        doc.put("firstLocation",this.firstLocation);
+        doc.put("lastLocation",this.firstLocation);
+        doc.put("nbPoints",this.nbPoints);
         return doc;
     }
 
@@ -56,7 +63,10 @@ public class Habit
         Habit h = new Habit();
 	    h.period = (Long) doc.get("period");
 	    h.offset = (Long) doc.get("offset");
-	    h.reliability = (Double) doc.get("reliability");
+        h.reliability = (Double) doc.get("reliability");
+        h.firstLocation = (Coordinate) doc.get("firstLocation");
+        h.lastLocation = (Coordinate) doc.get("lastLocation");
+        h.nbPoints = (int) doc.get("nbPoints");
 	    return h;
     }
 
@@ -65,7 +75,7 @@ public class Habit
      * @return  the string corresponding to this class
      */
     public String toString(){
-        return "\n Period: " + period + "\n Reliability: " + reliability + "\n Offset: " + new Date(offset).toString() + "\n First Location: " + firstLocation + "\n Last Location: " + lastLocation; 
+        return "\n Period: " + period + "\n Reliability: " + reliability + "\n Offset: " + new Date(offset).toString() + "\n First Location: " + firstLocation + "\n Last Location: " + lastLocation  + "\nNumber of occurences: " + nbPoints; 
     }
 
 
