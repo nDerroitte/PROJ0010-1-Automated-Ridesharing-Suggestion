@@ -14,6 +14,14 @@ public class Habit
     /**
      * Period of the habit
      */
+    public Coordinate firstLocation;
+    /**
+     * Period of the habit
+     */
+    public Coordinate lastLocation;
+    /**
+     * Period of the habit
+     */
     public long period;
     /**
      * Offset of the habit
@@ -57,7 +65,7 @@ public class Habit
      * @return  the string corresponding to this class
      */
     public String toString(){
-        return "\n period: " + period + "\n reliability: " + reliability + "\n offset: " + new Date(offset).toString(); 
+        return "\n Period: " + period + "\n Reliability: " + reliability + "\n Offset: " + new Date(offset).toString() + "\n First Location: " + firstLocation + "\n Last Location: " + lastLocation; 
     }
 
 
