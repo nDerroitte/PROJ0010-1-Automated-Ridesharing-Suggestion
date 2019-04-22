@@ -175,8 +175,8 @@ public class ComputeHabit {
             h.offset = base + Math.round(mean_var[0] * scale);
             h.reliability = Math.min(1, (double) cluster.getPoints().size() / (signal.length / best_period));
             h.spread = mean_var[1];
-            h.point_in_habit = cluster.getPoints().size();
-            h.end = end;
+            h.nbPoints = cluster.getPoints().size();
+        
             habits.add(h);
         }
         return habits;
