@@ -57,11 +57,14 @@ public class CreationHabitSM
                 newFile.mkdir();
             File method3 = new File(folderString+"/3");
             method3.mkdir();
-            FileWriter fw = new FileWriter(folderString+"/3/results.txt", false);
+            FileWriter fw = new FileWriter(folderString+"/3/habits.txt", false);
             PrintWriter writer = new PrintWriter(fw);
             writer.printf("User %s.\n\n", user);
-            writer.println(out);
-            writer.printf("========================================================================================\n");
+            for(Habit h : out)
+            {
+                writer.println(h);
+                writer.printf("========================================================================================\n");
+            }
             writer.close();
         }
         catch(IOException e)

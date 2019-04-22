@@ -26,14 +26,6 @@ public class SimpleHabit extends Habit
      */
     private int day; 
     /**
-     * Period always is a week
-     */
-    private long period;
-    /**
-     * Reliability (in %) of the habits
-     */
-    private double reliability;
-    /**
      * Number of weeks of the habit
      */
     private long oldness;
@@ -51,6 +43,10 @@ public class SimpleHabit extends Habit
         this.oldness = 1;
         this.period = 7;
         this.reliability = 100;
+        super.firstLocation = journey.getPath().get(0);
+        super.lastLocation = journey.getPath().get(journey.getPath().size()-1);
+        super.offset =  occurences.get(0).getTimeInMillis();
+        super.nbPoints = 1;
     }
 
     /**
@@ -109,6 +105,8 @@ public class SimpleHabit extends Habit
         this.oldness = Math.round(mDay/7);
         if(oldness == 0)
             return;
+        
+        super.nbPoints = occurences.size();
         
         // Update the reliability
         double r = 100*this.occurences.size()/this.oldness;
@@ -191,13 +189,6 @@ public class SimpleHabit extends Habit
     @Override
     public String toString()
     {
-        double mean_start = meanStarting();
-        int avg_hr_start = (int) mean_start/60;
-        int avg_min_start = (int) mean_start%60;
-        String occuString = "";
-        for( Calendar cal : occurences)
-            occuString += cal.getTime();
-        return String.format("Average start : %d:%d on %s.\nReliability of this habit : %f.\nNumber of occurencre : %d\nOccurences : %s\nLength path (points) : %d\nOldness : %d\n--------------------------\n",
-               avg_hr_start,avg_min_start, Constants.DAY_LIST.get(day), reliability,  occurences.size(), occuString,  path.size(), oldness );
+        return super.toString();
     }
 }

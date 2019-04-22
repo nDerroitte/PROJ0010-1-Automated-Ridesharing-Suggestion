@@ -75,7 +75,7 @@ public class Habit
      * @return  the string corresponding to this class
      */
     public String toString(){
-        return "\n Period: " + period + "\n Reliability: " + reliability + "\n Offset: " + new Date(offset).toString() + "\n First Location: " + firstLocation + "\n Last Location: " + lastLocation  + "\nNumber of occurences: " + nbPoints; 
+        return "Period: " + period + "\nReliability: " + reliability + "\nOffset: " + new Date(offset).toString() + "\nFirst Location: " + firstLocation + "\nLast Location: " + lastLocation  + "\nNumber of occurrences: " + nbPoints; 
     }
 
 
