@@ -8,18 +8,22 @@ import services.Point;
 import java.io.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import com.fasterxml.jackson.databind.*;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-import java.util.Arrays;
-import com.mongodb.Block;
-import com.mongodb.client.MongoCursor;
 import javax.json.*;
+
+import com.fasterxml.jackson.databind.*;
+
+
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.Block;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;

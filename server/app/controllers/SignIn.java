@@ -22,9 +22,6 @@ import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
 
-
- 
-
 @Singleton
 public class SignIn extends Controller {
 	

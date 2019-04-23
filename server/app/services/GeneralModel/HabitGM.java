@@ -26,11 +26,4 @@ public class HabitGM extends Habit
      */
     public long end;
 
-    @Override
-    public String toString(){
-        return super.toString() + "\n spread: " + spread + "\n end: " 
-            + new Date(end).toString() + "\n nb point: " + point_in_habit 
-            + "\n nb_realisation: " + ((end-offset) /(period * 1440 * 60000));
-    }
-
 }

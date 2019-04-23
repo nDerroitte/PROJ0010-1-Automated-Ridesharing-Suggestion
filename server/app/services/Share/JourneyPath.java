@@ -27,10 +27,18 @@ public class JourneyPath{
         end = Constants.CoordinateTransformation(lat, lon);
     }
 
+    /**
+     * Return the start point of the path.
+     * @return Return the start point of the path.
+     */
     public Coordinate getStart(){
         return start;
     }
 
+    /**
+     * Return the end point of the path.
+     * @return  Return the end point of the path.
+     */
     public Coordinate getEnd(){
         return end;
     }
