@@ -5,6 +5,12 @@ class TimedLocation {
   String longitude;
   String calendar;
 
+  TimedLocation.fromExplicit(String latitude, String longitude, String calendar) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.calendar = calendar;
+  }
+
   TimedLocation(List<dynamic> l) {
     latitude = l[0].toString();
     longitude = l[1].toString();

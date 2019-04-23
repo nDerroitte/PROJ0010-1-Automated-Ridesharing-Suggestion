@@ -22,13 +22,6 @@ Future<File> get _journeyData async {
   return File('$path/data.json');
 }
 
-/// Getter for the file that contains the last geofence id
-/// TODO should be deleted soon
-Future<File> get _geofenceFile async {
-  final path = await _localPath;
-  return File('$path/geofence');
-}
-
 /// Getter for the file that contains the last point of the latest journey
 /// A new journey will start if the user goes out of the circle centered here
 Future<File> get _geofenceCenter async {
@@ -71,14 +64,13 @@ clearFile() async {
   await _clearFile(await _journeyData);
 }
 
-/// Delete stored geofence id
-clearGeofence() async {
-  await _clearFile(await _geofenceFile);
-}
-
 /// Delete buffered points
-clearBuffer() async {
+clearBuffers() async {
+  await _clearFile(await _geofenceCenter);
+  await _clearFile(await _journey);
+  await _clearFile(await _llStarted);
   await _clearFile(await _bufferedPoints);
+
 }
 
 /// Delete all the content of the file 'which'
@@ -106,14 +98,6 @@ Future<String> _readFile(File which) async {
   }
 }
 
-/// Store the id given in argument. The previous id is replaced if existing
-storeGeofenceById(String id) async {
-  File file = await _geofenceFile;
-  //TODO for defect table : forgotten await so file became empty for no reason
-  await _clearFile(file);
-  await _writeInFile(id, file);
-}
-
 /// Store the given point (time and position), it can be retrieved later
 /// with getLastTimedPos or used to create a journey with
 /// writeJourneyFromBufferedPoints. A new journey is automatically started
@@ -125,16 +109,9 @@ storePoint(String calendar, String lat, String lon) async {
 
 /// Store the given point as a geofence center
 storeGeofenceCenter(String calendar, String latitude, String longitude) async {
-  await _writeInFile(calendar + "," + latitude + "," + longitude, await _geofenceCenter);
-}
-
-/// Retrieve the previously stored geofence id
-Future<String> getLastGeofenceId() async {
-  String id = await _readFile(await _geofenceFile);
-  if (id == "") {
-    return null;
-  }
-  return id;
+  File geoCenter = await _geofenceCenter;
+  await _clearFile(geoCenter);
+  await _writeInFile(calendar + "," + latitude + "," + longitude, geoCenter);
 }
 
 /// Retrieve the latest stored point, or the geofence center if
@@ -155,18 +132,6 @@ Future<List<String>> getLastTimedLoc() async {
   List<String> points = data.split("\n");
   // -2 and sublist because the split method returns a last empty string
   return points[points.length - 2].split(",").sublist(0, 3);
-}
-
-/// Retrieve the latest stored calendar
-/// TODO should be deleted soon
-Future<String> getLastCalendar() async {
-  String data = await _readFile(await _bufferedPoints);
-  if (data == "") {
-    return null;
-  }
-  List<String> points = data.split("\n");
-  /// -2 because the split method returns a last empty string
-  return points[points.length - 2].split(",")[0];
 }
 
 /// Create and store a journey from the currently buffered points,

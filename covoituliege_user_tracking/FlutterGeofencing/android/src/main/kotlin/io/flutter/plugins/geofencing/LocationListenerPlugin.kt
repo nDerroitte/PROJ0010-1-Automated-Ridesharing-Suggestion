@@ -64,11 +64,9 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
             val callbackHandle = args!![0] as Long
             val interval = args[1] as Int
             val maxWaitTime = args[2] as Int
-            val smallestDisplacement = args[3] as Double
             val locRequest = LocationRequest().setInterval(interval.toLong()) // 2 min 30
                     .setMaxWaitTime(maxWaitTime.toLong())    //1 hour
                     .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                    .setSmallestDisplacement(smallestDisplacement.toFloat()) // 100 meters
             val pIntent = getLocListenerPendingIntent(context, callbackHandle)
             fusedLocationProviderClient.requestLocationUpdates(locRequest, pIntent).run {
                 addOnSuccessListener {
