@@ -100,8 +100,7 @@ public class GetHabit extends Controller {
 			}
 			users.updateOne(and(eq("user", a_user)));
 
-		}
-		*/
+		}*/
 		return ok("");
 
 

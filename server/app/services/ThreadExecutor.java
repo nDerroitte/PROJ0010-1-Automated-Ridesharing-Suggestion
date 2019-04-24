@@ -70,9 +70,9 @@ public class ThreadExecutor implements HabitGenerator {
      *                  
      */
     @Override
-    public void submitTask(String userID, int method) {
+    public void submitTask(String userID) {
         try {
-            this.worker.submit(new ComputationUnit(userID, method, users));
+            this.worker.submit(new ComputationUnit(userID, users));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -94,36 +94,18 @@ class ComputationUnit implements Runnable {
      * @param method method use for computing habit of UserID
      * @param database entry point to the database
      */
-    ComputationUnit(String userID, int method, MongoCollection<Document> database) {
+    ComputationUnit(String userID, MongoCollection<Document> database) {
         this.user_id = userID;
-        this.method = method;
         this.database = database;
     }
 
     public void run() {
         try {
-            switch (this.method) {
-            case 0:
-
-                UserGM usergm = new UserGM(user_id, database, 0);
-                usergm.createHabits();
-                break;
-
-            case 1:
-                usergm = new UserGM(user_id, database, 1);
-                usergm.createHabits();
-                break;
-
-            case 2:
-                usergm = new UserGM(user_id, database, 2);
-                usergm.createHabits();
-                break;
-
-            case 3:
-                UserSimpleModel user = new UserSimpleModel(user_id, database);
-                user.createHabits();
-                break;
-            }
+            UserSimpleModel simple_user = new  UserSimpleModel(userID,database);
+            List<Journey> unused_journey = simple_user.createHabits();
+            UserGM user_gm = new UserGM(userID,unused_journey);
+            user_gm.createHabits();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
