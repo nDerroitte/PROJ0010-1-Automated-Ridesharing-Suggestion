@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/services.dart';
 
 import 'Cst.dart';
@@ -11,6 +12,7 @@ import 'Cst.dart';
 class ServerCommunication {
   String cookie;
 
+  /// Returns a secure HttpClient filled with the security certificate and key
   static Future<HttpClient> _secureClient() async {
     SecurityContext context = SecurityContext();
     final _cert = await rootBundle.load("spem2.pem");
@@ -19,6 +21,8 @@ class ServerCommunication {
     return HttpClient(context: context);
   }
 
+  /// Sends a get message to the url given in argument and returns a future
+  /// containing the response
   static Future<HttpClientResponse> _get(String url) async {
     HttpClient client = await _secureClient();
     return client.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
@@ -28,6 +32,8 @@ class ServerCommunication {
     });
   }
 
+  /// Sends a post message to the url given in argument, appending the body
+  /// (also given in argument) to it, and returns a future containing the response
   Future<HttpClientResponse> _post(String url, String body) async {
     HttpClient client = await _secureClient();
     return client.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
@@ -41,6 +47,7 @@ class ServerCommunication {
     });
   }
 
+  /// Wrapper that extracts the body of a response
   static Future<String> _responseBody(HttpClientResponse response) async {
     StringBuffer body = StringBuffer();
     for (String readUnit in await response.transform(latin1.decoder).toList()) {
@@ -49,7 +56,9 @@ class ServerCommunication {
     return body.toString();
   }
 
-  Future<bool> _sendPoints(String jsonData, int tryIndex) async {
+  /// If the communication with the server failed for any reason,
+  /// retry up to a given number of times
+  Future<bool> _sendJourneys(String jsonData, int tryIndex) async {
     if (tryIndex > 4) {
       return false;
     }
@@ -57,20 +66,23 @@ class ServerCommunication {
     try {
       response = await _post(serverURL + "store_data?", jsonData);
     } catch (exception) {
-      return _sendPoints(jsonData, tryIndex + 1);
+      return _sendJourneys(jsonData, tryIndex + 1);
     }
 
     if (response.statusCode == 200) {
       return true;
     } else {
-      return _sendPoints(jsonData, tryIndex + 1);
+      return _sendJourneys(jsonData, tryIndex + 1);
     }
   }
 
-  Future<bool> sendPoints(String jsonData) async {
-    return _sendPoints(jsonData, 0);
+  /// Sends the journeys contained in the argument to the server
+  Future<bool> sendJourneys(String jsonData) async {
+    return _sendJourneys(jsonData, 0);
   }
 
+  /// Tries to connect with the given logs, see Cst.dart for the different
+  /// possible results
   Future<int> checkConnection(String username, String password) async {
     if (username == "" && password == "") {
       return anonymousConnexion;
@@ -103,6 +115,8 @@ class ServerCommunication {
     }
   }
 
+  /// Tries to sign up a new user, may fail for instance is the username is
+  /// already used
   static Future<int> sendSignUp(
       String username, String password, String email) async {
     HttpClientResponse response;
@@ -134,7 +148,10 @@ class ServerCommunication {
     }
   }
 
-  static Future<int> sendNewPassword(String username, String email) async {
+  /// Asks the server to send an email containing the password of the given user.
+  /// If the sent email is not the same as the one used for signing up,
+  /// the request is silently dropped(we do not want to give this information to the user).
+  static Future<int> sendPasswordRequest(String username, String email) async {
     HttpClientResponse response;
     try {
       response = await _get(serverURL +

@@ -1,0 +1,14 @@
+name: geofencing
+
+environment:
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl:
+
+flutter:
+  plugin:
+    androidPackage: io.flutter.plugins.geofencing
+    pluginClass: LocationListenerPlugin

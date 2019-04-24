@@ -12,6 +12,10 @@ Ke = (k1 xor k2) xor k3: 1225015408301374256081373116759064735667235615710586003
 
 K2=Kencryption=Kprime : e9e581807a79003b6aca9d53d9b959f57798c16be0a2dbf48dbb603a0a1a6517734e44a5474d2102f4d8b71a20244c9fa8b95e8046f34f705b166874fc5c79dc
 
-kill $(cat ~/play-working-3rd-march/target/universal/stage/RUNNING_PID)
+kill $(cat ~/play-working-13th-april/target/universal/stage/RUNNING_PID)
 
 2 3 6 7
+
+telnet localhost 5554
+
+geo fix <longitude> <latitude>

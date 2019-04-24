@@ -8,18 +8,22 @@ import services.Point;
 import java.io.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import com.fasterxml.jackson.databind.*;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-import java.util.Arrays;
-import com.mongodb.Block;
-import com.mongodb.client.MongoCursor;
 import javax.json.*;
+
+import com.fasterxml.jackson.databind.*;
+
+
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
 import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.Block;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
@@ -27,9 +31,6 @@ import java.util.UUID;
 import java.util.Optional;
 import java.util.Calendar;
 import services.*;
-
-
-
 
 @Singleton
 public class StoreData extends Controller {
@@ -48,25 +49,25 @@ public class StoreData extends Controller {
 	// to handle wifi unavailability, and is stored in the database in a Journey format (cf class).
 	@BodyParser.Of(BodyParser.TolerantText.class)
 	public Result store_data() throws Exception{
+		String out = "";
+		int nb_journey = 0;
 		String[] data = request().body().asText().split("data_splitter");
 		JsonReader reader;
 		JsonObject dataUnit;
-		Optional cookie = request().header("cookie");
-		if (!cookie.isPresent()) {
+		Http.Cookie cookie = request().cookies().get("user");
+		if (cookie == null) {
 			return badRequest("Cookie required");
 		}
-		String cookieValue = cookie.get().toString().split(";")[0];
-		if (!cookieValue.split("=")[0].equals("user") || cookieValue.split("=").length != 2) {
-			return badRequest("Cookie badly set");
-		}
-
+		String cookieValue = cookie.value();
+		Document user = null;
 		for (String jSonString : data) {
 			reader = Json.createReader(new StringReader(jSonString));
 			dataUnit = reader.readObject();
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
-			Document user = users.find(eq("user", dataUnit.getString("UserId"))).first();
-			if (user == null || !user.get("key").equals(cookieValue.split("=")[1])) {
+			user = users.find(eq("user", dataUnit.getString("UserId"))).first();
+			if (user == null || !user.get("key").equals(cookieValue)) {
+				out += "invalid cookie/user";
 				continue;
 			}
 			ArrayList<Point> point_list = new ArrayList<>();
@@ -94,8 +95,11 @@ public class StoreData extends Controller {
 			//first encrypt the journey to obtain the byte[] and then we get the journeys in byte{]
 			//replace each string by a byte[] 
 			users.updateOne(eq("user", user.get("user")),set("journeys", journeys));
-			hb.submitTask((String)(user.get("user")), journeys,1);
-		}
-		return ok();
+			nb_journey ++;
+		}	
+		if(user != null){
+			hb.submitTask((String)(user.get("user")));
+		}		
+		return ok(out + " " + nb_journey + "data length: " + data.length);
 	}
 }

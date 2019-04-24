@@ -1,9 +1,23 @@
 package services;
 import java.util.ArrayList;
 
+/**
+ * Path of a Journey 
+ */
 public class JourneyPath{
+    /**
+     * Start coordinate
+     */
     Coordinate start;
+    /**
+     * End coordinate
+     */
     Coordinate end;
+
+    /**
+     * Constructor
+     * @param path: the ArrayList of Coordinate correspinding to the jounrey
+     */
     public JourneyPath( ArrayList<Coordinate> path){
         double lat = path.get(0).getX();
         double lon = path.get(0).getY();
@@ -13,11 +27,34 @@ public class JourneyPath{
         end = Constants.CoordinateTransformation(lat, lon);
     }
 
+    /**
+     * Return the start point of the path.
+     * @return Return the start point of the path.
+     */
+    public Coordinate getStart(){
+        return start;
+    }
+
+    /**
+     * Return the end point of the path.
+     * @return  Return the end point of the path.
+     */
+    public Coordinate getEnd(){
+        return end;
+    }
+     /**
+     * Override the toString method
+     * @return  the string correspinding to this class
+     */
     @Override
     public String toString(){
         return start.toString() + "___" + end.toString();
     }
 
+    /**
+     * Override the equals method to check if two journeys are similar
+     * @return  true if they are similar. False otherwise
+     */
     @Override
     public boolean equals(Object o){
         if(o instanceof JourneyPath){
@@ -27,6 +64,9 @@ public class JourneyPath{
         return false;
     }
 
+    /**
+     * Override the hash code.
+     */
     @Override 
     public int hashCode(){
         return toString().hashCode();

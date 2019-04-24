@@ -5,7 +5,7 @@ import 'TextInput.dart';
 import 'serverCommunication.dart';
 
 /// This class represents the forgotten password screen of the application.
-/// It allows the user to give its username and the corresponding email,
+/// It allows the user to give its username and the corresponding email
 /// in order to receive an email containing its password.
 class ForgottenPasswordScreen extends StatefulWidget {
   @override
@@ -14,15 +14,16 @@ class ForgottenPasswordScreen extends StatefulWidget {
 }
 
 class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
-  static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _listViewContent;
-  TextInput _usernameInput;
+  InputText _usernameInput;
   TextEditingController _username = TextEditingController();
-  TextInput _emailInput;
+  InputText _emailInput;
   TextEditingController _email = TextEditingController();
   Padding _askNewPasswordButton;
 
-  _askNewPassword() async {
+  /// Called when the user ask to be reminded of his password.
+  /// Checks whether the data are valid and call the server if so
+  _askPasswordMail() async {
     bool goodId = _username.text != "";
     bool goodEmail = true;
     int indexOfAt = _email.text.lastIndexOf("@");
@@ -38,10 +39,10 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
     }
 
     if (goodId && goodEmail) {
-      int newPasswordResult =
-          await ServerCommunication.sendNewPassword(_username.text, _email.text);
+      int newPasswordResult = await ServerCommunication.sendPasswordRequest(
+          _username.text, _email.text);
 
-      /// If the username exists, we don't tell the user whether the email address is good or not,
+      /// If the username exists, we don't tell the user whether the email address is good or not.
       if (newPasswordResult == forgottenPasswordOK) {
         setState(() {
           _listViewContent = <Widget>[
@@ -112,7 +113,6 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
           Text(
             "Adresse email invalide",
             style: smallWarningStyle,
-
             textAlign: TextAlign.right,
           )
         ];
@@ -128,27 +128,15 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
   void initState() {
     super.initState();
 
-    /// We wrap the TextInputs in variables so that we can insert messages between them without having them rebuilt.
-    _usernameInput = /*TextFormField(
-      controller: _username,
-      decoration: new InputDecoration(
-        labelText: "Identifiant",
-
-        fillColor: Colors.white,
-        border: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(25.0),
-          borderSide: new BorderSide(
-          ),
-        ),),);*/
-
-    TextInput(
-      messageToUser: 'Identifiant',
-      color: _backgroundColor,
+    /// We wrap the InputTexts in variables so that we can insert messages between them without having them rebuilt.
+    _usernameInput = InputText(
+      labelText: 'Identifiant',
+      color: backgroundColor,
       controller: _username,
     );
-     _emailInput = TextInput(
-      messageToUser: 'Adresse email',
-      color: _backgroundColor,
+    _emailInput = InputText(
+      labelText: 'Adresse email',
+      color: backgroundColor,
       controller: _email,
       emailAddress: true,
     );
@@ -157,17 +145,16 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
       padding: EdgeInsets.symmetric(horizontal: 25.0),
       child: RaisedButton(
         textColor: Colors.white,
-        color: Colors.lightBlue[800],
+        color: buttonColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: Text(
           'Nouveau mot de passe',
-          //style: textStyle,
-          style: TextStyle(fontSize: 18.0),
+          style: textStyle,
           textAlign: TextAlign.center,
         ),
-        onPressed: _askNewPassword,
+        onPressed: _askPasswordMail,
       ),
     );
 
@@ -183,7 +170,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
     return Scaffold(
       appBar: appBar,
       body: Container(
-        color: _backgroundColor,
+        color: backgroundColor,
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(

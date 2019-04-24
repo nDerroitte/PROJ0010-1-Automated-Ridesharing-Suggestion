@@ -22,11 +22,6 @@ import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
 
-import services.Encryption.Encrypt;
-import services.Encryption.Decrypt;
-import services.Encryption.EncryptionException;
-
-
 @Singleton
 public class SignIn extends Controller {
 	
@@ -44,7 +39,7 @@ public class SignIn extends Controller {
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
-			return ok("connection OK");
+			return ok("success");
 		}
 		if (users.find(eq("user",a_user)).first() == null){
 			return ok("user doesn't exist");		

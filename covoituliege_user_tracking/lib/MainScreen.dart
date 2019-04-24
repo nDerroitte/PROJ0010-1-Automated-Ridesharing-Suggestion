@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/widgets.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:intl/intl.dart';
+import 'package:geofencing/geofencing.dart';
+import 'package:latlong/latlong.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
-import 'dart:convert';
+import 'dart:ui';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
@@ -12,8 +14,8 @@ import 'FileHandler.dart';
 import 'serverCommunication.dart';
 import 'PrintDataScreen.dart';
 
-/// This class represents the main screen of the application. It allows the user to launch the position capturing,
-/// as well as printing and deleting the buffered data.
+/// This class represents the main screen of the application. It allows the user
+/// to launch the position tracking as well as printing and deleting buffered data.
 class MainScreen extends StatefulWidget {
   final UserInfo user;
   final ServerCommunication serverCommunication;
@@ -27,82 +29,131 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Function _pressedOnOff;
-  Function _pressedDataButton;
   IconData _onOffIcon;
-  int _capturePosIndex;
-  UserInfo _user;
-  Text _data;
+  static UserInfo _user;
   Stream<ConnectivityResult> _onConnectivityChanged;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  Stream<Position> _onLocationChanged;
-  StreamSubscription<Position> _locationSubscription;
-  int _nbSameLocationPoints;
-  bool _waitingForWifi;
+  bool _waitingForWifi = false;
   ServerCommunication _serverCommunication;
-  int _minDist = 1000;
-  Map<String, dynamic> _lastPos;
   bool _anonymous;
 
-  /// This function gets the current user's location and adds it in a buffer,
-  /// in an easy-to-parse way.
-  Future<void> _newPos() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-
-    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
-
-    Map<String, dynamic> previousPos = _lastPos;
-    if (previousPos != null &&
-        await Geolocator().distanceBetween(double.parse(previousPos["lat"]),
-                double.parse(previousPos["long"]), latitude, longitude) <
-            _minDist) {
-      _nbSameLocationPoints += 1;
-      if (_nbSameLocationPoints > 7) {
-        await _stop();
-        _start();
+  /// Function called periodically by the background location listener,
+  /// it receives a list of locations (which are supposed to be ordered from
+  /// oldest to newest), analyzes them and store relevant data to be sent later.
+  static Future<void> newPointsBatchCallback(
+      List<TimedLocation> locations) async {
+    /// These variables are used to avoid accessing files multiple times when
+    /// not necessary
+    String lastCalendar;
+    double lastLat;
+    double lastLon;
+    List<String> lastTimedLoc = await getLastTimedLoc();
+    if (lastTimedLoc == null) {
+      if (locations.length > 0) {
+        lastCalendar = locations[0].calendar;
+        lastLat = double.parse(locations[0].latitude);
+        lastLon = double.parse(locations[0].longitude);
+        await storePoint(
+            lastCalendar, locations[0].latitude, locations[0].longitude);
       }
     } else {
-      _nbSameLocationPoints = 0;
-      _lastPos = _user.addData(calendar, latitude.toString(), longitude.toString());
+      lastCalendar = lastTimedLoc[0];
+      lastLat = double.parse(lastTimedLoc[1]);
+      lastLon = double.parse(lastTimedLoc[2]);
+    }
+    String newCalendar;
+    double distance;
+    bool inJourney = await hasJourneyStarted();
+
+    for (TimedLocation loc in locations) {
+      distance = DistanceVincenty().distance(LatLng(lastLat, lastLon),
+          LatLng(double.parse(loc.latitude), double.parse(loc.longitude)));
+      if (inJourney) {
+        if (DateFormat(dateFormat)
+            .parse(lastCalendar)
+            .add(minPauseTimeBetweenJourneys)
+            .isBefore(DateFormat(dateFormat).parse(loc.calendar))) {
+          if (distance < minDistanceNewJourney) {
+            newCalendar = DateFormat(dateFormat).format(DateFormat(dateFormat)
+                .parse(lastCalendar)
+                .add(Duration(minutes: 2, seconds: 30)));
+            await storePoint(newCalendar, loc.latitude, loc.longitude);
+          }
+          await writeJourneyFromBufferedPoints(_user);
+          await storeGeofenceCenter(loc.calendar, loc.latitude, loc.longitude);
+          lastCalendar = loc.calendar;
+          lastLat = double.parse(loc.latitude);
+          lastLon = double.parse(loc.longitude);
+          inJourney = false;
+        } else if (distance > minDistanceNewJourney) {
+          await storePoint(loc.calendar, loc.latitude, loc.longitude);
+          lastCalendar = loc.calendar;
+          lastLat = double.parse(loc.latitude);
+          lastLon = double.parse(loc.longitude);
+        }
+      } else if (distance > minDistanceNewJourney) {
+        newCalendar = DateFormat(dateFormat).format(DateFormat(dateFormat)
+            .parse(loc.calendar)
+            .subtract(Duration(minutes: 2, seconds: 30)));
+        await storePoint(newCalendar, lastLat.toString(), lastLon.toString());
+        await storePoint(loc.calendar, loc.latitude, loc.longitude);
+        lastCalendar = loc.calendar;
+        lastLat = double.parse(loc.latitude);
+        lastLon = double.parse(loc.longitude);
+        inJourney = true;
+      }
     }
   }
 
-  /// This function launches periodically the newPos function. The index handle the situation
-  /// in which the user presses multiple times on the start button : only one instance can be active simultaneously.
-  _capturePos(index) {
-    if (index == _capturePosIndex) {
-      _newPos();
-      Future.delayed(Duration(minutes: 2, seconds: 30), () {
-        _capturePos(index);
-      });
-    }
-  }
-
-  _onLocationEvent(Position pos) async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-    if (_lastPos == null || await Geolocator().distanceBetween(double.parse(_lastPos["lat"]),
-        double.parse(_lastPos["long"]), latitude, longitude) >=
-        _minDist) { /// Only if this is not a false trigger
-      _nbSameLocationPoints = 0;
-      _locationSubscription.pause();
-      _capturePos(_capturePosIndex);
-    }
-  }
-
-  /// This function clear the buffer and starts a new capturePos process.
+  /// This function clear the buffer and starts a new position tracking process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
-  void _start() async {
-    if (_locationSubscription == null) {
-        _locationSubscription = _onLocationChanged.listen(_onLocationEvent);
-    } else {
-      _locationSubscription.resume();
-    }
+  _start() async {
+    await clearBuffers();
+    //TODO implement location batches on IOs side
+    registerLocListener(newPointsBatchCallback, timeIntervalBetweenPoints,
+        maxWaitTimeForUpdates);
+    await startedLocListener();
+    /*List<TimedLocation> test1 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 15-01-24"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-03-45"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-06-38"),
+    TimedLocation.fromExplicit("50.0000024", "50.00000012", "2019-04-23 16-09-21")];
+    List<TimedLocation> test2 = [TimedLocation.fromExplicit("45.0", "50.0", "2019-04-23 16-13-18"),
+    TimedLocation.fromExplicit("40.0", "50.0", "2019-04-23 16-16-45"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-19-26")];
+    List<TimedLocation> test3 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-22-47"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-25-37"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-28-19")];
+    List<TimedLocation> test4 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-31-36"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-34-18"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-37-01"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-40-08")];
+    List<TimedLocation> test5 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-43-51"),
+    TimedLocation.fromExplicit("38.0", "50.0", "2019-04-23 16-46-12"),
+    TimedLocation.fromExplicit("42.0", "50.0", "2019-04-23 16-49-51"),
+    TimedLocation.fromExplicit("44.5", "50.0", "2019-04-23 16-53-08")];
+    List<TimedLocation> test6 = [TimedLocation.fromExplicit("46.8521", "50.0", "2019-04-23 16-57-51")];
+    List<TimedLocation> test7 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-01-00")];
+    List<TimedLocation> test8 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-03-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-06-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-09-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-12-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-15-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-18-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-21-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-24-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-27-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-30-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-33-00")];
+    await newPointsBatchCallback(test1);
+    await newPointsBatchCallback(test2);
+    await newPointsBatchCallback(test3);
+    await newPointsBatchCallback(test4);
+    await newPointsBatchCallback(test5);
+    await newPointsBatchCallback(test6);
+    await newPointsBatchCallback(test7);
+    await newPointsBatchCallback(test8);*/
+
     setState(() {
       _pressedOnOff = _stop;
       _onOffIcon = Icons.stop;
@@ -110,76 +161,43 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   /// This function is called when the user taps on the stop button.
-  /// It saves the currently buffered data in a file (but it should send it if possible, this is still to do),
-  /// and updates the button so that it becomes a start button.
+  /// It creates a journey from the currently buffered points,
+  /// stops the position tracking process and
+  /// updates the button so that it becomes a start button.
   _stop() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+    writeJourneyFromBufferedPoints(_user);
+    removeLocListener(newPointsBatchCallback);
+    await stoppedLocListener();
 
-    String calendar = DateFormat('yyyy-MM-dd HH-mm-ss').format(DateTime.now());
-
-    _lastPos = _user.addData(calendar, latitude.toString(), longitude.toString());
-
-    _capturePosIndex += 1;
-    /// Can happen if the stop button is pressed before the location has changed at least once
-    if (!_locationSubscription.isPaused) {
-      _locationSubscription.pause();
-    }
-    String jSon = json.encode(_user);
-    await writeInFile(jSon);
-    await _printData();
-    _user.clear();
-    if (!_waitingForWifi && !_anonymous) {
-      _waitingForWifi = true;
-      _sendPoints();
-    }
     setState(() {
       _pressedOnOff = _start;
       _onOffIcon = Icons.play_arrow;
     });
   }
 
-  _sendPoints() async {
+  /// Sends buffered journeys to the server. Called when the user connects.
+  _sendJourneys() async {
     ConnectivityResult connectivity = await Connectivity().checkConnectivity();
 
     /// We try to send the data, if it fails (likely because wifi is not available),
     /// we wait for the state of the connectivity to change and we retry.
+    /// If a data unit was collected anonymously, it is filled with the current username.
     if (connectivity == ConnectivityResult.wifi &&
-        await _serverCommunication.sendPoints(await readFile())) {
+        await _serverCommunication.sendJourneys((await readFile()).replaceAll(
+            RegExp("\"UserId\":\"\""),
+            "\"UserId\":\"" + _user.getId() + "\""))) {
       clearFile();
       _waitingForWifi = false;
     } else {
       _connectivitySubscription =
           _onConnectivityChanged.listen((ConnectivityResult result) {
         _connectivitySubscription.cancel();
-        _sendPoints();
+        _sendJourneys();
       });
     }
   }
 
-  /// This function is called when the user taps on the print data button.
-  /// It prints the points that are in the application local file.
-  _printData() async {
-    String data = await readFile();
-    List<String> dataUnit = data.split("data_splitter");
-    StringBuffer toPrint = StringBuffer();
-    for (String userInfo in dataUnit) {
-      /// The split method returns an empty String if there is nothing after the last regex (argument)
-      if (userInfo == "") {
-        break;
-      }
-      toPrint.write(UserInfo.toPrint(json.decode(userInfo)));
-    }
-    setState(() {
-      _data = Text(
-        "(Appuyer pour recharger)\n" + toPrint.toString(),
-        style: TextStyle(fontSize: 18.0),
-      );
-    });
-  }
-
+  /// Push the screen showing buffered journeys.
   _printDataScreen() {
     Navigator.push(
       context,
@@ -187,107 +205,60 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  /// Wrapper checking whether the app should show first a play or a stop button
+  /// Needed because the app can be killed at anytime when in background
+  _playOrStop() async {
+    if (await isLocListenerStarted()) {
+      _pressedOnOff = _stop;
+      _onOffIcon = Icons.stop;
+    } else {
+      _pressedOnOff = _start;
+      _onOffIcon = Icons.play_arrow;
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     _user = widget.user;
     _anonymous = widget.anonymous;
-    _pressedOnOff = _start;
-    _pressedDataButton = _printData;
-    _onOffIcon = Icons.play_arrow;
-    _capturePosIndex = 0;
-    /*_data = Text(
-      'Afficher les données',
-      style: textStyle,
-    );*/
+    if (!_anonymous && !_waitingForWifi) {
+      _sendJourneys();
+      _waitingForWifi = true;
+    }
+
     _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
-    _onLocationChanged = Geolocator()
-        .getPositionStream(LocationOptions(
-            distanceFilter: _minDist, accuracy: LocationAccuracy.high))
-        .skip(1);
     _waitingForWifi = false;
     _serverCommunication = widget.serverCommunication;
+    _playOrStop();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('Ugo              ')), //LET THE SPACE, IT IS FOR CENTERING
-        flexibleSpace: Container(
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-                colors: [
-                  const Color(0xFF3366FF),
-                  const Color(0xFF00CCFF),
-                ],
-                begin: Alignment.topRight,
-                end: Alignment.topLeft,
-                //begin: const FractionalOffset(0.0, 0.0),
-                //end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp),
-          ),
-        ),),
+      appBar: appBar,
       body: Container(
-        color: Colors.lightBlue[50],
-        //width: 400.0,
-        //height: 200.0,
-        //decoration: new BoxDecoration(
-        //  image: new DecorationImage(image: new AssetImage("localisation2.png"), fit: BoxFit.cover,),
-        //),
+        color: backgroundColor,
         child: Center(
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-
               IconButton(
                 icon: Icon(_onOffIcon),
                 color: Colors.lightGreen,
                 onPressed: _pressedOnOff,
                 iconSize: 120.0,
               ),
-
               Divider(),
               ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Effacer les données'),
-                  onTap: clearFile ),
+                  onTap: clearFile),
               ListTile(
                   leading: Icon(Icons.help),
-                  title: Text('Afficher les données'),
-                  //child: _data,
-                  //subtitle : _data,
-                  //onTap: _pressedDataButton
-                  onTap: _printDataScreen
-              ),
-
-
-/*
-              RaisedButton(
-                textColor: Colors.white,
-                color: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-
-                child: Text(
-                  "Effacer les données",
-                  style: textStyle,
-                ),
-                onPressed: clearFile,
-              ),
-
-             RaisedButton(
-                textColor: Colors.white,
-                color: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: _data,
-                onPressed: _pressedDataButton,
-              ),
-*/
+                  title: Text('Afficher les données locales'),
+                  onTap: _printDataScreen),
             ],
           ),
         ),

@@ -4,15 +4,31 @@ import play.test.Helpers;
 import play.mvc.Http.RequestBuilder;
 import play.mvc.Http;
 import play.mvc.Result;
+import static play.mvc.Http.Status.OK;
+import play.mvc.Http.Status;
+import org.junit.Assert;
+import play.twirl.api.Content;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 //import static  play.test.Helpers;
 public class TestSignUp {
-	
+
   @Test
   public void SIGNUP() throws Exception {
-	Application fakeApp = Helpers.fakeApplication();
-    RequestBuilder request = Helpers.fakeRequest("GET","/sign_up?user=minh&password=0");
-    Result result = Helpers.route(fakeApp,request);
-	 request = Helpers.fakeRequest("GET","/sign_up?user=schils&password=1");
-     result = Helpers.route(fakeApp,request);
+    Application fakeApp = Helpers.fakeApplication();
+
+    RequestBuilder request = Helpers.fakeRequest("GET", "/remove_user?user=trouducul&password=minh")
+        .header(Http.HeaderNames.HOST, "localhost:9000");
+    Helpers.route(fakeApp, request);;
+
+    // sign up new user
+    request = Helpers.fakeRequest("GET", "/sign_up?user=trouducul&password=minh&email=555ccc5@xx")
+        .header(Http.HeaderNames.HOST, "localhost:9000");
+    Result result = Helpers.route(fakeApp, request);
+    System.out.println(Helpers.contentAsString(result));
+    assertEquals(OK, result.status());
+    assertTrue(Helpers.contentAsString(result).contains("succes"));
+
   }
 }

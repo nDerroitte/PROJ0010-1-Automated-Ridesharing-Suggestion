@@ -3,7 +3,14 @@ package services;
 import org.bson.Document;
 import java.util.ArrayList;
 
-//Entry point to compute the habit of an user given its journeys.
+/**
+ * Interface of the entry point for computing a user habit with a method.
+ */
 public interface HabitGenerator {
-   void submitTask(String userID, ArrayList<Document> journeys,int method);
+   /**
+    * 
+    * @param userID a user
+    * @param method Method use for computing habit of userID
+    */
+   void submitTask(String userID);
 }

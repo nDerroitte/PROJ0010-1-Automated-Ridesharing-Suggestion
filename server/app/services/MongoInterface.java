@@ -19,6 +19,9 @@ import java.util.List;
 
 import com.google.inject.ImplementedBy;
 
+/**
+ * Interface for database entry point.
+ */
 
 public interface MongoInterface {
    MongoDatabase get_database();

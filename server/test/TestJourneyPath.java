@@ -6,9 +6,16 @@ import java.util.ArrayList;
 import services.Constants;
 import services.JourneyPath;
 import services.Coordinate;
-
+/**
+ * Class for testing JourneyPath
+ * @see [[JourneyPath]]
+ */
 public class TestJourneyPath{
 
+    /**
+     * Test that the hash of two equivalent JourneyPath are the same
+     * @see [[JourneyPath.hashCode()]]
+     */
     @Test
     public void testHash(){
         ArrayList<Coordinate> in = new ArrayList<>();
@@ -25,6 +32,10 @@ public class TestJourneyPath{
         assertTrue(a.hashCode() == b.hashCode());
     }
 
+    /**
+     * Test equal function
+     * @see [[JourneyPath.equals(Obj)]]
+     */
     @Test 
     public void testEqual(){
         ArrayList<Coordinate> in = new ArrayList<>();
@@ -41,8 +52,6 @@ public class TestJourneyPath{
 
         assertEquals(a,b);
         assertFalse(a.equals(in));
-        System.out.println(a.toString());
-        System.out.println(c.toString());
         assertFalse(a.equals(c));
     }
 }

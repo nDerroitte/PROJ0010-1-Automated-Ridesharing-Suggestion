@@ -2,34 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'Cst.dart';
 
-/// This class represents a little text followed by a TextInput.
-/// The messageToUser argument represents the text to display before the TextField,
-/// the color argument is the background color of the text,
+/// This class represents a text input with a little label (labelText argument)
+/// showing which information the user should write in the input.
+/// The color argument is the background color of the text,
 /// the controller argument is a TextInputController that enables the caller
-/// to get the current input, without having to call a function each time the input is changed.
-/// The obscureText argument tells whether the text should be hidden or not (on the screen), it defaults to false.
-///	The emailAddress argument tells whether the keyboard should be optimized for an email address input, it defaults to false.
-class TextInput extends StatelessWidget {
+/// to get the current input.
+/// The obscureText argument tells whether the text should be hidden or not
+/// (on the screen), it defaults to false.
+///	The emailAddress argument tells whether the keyboard should be optimized
+/// for an email address input, it defaults to false.
+class InputText extends StatelessWidget {
   static const _padding = EdgeInsets.symmetric(vertical: 15.0);
 
-  final String messageToUser;
+  final String labelText;
   final Color color;
   final TextEditingController controller;
   final bool obscureText;
   final bool emailAddress;
-  //final ShapeBorder shape;
-  final InputDecoration decoration;
 
-  TextInput({
-    @required this.messageToUser,
+  InputText({
+    @required this.labelText,
     @required this.color,
     @required this.controller,
-    //@required this.shape,
-    @required this.decoration,
-
     this.obscureText = false,
     this.emailAddress = false,
-  })  : assert(messageToUser != null),
+  })  : assert(labelText != null),
         assert(color != null),
         assert(controller != null);
 
@@ -46,52 +43,29 @@ class TextInput extends StatelessWidget {
       child: Padding(
         padding: _padding,
         child: Row(
-
           children: <Widget>[
-
-            /*Text(
-              this.messageToUser + ': ',
-              style: textStyle,
-            ),*/
-
             Expanded(
               child: Container(
-                /*decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius : BorderRadius.circular(25.0)
-              ),*/
                 child: TextFormField(
-                    obscureText: this.obscureText,
-                    keyboardType: type,
-                    //style: textStyle,
-                    style: TextStyle(fontSize: 18.0, color: Colors.black),
-                    controller: controller,
-                    inputFormatters: <TextInputFormatter> [
-                      BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
-                    ] ,
-                  decoration: new InputDecoration(
-                  labelText: this.messageToUser,
-                  fillColor: Colors.black,
-                    border: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(25.0),
-                      borderSide: new BorderSide(
-                      ),
-                    ),
-
-                  )),
-                /*child: TextField(
                   obscureText: this.obscureText,
                   keyboardType: type,
                   style: textStyle,
                   controller: controller,
-                  inputFormatters: <TextInputFormatter> [
-                    BlacklistingTextInputFormatter(RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
-                  ] ,
-                ), */
+                  inputFormatters: <TextInputFormatter>[
+                    BlacklistingTextInputFormatter(
+                        RegExp('[\\&|\\=|\\?|\\[|\\]|\\#]')),
+                  ],
+                  decoration: new InputDecoration(
+                    labelText: this.labelText,
+                    fillColor: Colors.black,
+                    border: new OutlineInputBorder(
+                      borderRadius: new BorderRadius.circular(25.0),
+                      borderSide: new BorderSide(),
+                    ),
+                  ),
+                ),
               ),
             ),
-
-
           ],
         ),
       ),

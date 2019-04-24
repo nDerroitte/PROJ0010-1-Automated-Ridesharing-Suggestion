@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:simple_permissions/simple_permissions.dart';
 
 import 'Cst.dart';
 import 'TextInput.dart';
@@ -9,21 +8,24 @@ import 'serverCommunication.dart';
 import 'ForgottenPasswordScreen.dart';
 import 'SignUpScreen.dart';
 
+import 'dart:ui';
+
 /// This class represents the login screen of the application.
 /// It allows the user to connect to its account, to go the sign up screen
 /// if he has no account yet, and to go to the forgotten password screen
 /// if he can't remember its password.
+/// It is also possible to connect and store data anonymously, which will later
+/// be sent in the name of the connected user
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => new _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  static final _backgroundColor = Colors.lightBlue[50];
   List<Widget> _baseListViewContent;
   List<Widget> _listViewContent;
-  TextInput _identifiant;
-  TextInput _password;
+  InputText _username;
+  InputText _password;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   ServerCommunication _serverCommunication;
@@ -38,17 +40,22 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen(
-                  UserInfo(_usernameController.text), _serverCommunication)),
+            builder: (context) => MainScreen(
+                UserInfo(_usernameController.text), _serverCommunication),
+          ),
         );
       } else if (connectionResult == anonymousConnexion) {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MainScreen(
-                  UserInfo(_usernameController.text), _serverCommunication, true)),
+            builder: (context) => MainScreen(
+                  UserInfo(_usernameController.text),
+                  _serverCommunication,
+                  true,
+                ),
+          ),
         );
-    } else {
+      } else {
         String errorExplanation;
         switch (connectionResult) {
           case invalidUsername:
@@ -94,63 +101,35 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _identifiant = TextInput(
-      messageToUser: 'Identifiant',
+    _username = InputText(
+      labelText: 'Identifiant',
       controller: _usernameController,
-      color: _backgroundColor,
-      /*decoration: new InputDecoration(
-        labelText: "Identifiant",
-        fillColor: Colors.white,
-        border: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(25.0),
-          borderSide: new BorderSide(
-          ),
-        ),),*/);
+      color: backgroundColor,
+    );
 
-    _password = TextInput(
-      messageToUser: 'Mot de passe',
+    _password = InputText(
+      labelText: 'Mot de passe',
       controller: _passwordController,
-      color: _backgroundColor,
-
-      /*decoration: new InputDecoration(
-        labelText: "Mot de passe",
-        fillColor: Colors.white,
-        border: new OutlineInputBorder(
-          borderRadius: new BorderRadius.circular(25.0),
-          borderSide: new BorderSide(
-          ),
-        ),),*/);
+      color: backgroundColor,
+      obscureText: true,
+    );
 
     /// This variable holds the content of the screen. It's useful in the case we want to add a text
     /// at the bottom (that occurs in case of connection error), it avoids rebuilding the main content each time.
     _baseListViewContent = <Widget>[
-      _identifiant,
+      _username,
       _password,
-
-    /*TextInput(
-        messageToUser: 'Identifiant',
-        color: _backgroundColor,
-        controller: _usernameController,
-
-      ),
-      TextInput(
-        messageToUser: 'Mot de passe',
-        color: _backgroundColor,
-        controller: _passwordController,
-        obscureText: true,
-      ),*/
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 75.0),
         child: RaisedButton(
           textColor: Colors.white,
-          color: Colors.lightBlue[800],
+          color: buttonColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
           child: Text(
             'Connexion',
-            style: TextStyle(fontSize: 18.0),
-
+            style: textStyle,
           ),
           onPressed: _connection,
         ),
@@ -159,41 +138,14 @@ class _LoginPageState extends State<LoginPage> {
       ListTile(
           leading: Icon(Icons.help),
           title: Text('Mot de passe oublié?'),
-          onTap: _forgottenPassword
-      ),
+          onTap: _forgottenPassword),
       ListTile(
           leading: Icon(Icons.settings),
           title: Text("S'inscrire"),
-          onTap: _signUp ),
-      /*FlatButton(
-        onPressed: _forgottenPassword,
-        color: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: Text(
-          "Mot de passe oublié?",
-          style: textStyle,
-        ),
-      ),*/
-      /*FlatButton(
-        onPressed: _signUp,
-        color: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: Text(
-          "S'inscrire",
-          style: textStyle,
-        ),
-      ),*/
+          onTap: _signUp),
     ];
 
     _listViewContent = _baseListViewContent;
-
-    /// This line is necessary because the location package has an issue with the requestPermissions
-    /// callbacks for SDK < 21.
-    SimplePermissions.requestPermission(Permission.AlwaysLocation);
 
     _serverCommunication = ServerCommunication();
   }
@@ -201,12 +153,25 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: AppBar(
+        title: Center(child: Text('Ugo')),
+        flexibleSpace: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                const Color(0xFF3366FF),
+                const Color(0xFF00CCFF),
+              ],
+              begin: Alignment.topRight,
+              end: Alignment.topLeft,
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
+            ),
+          ),
+        ),
+      ),
       body: Container(
-        /*decoration: new BoxDecoration(
-          image: new DecorationImage(image: new AssetImage("car.png"), fit: BoxFit.cover,),
-        ),*/
-        color: _backgroundColor,
+        color: backgroundColor,
         child: Center(
           child: Padding(
             padding: EdgeInsets.symmetric(
