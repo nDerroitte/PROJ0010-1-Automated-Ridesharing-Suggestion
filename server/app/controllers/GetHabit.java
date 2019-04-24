@@ -39,7 +39,7 @@ public class GetHabit extends Controller {
 		this.hb = habit_generator;
 	}
 
-	public Result compute_habit(String a_user,String method) {
+	public Result compute_habit(String a_user) {
 		MongoCollection<Document> users = database.getCollection("users");
 		if(a_user.equals("all")){
 			System.out.println("Computing habit of all user");
@@ -47,7 +47,7 @@ public class GetHabit extends Controller {
 			try {
 				while (cursor.hasNext()) {
 					Document user = cursor.next();						
-					hb.submitTask((String) user.get("user"),Integer.parseInt(method));
+					hb.submitTask((String) user.get("user"));
 					System.out.println("User: " + user.get("user") + " is submit");
 				}
 			} 
@@ -62,7 +62,7 @@ public class GetHabit extends Controller {
 		else{
 			Document user = users.find(and(eq("user", a_user))).first();
 			if(user != null) {
-				hb.submitTask(a_user,Integer.parseInt(method));
+				hb.submitTask(a_user);
 				return ok("computing...");
 			}
 			return ok("user does not exist");
