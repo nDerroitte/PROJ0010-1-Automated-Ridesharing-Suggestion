@@ -33,6 +33,7 @@ public class SignIn extends Controller {
 	}
 
 	public Result sign_in(String a_user, String a_password) {
+		//crypter et decrypter le password et l'user name et l'email avant de les lires, et les trajects
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));

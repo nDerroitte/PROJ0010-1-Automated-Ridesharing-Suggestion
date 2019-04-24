@@ -1,4 +1,4 @@
-package services;
+//package services;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
 public class Decrypt {
-	public static String decrypt(String toDecrypt) throws EncryptionException {
+	public static String decrypt(byte[] toDecrypt) throws EncryptionException {
 		try {
 			return decrypt(toDecrypt, getKey());
 		} catch (Exception e) {
@@ -20,15 +20,16 @@ public class Decrypt {
 		}
 	}
 
-	private static String decrypt(String toDecrypt, String key) throws Exception {
-		return getAES(key).decrypt(toDecrypt);
+	private static String decrypt(byte[] toDecrypt, String key) throws Exception {
+		AES aes = getAES(key);
+		return aes.decrypt(toDecrypt);
 	}
 
 	static AES getAES(String myKey) throws Exception {
 		byte[] salt = myKey.getBytes();
 		char[] password = "9dh4dkg8".toCharArray();
 		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-		PBEKeySpec spec = new PBEKeySpec(password, salt, 65536, 256);
+		PBEKeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
 		SecretKey tmp = factory.generateSecret(spec);
 		SecretKey key = new SecretKeySpec(tmp.getEncoded(), "AES");
 		return new AES(key);
@@ -40,8 +41,9 @@ public class Decrypt {
 		String k1xork2 = xor(k1, k2);
 		String k3 = readFile("k6.txt");
 		String ke = xor(k1xork2, k3);
-		String k4 = Decrypt.decrypt(readFile("k7.txt"), ke);
-		return k4;
+		//AES aes = getAES(ke); 
+		//String k4 = Decrypt.decrypt(readFile("k7.txt"), ke);
+		return ke;
 	}
 
 	private static String xor(String str1, String str2) {
@@ -52,7 +54,7 @@ public class Decrypt {
 		byte[] bytes2 = str2.getBytes();
 		String res = "";
 		for(int i = 0; i < bytes1.length; i++) {
-			res += Integer.toHexString(bytes1[i] ^ bytes2[i]);
+			res += Integer.toHexString(bytes1[i] ^ bytes2[i]).substring(0,1);
 		}
 
 		return res;
