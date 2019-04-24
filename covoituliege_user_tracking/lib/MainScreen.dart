@@ -51,10 +51,10 @@ class _MainScreenState extends State<MainScreen> {
     if (lastTimedLoc == null) {
       if (locations.length > 0) {
         lastCalendar = locations[0].calendar;
-        lastLat = double.parse(locations[1].latitude);
-        lastLon = double.parse(locations[2].longitude);
+        lastLat = double.parse(locations[0].latitude);
+        lastLon = double.parse(locations[0].longitude);
         await storePoint(
-            lastCalendar, locations[1].latitude, locations[2].longitude);
+            lastCalendar, locations[0].latitude, locations[0].longitude);
       }
     } else {
       lastCalendar = lastTimedLoc[0];
@@ -63,11 +63,12 @@ class _MainScreenState extends State<MainScreen> {
     }
     String newCalendar;
     double distance;
+    bool inJourney = await hasJourneyStarted();
 
     for (TimedLocation loc in locations) {
       distance = DistanceVincenty().distance(LatLng(lastLat, lastLon),
           LatLng(double.parse(loc.latitude), double.parse(loc.longitude)));
-      if (await hasJourneyStarted()) {
+      if (inJourney) {
         if (DateFormat(dateFormat)
             .parse(lastCalendar)
             .add(minPauseTimeBetweenJourneys)
@@ -83,6 +84,7 @@ class _MainScreenState extends State<MainScreen> {
           lastCalendar = loc.calendar;
           lastLat = double.parse(loc.latitude);
           lastLon = double.parse(loc.longitude);
+          inJourney = false;
         } else if (distance > minDistanceNewJourney) {
           await storePoint(loc.calendar, loc.latitude, loc.longitude);
           lastCalendar = loc.calendar;
@@ -90,11 +92,15 @@ class _MainScreenState extends State<MainScreen> {
           lastLon = double.parse(loc.longitude);
         }
       } else if (distance > minDistanceNewJourney) {
-        await storePoint(lastCalendar, lastLat.toString(), lastLon.toString());
+        newCalendar = DateFormat(dateFormat).format(DateFormat(dateFormat)
+            .parse(loc.calendar)
+            .subtract(Duration(minutes: 2, seconds: 30)));
+        await storePoint(newCalendar, lastLat.toString(), lastLon.toString());
         await storePoint(loc.calendar, loc.latitude, loc.longitude);
         lastCalendar = loc.calendar;
         lastLat = double.parse(loc.latitude);
         lastLon = double.parse(loc.longitude);
+        inJourney = true;
       }
     }
   }
@@ -103,11 +109,51 @@ class _MainScreenState extends State<MainScreen> {
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
   _start() async {
-    clearBuffer();
+    await clearBuffers();
     //TODO implement location batches on IOs side
     registerLocListener(newPointsBatchCallback, timeIntervalBetweenPoints,
-        maxWaitTimeForUpdates, minDistanceBetweenPoints);
+        maxWaitTimeForUpdates);
     await startedLocListener();
+    /*List<TimedLocation> test1 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 15-01-24"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-03-45"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-06-38"),
+    TimedLocation.fromExplicit("50.0000024", "50.00000012", "2019-04-23 16-09-21")];
+    List<TimedLocation> test2 = [TimedLocation.fromExplicit("45.0", "50.0", "2019-04-23 16-13-18"),
+    TimedLocation.fromExplicit("40.0", "50.0", "2019-04-23 16-16-45"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-19-26")];
+    List<TimedLocation> test3 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-22-47"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-25-37"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-28-19")];
+    List<TimedLocation> test4 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-31-36"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-34-18"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-37-01"),
+    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-40-08")];
+    List<TimedLocation> test5 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-43-51"),
+    TimedLocation.fromExplicit("38.0", "50.0", "2019-04-23 16-46-12"),
+    TimedLocation.fromExplicit("42.0", "50.0", "2019-04-23 16-49-51"),
+    TimedLocation.fromExplicit("44.5", "50.0", "2019-04-23 16-53-08")];
+    List<TimedLocation> test6 = [TimedLocation.fromExplicit("46.8521", "50.0", "2019-04-23 16-57-51")];
+    List<TimedLocation> test7 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-01-00")];
+    List<TimedLocation> test8 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-03-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-06-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-09-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-12-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-15-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-18-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-21-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-24-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-27-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-30-00"),
+    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-33-00")];
+    await newPointsBatchCallback(test1);
+    await newPointsBatchCallback(test2);
+    await newPointsBatchCallback(test3);
+    await newPointsBatchCallback(test4);
+    await newPointsBatchCallback(test5);
+    await newPointsBatchCallback(test6);
+    await newPointsBatchCallback(test7);
+    await newPointsBatchCallback(test8);*/
+
     setState(() {
       _pressedOnOff = _stop;
       _onOffIcon = Icons.stop;

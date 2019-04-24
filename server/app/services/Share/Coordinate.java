@@ -3,6 +3,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
+import org.bson.Document;
 
 /**
  * Coordinate corresponds to the class representing the lattitude(x) longitude(y) 
@@ -70,6 +71,20 @@ public final class Coordinate {
     public String toString() {
         NumberFormat formatter = DecimalFormat.getInstance(Locale.ENGLISH);
         return "[" + formatter.format(x) + ";" + formatter.format(y) + "]";
+    }
+
+    public Document toDoc(){
+        Document doc = new Document();
+        doc.put("lat",x);
+        doc.put("long",y);
+        return doc;
+    }
+
+    public static Coordinate fromDoc(Document doc){
+        double lat = (double) doc.get("lat");
+        double lon = (double) doc.get("long");
+        Coordinate c = new Coordinate(lat,lon);
+        return c;
     }
 
 }

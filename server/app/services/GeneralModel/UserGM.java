@@ -11,12 +11,20 @@ import java.io.PrintWriter;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
+import static com.mongodb.client.model.Filters.*;
+import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Updates.*;
+import com.mongodb.client.result.UpdateResult;
+import com.mongodb.Block;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+
 import java.text.ParseException;
 
-import org.bson.Document;
-import static com.mongodb.client.model.Filters.*;
 /**
  * Compute all habit of an user
  */
@@ -35,6 +43,11 @@ public class UserGM {
     private int mode;
 
     /**
+     * entry point to the database
+     */
+    private MongoCollection<Document> db;
+
+    /**
      * Extract the data of user_id and set the method used for computing habits.
      * @param user_id ID of the user
      * @param database Entry point to DB containt user journey.
@@ -45,6 +58,7 @@ public class UserGM {
         this.user_id = user_id;
         this.mode = mode;
         this.unused_journeys = new ArrayList<>();
+        this.db = database;
 
         //get user journey from database
         Document user = database.find(eq("user", user_id)).first();
@@ -67,36 +81,42 @@ public class UserGM {
         // Compute habit on all data
         HashMap<JourneyPath, ArrayList<Journey>> sorted_journey = sortJourneyByPath();
         Iterator it = sorted_journey.entrySet().iterator();
+        LinkedList<Habit> habits = new LinkedList<>();
+        
         while (it.hasNext()) {
+            LinkedList<Habit> new_habit = new LinkedList<>();
             Map.Entry pair = (Map.Entry) it.next();
-            LinkedList<Habit> habits = new LinkedList<>();
             ArrayList<Journey> data = (ArrayList<Journey>) pair.getValue();
             if (mode == 0) {
                 ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440);
-                habits.addAll(computer.getHabit());
+                new_habit=computer.getHabit();
             }
             if (mode == 1){
                 ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440*7);
-                habits.addAll(computer.getHabit());                
+                new_habit=computer.getHabit();               
             }
             // Compute habit on day subset.
-            else {
+            if (mode==2) {
                 HashMap<Integer, ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
                 Iterator byday = journey_by_day.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry entry = (Map.Entry) it.next();
                     ArrayList<Journey> databyday = (ArrayList<Journey>) entry.getValue();
                     ComputeHabit computer = new ComputeHabit(journeyToLong(databyday),1440);
-                    habits.addAll(computer.getHabit());
+                    new_habit.addAll(computer.getHabit());
                 }
             }
-            for(Habit habit : habits){
+            for(Habit habit : new_habit){
                 habit.firstLocation = ((JourneyPath) pair.getKey()).start;
                 habit.lastLocation = ((JourneyPath) pair.getKey()).end;
-            }                    
-            habitsTofile(habits, (JourneyPath) pair.getKey());
-            System.out.println("User: " + user_id + "done");
+            }          
+            System.out.println("number of habit find: " + new_habit.size());         
+            habits.addAll(new_habit);
+                 
         }
+        habitsTofile(habits);
+        habitToDB(habits);
+
     }
 
     /**
@@ -112,21 +132,31 @@ public class UserGM {
     /**
      * Write a list of habit into file.
      * @param habits List of habits
-     * @param path Path of the habit.
      */
-    public void habitsTofile(LinkedList<Habit> habits, JourneyPath path) {
-        try {
-            File root = new File("user_habit/" + user_id + "/" + mode);
-            root.mkdirs();
-            int i= 0;
-            for (Habit habit : habits) {
-                File file = new File(root.getPath(),"habit "+ i +" " + path.toString() + ".habit");
-                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                writer.write( habit.toString() + "\n" );
-                i++;            
-                writer.close();
+    public void habitsTofile(LinkedList<Habit> habits) {
+        // Writing in files
+        try
+        {
+            String folderString = "user_habit/"+user_id;
+            File newFile = new File(folderString);
+            if(!newFile.exists())
+                newFile.mkdir();
+            File method1 = new File(folderString+"/2");
+            method1.mkdir();
+            FileWriter fw = new FileWriter(folderString+"/2/habits.txt", false);
+            PrintWriter writer = new PrintWriter(fw);
+            writer.printf("User %s.\n\n", user_id);
+            System.out.println(habits.size());
+            for(Habit h : habits)
+            {
+                writer.println(h);
+                writer.printf("========================================================================================\n");
             }
-        } catch (Exception e) {
+            writer.close();
+        }
+        catch(IOException e)
+        {
+            System.err.println("Error writing in file.");
             e.printStackTrace();
         }
     }
@@ -185,4 +215,15 @@ public class UserGM {
         return out;
     }
 
+    public void habitToDB(LinkedList<Habit> new_habits){
+        Document user = db.find(eq("user", user_id)).first();
+        ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
+        if(habits == null){
+            habits = new ArrayList<Document>();
+        }
+        for(Habit h : new_habits){
+            habits.add(h.toDoc());
+        }
+        db.updateOne(eq("user",user_id),set("habits", habits));
+    }
 }

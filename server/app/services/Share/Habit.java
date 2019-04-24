@@ -4,6 +4,7 @@ import org.bson.Document;
 import services.*;
 import java.text.ParseException;
 import java.util.Date;
+import com.mongodb.client.*;
 
 
 /**
@@ -43,12 +44,12 @@ public class Habit
     public Document toDoc()
     {
         Document doc = new Document();
-        doc.put("period",this.period);
-        doc.put("offset",this.offset);
+        doc.put("period",period);
+        doc.put("offset",offset);
         doc.put("reliability",this.reliability);
-        doc.put("firstLocation",this.firstLocation);
-        doc.put("lastLocation",this.firstLocation);
-        doc.put("nbPoints",this.nbPoints);
+        doc.put("firstLocation",firstLocation.toDoc());
+        doc.put("lastLocation",lastLocation.toDoc());
+        doc.put("nbPoints",nbPoints);
         return doc;
     }
 

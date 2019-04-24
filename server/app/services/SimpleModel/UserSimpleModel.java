@@ -55,5 +55,6 @@ public class UserSimpleModel
     public void createHabits()
     {
         this.habits = CreationHabitSM.createHabitSM(unused_journeys, user_id);
+        
     }
 }

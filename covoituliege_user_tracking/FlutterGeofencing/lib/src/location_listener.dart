@@ -16,15 +16,13 @@ void removeLocListener(void Function(List<TimedLocation> locations) callback) {
 void registerLocListener(
     void Function(List<TimedLocation> locations) callback,
     int timeIntervalBetweenPoints,
-    int maxWaitTimeForUpdates,
-    double minDistanceBetweenPoints) {
+    int maxWaitTimeForUpdates) {
   initialize();
   final List<dynamic> args = <dynamic>[
     PluginUtilities.getCallbackHandle(callback).toRawHandle()
   ];
   args.add(timeIntervalBetweenPoints);
   args.add(maxWaitTimeForUpdates);
-  args.add(minDistanceBetweenPoints);
   MethodChannel('plugins.flutter.io/loc_listener_plugin')
       .invokeMethod('LocationListenerPlugin.registerLocationListener', args);
 }

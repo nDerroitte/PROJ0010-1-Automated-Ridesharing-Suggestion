@@ -39,7 +39,7 @@ public class GetHabit extends Controller {
 		this.hb = habit_generator;
 	}
 
-	public Result get_habit(String a_user,String method) {
+	public Result compute_habit(String a_user,String method) {
 		MongoCollection<Document> users = database.getCollection("users");
 		if(a_user.equals("all")){
 			System.out.println("Computing habit of all user");
@@ -70,6 +70,39 @@ public class GetHabit extends Controller {
 
 	}
 
+	public Result get_habit(String a_user,String a_password){
+		Document user = database.getCollection("users").find(and(eq("user", a_user), eq("password", a_password))).first();
+		ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
+		String out = "";
+		if (user == null){
+			return ok("user doesn't exist");		
+		}
+		for(Document habit: habits){
+			out += habit.toJson();
+			out += "data_splitter";
+		}
+		return ok(out.toString());
+	}
+
+	public Result update_habit(String a_user,String password){
+		String[] data = request().body().asText().split("data_splitter");
+		JsonReader reader;
+		JsonObject dataUnit;
+		MongoCollection<Document> users = database.getCollection("users");
+		for (String jSonString : data) {
+			reader = Json.createReader(new StringReader(jSonString));
+			dataUnit = reader.readObject();
+			reader.close();
+			Document user = users.find(and(eq("user", a_user), eq("password", a_password))).first();
+			if(user==null){
+				return ok("user not found or incorect password");
+			}
+			users.updateOne(and(eq("user", a_user)))
+
+		}
+
+
+	}
 
 }
 
