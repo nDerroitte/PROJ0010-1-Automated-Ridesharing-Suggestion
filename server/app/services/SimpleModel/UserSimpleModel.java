@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
 import java.text.ParseException;
 
 
@@ -24,6 +25,11 @@ public class UserSimpleModel
      */
     private ArrayList<Habit> habits;
 
+     /**
+     * entry point to the database
+     */
+    private MongoCollection<Document> db;
+
     /**
      * Constructor of the USM
      * @param user_id string of the user id
@@ -35,6 +41,7 @@ public class UserSimpleModel
         this.user_id = user_id;
         this.habits = new ArrayList<>();
         this.unused_journeys = new ArrayList<>();
+        this.db = database;
         
         // Get user journey from database
         Document user = database.find(eq("user", user_id)).first();
@@ -55,6 +62,18 @@ public class UserSimpleModel
     public void createHabits()
     {
         this.habits = CreationHabitSM.createHabitSM(unused_journeys, user_id);
-        
+        habitToDB(this.habits);
+    }
+
+    public void habitToDB(ArrayList<Habit> new_habits){
+        Document user = db.find(eq("user", user_id)).first();
+        ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
+        if(habits == null){
+            habits = new ArrayList<Document>();
+        }
+        for(Habit h : new_habits){
+            habits.add(h.toDoc());
+        }
+        db.updateOne(eq("user",user_id),set("habits", habits));
     }
 }
