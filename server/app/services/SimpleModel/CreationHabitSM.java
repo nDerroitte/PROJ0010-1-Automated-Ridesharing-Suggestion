@@ -12,6 +12,7 @@ import java.io.FileWriter;
  */
 public class CreationHabitSM
 {
+    public static ArrayList<Journey> unused_journeys = new ArrayList<>();
     /**
      * Static method that allow to create SimpleHabits for a user from a list of journey
      * @param journeys The Arraylist of jounreys
@@ -42,8 +43,15 @@ public class CreationHabitSM
             for(int j =0; j<habits.get(i).size();j++)
             {
                 // For each day happen habits if they are large enough and they happen several time
-                if(habits.get(i).get(j).getOccurences().size() > 1 && habits.get(i).get(j).getPath().size()> 1)
-                    out.add(habits.get(i).get(j));
+                if(habits.get(i).get(j).getOccurences().size() > 1)
+                {
+                    if(habits.get(i).get(j).getPath().size()> 1)
+                        out.add(habits.get(i).get(j));
+                }
+                else 
+                {
+                    CreationHabitSM.unused_journeys.add(habits.get(i).get(j).getJourney());
+                }
             }
         }
         System.out.printf("Habits of %s created\n", user);

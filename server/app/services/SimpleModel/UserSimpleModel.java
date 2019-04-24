@@ -59,10 +59,12 @@ public class UserSimpleModel
     /**
      * Create habits for the user
      */
-    public void createHabits()
+    public ArrayList<Journey> createHabits()
     {
         this.habits = CreationHabitSM.createHabitSM(unused_journeys, user_id);
         habitToDB(this.habits);
+        System.out.println(CreationHabitSM.unused_journeys);
+        return unused_journeys = CreationHabitSM.unused_journeys;
     }
 
     public void habitToDB(ArrayList<Habit> new_habits){

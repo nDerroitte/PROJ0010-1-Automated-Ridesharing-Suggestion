@@ -31,11 +31,17 @@ public class SimpleHabit extends Habit
     private long oldness;
 
     /**
+     * Private first jounrey
+     */
+    private Journey firstJourney;
+
+    /**
      * Constructor of the SimpleHabit class
      * @param journey: the first journey of this habit
      */
     public SimpleHabit(Journey journey)
     {
+        this.firstJourney = journey;
         this.path = journey.getPath();
         this.occurences = new ArrayList<>();
         occurences.add(journey.getFirstPointTime());
@@ -56,6 +62,15 @@ public class SimpleHabit extends Habit
     public ArrayList<Coordinate> getPath()
     {
         return this.path;
+    }
+
+    /**
+     * Getter of the first jounrey.
+     * @return : the first journey
+     */
+    public Journey getJourney()
+    {
+        return this.firstJourney;
     }
 
     /**
