@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.LinkedList;
+import java.util.List;
 import java.io.PrintWriter;
 import java.io.File;
 import java.io.BufferedWriter;
@@ -54,7 +55,7 @@ public class UserGM {
      * @param mode Tell which method to use for computing all habit.
      * @throws ParseException if the document from the DB cannot be instance in a java class.
      */
-    public UserGM(String user_id, MongoCollection<Document> database, List<Journey> journeys) throws ParseException {
+    public UserGM(String user_id, MongoCollection<Document> database, ArrayList<Journey> journeys) throws ParseException {
         this.unused_journeys = journeys;
         this.user_id = user_id;
         this.db = database;

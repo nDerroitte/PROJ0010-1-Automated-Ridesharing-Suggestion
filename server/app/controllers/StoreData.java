@@ -96,7 +96,7 @@ public class StoreData extends Controller {
 			nb_journey ++;
 		}	
 		if(user != null){
-			hb.submitTask((String)(user.get("user")),0);
+			hb.submitTask((String)(user.get("user")));
 		}		
 		return ok(out + " " + nb_journey + "data length: " + data.length);
 	}

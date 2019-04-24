@@ -85,13 +85,11 @@ public class ThreadExecutor implements HabitGenerator {
  */
 class ComputationUnit implements Runnable {
     private final String user_id;
-    private final int method;
     private final MongoCollection<Document> database;
 
     /**
      * 
      * @param userID A user 
-     * @param method method use for computing habit of UserID
      * @param database entry point to the database
      */
     ComputationUnit(String userID, MongoCollection<Document> database) {
@@ -101,9 +99,9 @@ class ComputationUnit implements Runnable {
 
     public void run() {
         try {
-            UserSimpleModel simple_user = new  UserSimpleModel(userID,database);
-            List<Journey> unused_journey = simple_user.createHabits();
-            UserGM user_gm = new UserGM(userID,unused_journey);
+            UserSimpleModel simple_user = new  UserSimpleModel(user_id,database);
+            ArrayList<Journey> unused_journey = simple_user.createHabits();
+            UserGM user_gm = new UserGM(user_id,database,unused_journey);
             user_gm.createHabits();
             
         } catch (Exception e) {
