@@ -54,23 +54,10 @@ public class UserGM {
      * @param mode Tell which method to use for computing all habit.
      * @throws ParseException if the document from the DB cannot be instance in a java class.
      */
-    public UserGM(String user_id, MongoCollection<Document> database, int mode) throws ParseException {
+    public UserGM(String user_id, MongoCollection<Document> database, List<Journey> journeys) throws ParseException {
+        this.unused_journeys = journeys;
         this.user_id = user_id;
-        this.mode = mode;
-        this.unused_journeys = new ArrayList<>();
         this.db = database;
-
-        //get user journey from database
-        Document user = database.find(eq("user", user_id)).first();
-        if (user == null ) {
-            System.err.println("User: " + user_id + " not in DB");
-        }
-        else{
-            ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-            for(Document journey : journeys){
-                unused_journeys.add(Journey.fromDoc(journey));
-            }
-        }
     }
 
     /**
@@ -87,25 +74,8 @@ public class UserGM {
             LinkedList<Habit> new_habit = new LinkedList<>();
             Map.Entry pair = (Map.Entry) it.next();
             ArrayList<Journey> data = (ArrayList<Journey>) pair.getValue();
-            if (mode == 0) {
-                ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440);
-                new_habit=computer.getHabit();
-            }
-            if (mode == 1){
-                ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440*7);
-                new_habit=computer.getHabit();               
-            }
-            // Compute habit on day subset.
-            if (mode==2) {
-                HashMap<Integer, ArrayList<Journey>> journey_by_day = sortJourneyByDay(data);
-                Iterator byday = journey_by_day.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry entry = (Map.Entry) it.next();
-                    ArrayList<Journey> databyday = (ArrayList<Journey>) entry.getValue();
-                    ComputeHabit computer = new ComputeHabit(journeyToLong(databyday),1440);
-                    new_habit.addAll(computer.getHabit());
-                }
-            }
+            ComputeHabit computer = new ComputeHabit(journeyToLong(data),1440);
+            new_habit=computer.getHabit();
             for(Habit habit : new_habit){
                 habit.firstLocation = ((JourneyPath) pair.getKey()).start;
                 habit.lastLocation = ((JourneyPath) pair.getKey()).end;
