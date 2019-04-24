@@ -65,7 +65,9 @@ public class StoreData extends Controller {
 			dataUnit = reader.readObject();
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
+			//Encrypt le "data unit get string (user id)""
 			user = users.find(eq("user", dataUnit.getString("UserId"))).first();
+			
 			if (user == null || !user.get("key").equals(cookieValue)) {
 				out += "invalid cookie/user";
 				continue;
@@ -86,7 +88,7 @@ public class StoreData extends Controller {
 				Point current_point = new Point(cal,coord);
 				point_list.add(current_point);
 			}
-			if (point_list.size() <= 1) {	// A journey with only one point has no meaning : this is a measurement error
+			if (point_list.size() <= 1) {	// A journey with only one  point has no meaning : this is a measurement error
 				continue;
 			}
 			Journey current_journey = new Journey(point_list);
@@ -94,10 +96,12 @@ public class StoreData extends Controller {
 			journeys.add(current_journey.toDoc());
 			//first encrypt the journey to obtain the byte[] and then we get the journeys in byte{]
 			//replace each string by a byte[] 
+			//tout sera deja encrypter 
 			users.updateOne(eq("user", user.get("user")),set("journeys", journeys));
 			nb_journey ++;
 		}	
 		if(user != null){
+			 //Decrypt the user.get 
 			hb.submitTask((String)(user.get("user")));
 		}		
 		return ok(out + " " + nb_journey + "data length: " + data.length);

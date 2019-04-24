@@ -43,12 +43,25 @@ public class Habit
      */
     public Document toDoc()
     {
+        //Encrypt
         Document doc = new Document();
-        doc.put("period",period);
-        doc.put("offset",offset);
-        doc.put("reliability",this.reliability);
-        doc.put("firstLocation",firstLocation.toDoc());
-        doc.put("lastLocation",lastLocation.toDoc());
+        doc.put("period",period); //Encrypt
+        doc.put("offset",offset); //Encrypt
+        doc.put("reliability",this.reliability); //Encrypt
+        doc.put("firstLocation",firstLocation.toDoc()); //NE PAS Encrypt
+        doc.put("lastLocation",lastLocation.toDoc()); //NE PAS Encrypt
+        doc.put("nbPoints",nbPoints); //Encrypt
+        return doc;
+    }
+
+        public Document toDocNotEncrypted()
+    {
+        Document doc = new Document();
+        doc.put("period",period); 
+        doc.put("offset",offset); 
+        doc.put("reliability",this.reliability); 
+        doc.put("firstLocation",firstLocation.toDoc()); 
+        doc.put("lastLocation",lastLocation.toDoc()); 
         doc.put("nbPoints",nbPoints);
         return doc;
     }
@@ -61,6 +74,7 @@ public class Habit
      */
     public static Habit fromDoc(Document doc)throws ParseException
     {
+        //Decrypt
         Habit h = new Habit();
 	    h.period = (Long) doc.get("period");
 	    h.offset = (Long) doc.get("offset");

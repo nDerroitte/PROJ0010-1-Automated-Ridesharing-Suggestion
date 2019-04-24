@@ -1,4 +1,4 @@
-//package services;
+package services;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.Base64;
+import java.util.ArrayList;
 
 public class AES {
 
@@ -34,29 +35,75 @@ public class AES {
     /*
 	 * This function takes in argument a String and returns a corresponding encrypted String.
 	 */
-    public byte[] encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
+    public ArrayList<Byte> encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
         try {
             StringBuilder SB = new StringBuilder();
 			SB.append(str);
-			while(SB.length()%16!=0){
-				SB.append("0");
-			}
-			str = SB.toString();
+            if (str.length()%16 == 0) {
+                if (str.substring(str.length()).equals("0")) {
+                    for(int i = 0; i < 16; i++) {
+                        SB.append("1");
+                    }
+                } else {
+                    for(int i = 0; i < 16; i++) {
+                        SB.append("0");
+                    }
+                }
+            } else {
+                int padding = 16 - SB.length() % 16;
+                if (str.substring(str.length()).equals("0")) {
+                    for(int j = 0; j < padding; j++) {
+                        SB.append("1");
+                    }
+                } else {
+                    for(int j = 0; j < padding; j++) {
+                        SB.append("0");
+                    }
+                }
+            }
+            str = SB.toString();
             byte[] returnB = str.getBytes("UTF-8");
             byte[] encry = ecipher.doFinal(returnB);
-            return encry;
+
+		    ArrayList<Byte> returnArrayList = new ArrayList<Byte>();
+		    for (byte b : encry) {
+			    returnArrayList.add(new Byte(b));
+		    }
+            return returnArrayList;
         } catch (IllegalBlockSizeException | BadPaddingException e) {
         	throw new EncryptionException("Error in doFinal: " + e.getMessage());
         }
     }
 
-    public String decrypt(byte[] byteArray) throws IOException, EncryptionException {
+    public String decrypt(ArrayList<Byte> arrayList) throws IOException, EncryptionException {
         try {
-            if(byteArray.length%16!=0){
-                return "bad encryption sequence";
+
+            //ArrayList<Byte> test3 = (ArrayList<Byte>)(userJustAdd.get("user"));
+		    byte[] byteArray = new byte[arrayList.size()];
+		    int i = 0;
+		    // Number because runtype type is Integer, guess why ?
+		    for (Number b : arrayList) {
+		    	byteArray[i] = b.byteValue();
+		    	i++;
+		    }
+
+            if(arrayList.size()%16!=0){
+                throw new EncryptionException("Argument should have a multiple of 16 as length.");
             }
             byte[] dcrypt = dcipher.doFinal(byteArray);
-            return new String(dcrypt, "UTF-8");
+            String returned = new String(dcrypt, "UTF-8");
+            StringBuilder SB = new StringBuilder();
+            SB.append(returned);
+            int initLength = SB.length();
+            if(SB.substring(SB.length()-1).equals("0")){
+                while(SB.substring(SB.length()-1).equals("0")){
+                    SB.setLength(--initLength);
+                }
+            }else if (returned.substring(returned.length()-1).equals("1")){
+                SB.setLength(--initLength);
+            }
+
+            return SB.toString();
         } catch (IllegalBlockSizeException | BadPaddingException e) {
         	throw new EncryptionException("Error in doFinal: " + e.getMessage());
         }

@@ -33,14 +33,15 @@ public class SignIn extends Controller {
 	}
 
 	public Result sign_in(String a_user, String a_password) {
-		//crypter et decrypter le password et l'user name et l'email avant de les lires, et les trajects
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
+		//Encrypt a_user and a_pawwrods 
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
 			return ok("success");
 		}
+		//encrypt a_user 
 		if (users.find(eq("user",a_user)).first() == null){
 			return ok("user doesn't exist");		
 		}

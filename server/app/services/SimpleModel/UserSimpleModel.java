@@ -44,6 +44,7 @@ public class UserSimpleModel
         this.db = database;
         
         // Get user journey from database
+        //Encrypt user id 
         Document user = database.find(eq("user", user_id)).first();
         if (user == null ) {
             System.err.println("User: " + user_id + " not in DB");
@@ -62,11 +63,13 @@ public class UserSimpleModel
     public ArrayList<Journey> createHabits()
     {
         this.habits = CreationHabitSM.createHabitSM(unused_journeys, user_id);
+
         habitToDB(this.habits);
         return unused_journeys = CreationHabitSM.unused_journeys;
     }
 
     public void habitToDB(ArrayList<Habit> new_habits){
+         //Encrypt user id 
         Document user = db.find(eq("user", user_id)).first();
         ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
         if(habits == null){
@@ -75,6 +78,7 @@ public class UserSimpleModel
         for(Habit h : new_habits){
             habits.add(h.toDoc());
         }
+         //Encrypt user id 
         db.updateOne(eq("user",user_id),set("habits", habits));
     }
 }

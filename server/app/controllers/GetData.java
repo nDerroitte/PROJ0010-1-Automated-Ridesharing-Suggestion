@@ -37,11 +37,13 @@ public class GetData extends Controller {
 
 	public Result get_data(String a_user, String a_password) {
 		MongoCollection<Document> users = database.getCollection("users");
+		//encrypt a_user et a_passward 
 		Document user = users.find(and(eq("user", a_user), eq("password", a_password))).first();
 		StringBuffer data = new StringBuffer();
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
 			for (Document journey : journeys) {
+				//TO DO changer ceci avec un getFromDoc
 				ArrayList<Document> doc_meeting_point = (ArrayList<Document>)journey.get("meeting_point");
 				for (Document doc_point : doc_meeting_point) {
 					data.append("datetime: ");
@@ -55,6 +57,7 @@ public class GetData extends Controller {
 			}
 			return ok(data.toString());
 		}
+		//Encrypt the a_user so use the a_user encrypted 
 		if (users.find(eq("user",a_user)).first() == null){
 			return ok("user doesn't exist");		
 		}

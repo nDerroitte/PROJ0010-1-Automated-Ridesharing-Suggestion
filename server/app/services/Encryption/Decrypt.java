@@ -1,4 +1,4 @@
-//package services;
+package services;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -10,9 +10,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import services.Constants;
+import java.util.ArrayList;
 
 public class Decrypt {
-	public static String decrypt(byte[] toDecrypt) throws EncryptionException {
+	public static String decrypt(ArrayList<Byte> toDecrypt) throws EncryptionException {
 		try {
 			return decrypt(toDecrypt, getKey());
 		} catch (Exception e) {
@@ -20,7 +22,7 @@ public class Decrypt {
 		}
 	}
 
-	private static String decrypt(byte[] toDecrypt, String key) throws Exception {
+	private static String decrypt(ArrayList<Byte> toDecrypt, String key) throws Exception {
 		AES aes = getAES(key);
 		return aes.decrypt(toDecrypt);
 	}
@@ -35,12 +37,14 @@ public class Decrypt {
 		return new AES(key);
 	}
 
-	static String getKey() throws Exception {
-		String k1 = readFile("k2.txt");
-		String k2 = readFile("k3.txt");
-		String k1xork2 = xor(k1, k2);
-		String k3 = readFile("k6.txt");
-		String ke = xor(k1xork2, k3);
+	static String getKey() throws Exception { //throws FileNotFoundException
+		//File file=new File("k2.txt");
+    	//System.out.println("FILE EXIST : "+file.exists());
+		//String k1 = readFile("k2.txt");
+		//String k2 = readFile("k3.txt");
+		String k1xork2 = xor(Constants.k2, Constants.k3);
+		//String k3 = readFile("k6.txt");
+		String ke = xor(k1xork2, Constants.k6);
 		//AES aes = getAES(ke); 
 		//String k4 = Decrypt.decrypt(readFile("k7.txt"), ke);
 		return ke;

@@ -44,12 +44,20 @@ public class ForgottenPassword extends Controller {
 	public Result forgotten_password(String a_user, String a_email){
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
+		//Encrypt the a_user, on encrypt pas key (cookies)
+		//byte[] a_user_E = encryption(a_user);
+		//remplacer tous les a_user par a_user_E
+
 		UpdateResult updateresult = users.updateOne(eq("user", a_user),set("key",key));
 		
+		//TODO check
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
-
+			//Encrypt a_email, encrypt a_user(deja fait)
+			//byte[] email_E = encrypt(email);
+			// changer le e_mail remplcae par e_mail_E sauf dans le add to laisqser le vraie email
 			if (users.find(and(eq("user", a_user), eq("email", a_email))).first() != null) {
+				//Decrypt le password 
 				Email email = new Email()
 					.setSubject("Demande de récupération du mot de passe")
 					.setFrom("Covoituliège <Proj00102018Covoituliege@gmail.com>")
@@ -60,6 +68,7 @@ public class ForgottenPassword extends Controller {
 
 			return ok("username OK");
 		}
+		//use the a_user encrypt ed 
 		if (users.find(eq("user",a_user)).first() == null){
 			return ok("user doesn't exist");		
 		}

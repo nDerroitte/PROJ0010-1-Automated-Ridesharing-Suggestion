@@ -53,6 +53,7 @@ public class Journey
      */
     public  Document toDoc()
     {
+        //Encrypt
         Document doc = new Document();
         ArrayList<Document> doc_meeting_point = new ArrayList<>();
         for(int i =0; i < this.meeting_points.size();i++)
@@ -70,6 +71,7 @@ public class Journey
      */
     public static Journey fromDoc(Document doc) throws ParseException
     {
+        //Decrypt pas ici vu que point le fait 
         ArrayList<Document> doc_meeting_point = (ArrayList<Document>)doc.get("meeting_point");
         ArrayList<Point> meeting_point = new ArrayList<>();
         for(Document doc_point : doc_meeting_point)

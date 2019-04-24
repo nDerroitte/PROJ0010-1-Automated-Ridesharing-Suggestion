@@ -32,10 +32,12 @@ public class RemoveUser extends Controller {
 	
 	public Result remove_user(String a_user,String a_password){
 		MongoCollection<Document> users = database.getCollection("users");
+		//Encrypt a_user et a_password
 		DeleteResult delete_result = users.deleteMany(and(eq("user",a_user),eq("password",a_password)));
 		if (delete_result.getDeletedCount() == 1){
 			return ok("user data succesfully removed");				
 		}
+		//ENcrypt use the a_user_E encrypted
 		if(users.find(eq("user",a_user)).first() != null){
 			return ok("incorrect password");
 		}

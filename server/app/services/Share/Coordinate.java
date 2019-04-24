@@ -74,6 +74,7 @@ public final class Coordinate {
     }
 
     public Document toDoc(){
+        //Encrypt
         Document doc = new Document();
         doc.put("lat",x);
         doc.put("long",y);
@@ -81,6 +82,7 @@ public final class Coordinate {
     }
 
     public static Coordinate fromDoc(Document doc){
+        //Decrypt
         double lat = (double) doc.get("lat");
         double lon = (double) doc.get("long");
         Coordinate c = new Coordinate(lat,lon);

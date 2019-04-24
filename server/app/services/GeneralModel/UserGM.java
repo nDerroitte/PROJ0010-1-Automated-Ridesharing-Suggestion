@@ -187,14 +187,19 @@ public class UserGM {
     }
 
     public void habitToDB(LinkedList<Habit> new_habits){
+        //Encrypt user id
         Document user = db.find(eq("user", user_id)).first();
+        //Decrypt
+        //laisser les habits cryptée
         ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
         if(habits == null){
             habits = new ArrayList<Document>();
         }
         for(Habit h : new_habits){
+            //ce sera deja crypter ici 
             habits.add(h.toDoc());
         }
+        //Encrypt user id  
         db.updateOne(eq("user",user_id),set("habits", habits));
     }
 }
