@@ -85,6 +85,7 @@ public class GetHabit extends Controller {
 	}
 
 	public Result update_habit(String a_user,String password){
+		/*
 		String[] data = request().body().asText().split("data_splitter");
 		JsonReader reader;
 		JsonObject dataUnit;
@@ -97,9 +98,10 @@ public class GetHabit extends Controller {
 			if(user==null){
 				return ok("user not found or incorect password");
 			}
-			users.updateOne(and(eq("user", a_user)))
+			users.updateOne(and(eq("user", a_user)));
 
-		}
+		}*/
+		return ok("");
 
 
 	}
