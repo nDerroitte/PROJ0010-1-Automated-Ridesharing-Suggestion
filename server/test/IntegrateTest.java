@@ -56,7 +56,7 @@ public class IntegrateTest {
         store_data();
         get_habit();
         TimeUnit.SECONDS.sleep(5); // let the time to compute the habit and write them into file.
-        erase_user(true);
+        //erase_user(true);
 
     }
 
@@ -110,7 +110,6 @@ public class IntegrateTest {
      */
     public void store_data() throws Exception {
         String body = json();
-        System.out.println(body);
         TimeUnit.SECONDS.sleep(1);
         CompletionStage<WSResponse> completionstage = ws.url("/store_data?user=" + user + "&password=" + password)
                 .addCookie(cookie.get()).post(body);
@@ -123,7 +122,7 @@ public class IntegrateTest {
      * Compute the habit of user and write them in a file.
      */
     public void get_habit() throws Exception {
-        CompletionStage<WSResponse> completionstage = ws.url("/get_habit?user=" + user + "&method=" + 1).get();
+        CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user).get();
         WSResponse result = completionstage.toCompletableFuture().get();
         System.out.println(result.getBody());
         assertEquals(OK, result.getStatus());
@@ -205,12 +204,10 @@ public class IntegrateTest {
         String out = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         ArrayList<Long> dates = new TestComputeHabit().new_data(period, spread, reliability, base_date, noise, range);
-        System.out.println("date in habit: " + dates.size());
         for (long date : dates) {
             out += "{\"UserId\": \"" + user + "\",\"Points\" : [";
             ArrayList<Point> journey = journey(start, end, date);
             boolean first = true;
-            System.out.println("Point in journey: " + journey.size());
             for (Point point : journey) {
                 if (!first) {
                     out += ",";
@@ -226,101 +223,106 @@ public class IntegrateTest {
         return out;
     }
 
-    public String json() throws Exception  {
+    public String json() throws Exception {
         String out = "";
         int period = 10080;
         int spread = 5;
-        double reliability = 8.0/15;
+        double reliability = 8.0 / 15;
         int noise = 1;
         long range = 10080 * 15;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        Coordinate home = new Coordinate(50.5732,5.5400);
-        Coordinate academy = new Coordinate(50.5916,5.4962);
-        Coordinate rcae = new Coordinate(50.577,5.569);
-        Coordinate hec1 = new Coordinate(50.639,5.567);
-        Coordinate hec2 = new Coordinate(50.6318,5.5653);
-        Coordinate montef = new Coordinate(50.5858,5.5591);
+        Coordinate home = new Coordinate(50.5732, 5.5400);
+        Coordinate academy = new Coordinate(50.5916, 5.4962);
+        Coordinate rcae = new Coordinate(50.577, 5.569);
+        Coordinate montef = new Coordinate(50.5858, 5.5591);
+        Coordinate market = new Coordinate(50.5697,5.550);
 
         // go to academy the Wednesday at 18:35
-        reliability = 8.0/15; //-4 for hoolyday -3 dont go.
+        reliability = 8.0 / 15; // -4 for hoolyday -3 dont go.
         spread = 5;
         long base_date = sdf.parse("2019-01-09 18-35-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,academy);
-        System.out.println("OUT: " + out);
-        
-        //go back at 19:40
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, academy);
+
+        // go back at 19:40
         base_date = sdf.parse("2019-01-09 19-40-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,academy,home);
-        
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, academy, home);
+
         // go to acadamy the Thursday at 18:15
         base_date = sdf.parse("2019-01-10 18-15-00").getTime();
-        reliability = 9.0/15; //-4 for hoolyday -2 dont go.
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,academy);
-        
-        //go back between 19:00-19:20
+        reliability = 9.0 / 15; // -4 for hoolyday -2 dont go.
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, academy);
+
+        // go back between 19:00-19:20
         spread = 10;
         base_date = sdf.parse("2019-01-10 19-10-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,academy,home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, academy, home);
 
-        //go to rcae Friday at 18:45
+        // go to rcae Friday at 18:45
         spread = 5;
-        reliability = 11.0/15;
+        reliability = 11.0 / 15;
         base_date = sdf.parse("2019-01-11 18-45-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,rcae);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, rcae);
 
-        //go back at 21:00
+        // go back at 21:00
         base_date = sdf.parse("2019-01-11 21-00-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,rcae,home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, rcae, home);
 
-        //go to PI at 13:30 or 14:00
-        reliability = 5.0/15;
+        // go to PI at 13:30 or 14:00
+        reliability = 5.0 / 15;
         spread = 15;
         base_date = sdf.parse("2019-01-07 13-45-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,montef);
-        
-        //go back at 16:00 +- 1h
-        spread= 60;
-        base_date = sdf.parse("2019-01-07 16-00-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,montef,home);
-        
-        //go to compiler
-        spread = 10;
-        reliability = 11.0/15;
-        base_date = sdf.parse("2019-01-08 14-00-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,montef);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, montef);
 
-        //go back 
+        // go back at 16:00 +- 1h
+        spread = 60;
+        base_date = sdf.parse("2019-01-07 16-00-00").getTime();
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
+
+        // go to compiler
+        spread = 10;
+        reliability = 11.0 / 15;
+        base_date = sdf.parse("2019-01-08 14-00-00").getTime();
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, montef);
+
+        // go back
         spread = 30;
         base_date = sdf.parse("2019-01-08 16-30-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,montef,home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
 
-        //goto ODM
+        // goto ODM
+        reliability = 8.0 / 15;
         spread = 10;
         base_date = sdf.parse("2019-01-09 14-00-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,montef);
-        
-        //goback
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, montef);
+
+        // goback
         spread = 30;
         base_date = sdf.parse("2019-01-09 16-30-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,montef,home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
 
-        //goto AML and TIC
+        // goto AML and TIC
         spread = 10;
-        reliability = 8.0/15;
+        reliability = 8.0 / 15;
         base_date = sdf.parse("2019-01-10 9-00-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,montef);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, montef);
 
-        //go back
+        // go back
         spread = 30;
         base_date = sdf.parse("2019-01-10 16-30-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,montef,home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
 
-        //go to and back DL
+        // go to and back DL
         base_date = sdf.parse("2019-01-11 09-00-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,montef);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, montef);
         base_date = sdf.parse("2019-01-11 11-30-00").getTime();
-        out += GenerateHabit(period, spread, reliability, base_date, noise, range,montef,home);
-        System.out.println(out);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
+
+        //go to hypermarket the weekend
+        spread = 1440;
+        reliability = 0.9;
+        noise = 2;
+
+
         return out;
     }
 
