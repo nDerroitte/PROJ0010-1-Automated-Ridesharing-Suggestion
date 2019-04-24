@@ -68,11 +68,11 @@ public class IntegrateGeolife extends Controller {
         InputStreamReader isr;
         BufferedReader br;
         MongoCollection<Document> users = database.getCollection("users");
-        final File data_folder = new File("D:\\cedri\\Documents\\Geolife Trajectories 1.3\\Data");
+        final File data_folder = new File("/Users/Tyx/Desktop/PI/Geolife Trajectories 1.3/Data");
         for (final File user_dir : data_folder.listFiles()) {
             username = user_dir.getName();
             System.out.println(username);
-            trajectory_dir = new File(user_dir.getPath() + "\\Trajectory");
+            trajectory_dir = new File(user_dir.getPath() + "/Trajectory");
             journey_list = new ArrayList<Document>();
             for (final File journey : trajectory_dir.listFiles()) {
                 prev_cal = null;
