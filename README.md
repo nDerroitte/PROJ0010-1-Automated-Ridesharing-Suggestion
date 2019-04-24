@@ -40,3 +40,8 @@ The Json that is provide in the body of the POST request can be described as :
 ```
 This Json file represents a user which the user id *Albert* which as send two points at 2 minutes of interval.
 
+# Kill the play server
+
+```sh
+kill $(cat ~/play-working-13th-april/target/universal/stage/RUNNING_PID)
+```
