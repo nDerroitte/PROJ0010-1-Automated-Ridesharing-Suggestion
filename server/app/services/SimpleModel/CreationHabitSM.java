@@ -50,7 +50,7 @@ public class CreationHabitSM
                 }
                 else 
                 {
-                    CreationHabitSM.unused_journeys.add(habits.get(i).get(j).getJourney());
+                    CreationHabitSM.unused_journeys.addAll(habits.get(i).get(j).getJourneys());
                 }
             }
         }
@@ -69,6 +69,11 @@ public class CreationHabitSM
             writer.printf("User %s.\n\n", user);
             for(Habit h : out)
             {
+                if(h.reliability < 55.0)
+                {
+                    SimpleHabit habitSM = (SimpleHabit) h;
+                    CreationHabitSM.unused_journeys.addAll(habitSM.getJourneys());
+                }
                 writer.println(h);
                 writer.printf("========================================================================================\n");
             }
@@ -95,7 +100,7 @@ public class CreationHabitSM
             // If an similar habit already exist, merge them
             if(habits_day.get(j).isSame(h))
             {
-                habits_day.get(j).addOccurence(journey.getFirstPointTime());
+                habits_day.get(j).addOccurence(journey);
                 habits_day.get(j).updateReliability();
                 return;
             }

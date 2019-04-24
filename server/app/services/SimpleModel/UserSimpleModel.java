@@ -63,7 +63,6 @@ public class UserSimpleModel
     {
         this.habits = CreationHabitSM.createHabitSM(unused_journeys, user_id);
         habitToDB(this.habits);
-        System.out.println(CreationHabitSM.unused_journeys);
         return unused_journeys = CreationHabitSM.unused_journeys;
     }
 

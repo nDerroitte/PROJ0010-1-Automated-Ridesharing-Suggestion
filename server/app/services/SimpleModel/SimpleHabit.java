@@ -31,9 +31,9 @@ public class SimpleHabit extends Habit
     private long oldness;
 
     /**
-     * Private first jounrey
+     * Private jounreys
      */
-    private Journey firstJourney;
+    private ArrayList<Journey> journeys = new ArrayList<>();
 
     /**
      * Constructor of the SimpleHabit class
@@ -41,7 +41,7 @@ public class SimpleHabit extends Habit
      */
     public SimpleHabit(Journey journey)
     {
-        this.firstJourney = journey;
+        this.journeys.add(journey);
         this.path = journey.getPath();
         this.occurences = new ArrayList<>();
         occurences.add(journey.getFirstPointTime());
@@ -68,17 +68,19 @@ public class SimpleHabit extends Habit
      * Getter of the first jounrey.
      * @return : the first journey
      */
-    public Journey getJourney()
+    public ArrayList<Journey> getJourneys()
     {
-        return this.firstJourney;
+        return journeys;
     }
 
     /**
      * Add a new occurence to the list of occurence of the habit
      * @param date: the date where the new jounrey happened
      */
-    public void addOccurence(Calendar date)
+    public void addOccurence(Journey new_journey)
     {
+        journeys.add(new_journey);
+        Calendar date = new_journey.getFirstPointTime();
         this.occurences.add(date);
     }
 
