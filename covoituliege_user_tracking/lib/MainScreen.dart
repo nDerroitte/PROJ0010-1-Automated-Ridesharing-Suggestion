@@ -79,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
                 .add(Duration(minutes: 2, seconds: 30)));
             await storePoint(newCalendar, loc.latitude, loc.longitude);
           }
-          await writeJourneyFromBufferedPoints(_user);
+          await writeJourneyFromBufferedPoints();
           await storeGeofenceCenter(loc.calendar, loc.latitude, loc.longitude);
           lastCalendar = loc.calendar;
           lastLat = double.parse(loc.latitude);
@@ -165,7 +165,7 @@ class _MainScreenState extends State<MainScreen> {
   /// stops the position tracking process and
   /// updates the button so that it becomes a start button.
   _stop() async {
-    writeJourneyFromBufferedPoints(_user);
+    writeJourneyFromBufferedPoints();
     removeLocListener(newPointsBatchCallback);
     await stoppedLocListener();
 
@@ -222,6 +222,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _user = widget.user;
+    storeUserId(_user.getId());
     _anonymous = widget.anonymous;
     if (!_anonymous && !_waitingForWifi) {
       _sendJourneys();
