@@ -111,22 +111,24 @@ public class TestComputeHabit {
      * evaluate the computeHabit performence.
      * @throws IOException
      */
+    @Test
     public void testSignal() throws IOException{
 
-        int[] hit = new int[6];
+        int[] hit = new int[5];
         for(int j=1; j < hit.length; j++){
             for (int k = 0; k < 100; k++){
                 //generate fake data:
-                long range = 10080*3;
+                long range = 10080*15;
                 ArrayList<Long> raw_data = new ArrayList<Long>();
                 long base_date = new Date().getTime();
                 for(int i=0; i < j; i++){
                     base_date += 1440;
-                    raw_data.addAll(new_data(10080,60,0.7,10080/7*i,0,range));
+                    raw_data.addAll(new_data(10080,60,0.7,base_date,0,range));
                 }
                 ComputeHabit c = new ComputeHabit(raw_data,1440);
                 LinkedList<Habit> habits = c.getHabit();
-                if(habits.size() > 0 && habits.getFirst().period % 10080 == 0){
+
+                if(habits.size() > 0 && habits.getFirst().period % 7 == 0){
                     hit[j] ++;
                 }                
             }          
