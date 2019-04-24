@@ -35,7 +35,6 @@ public class CreationHabitSM
             // Adding the habits in the habit Array list
             CreationHabitSM.addHabitsSM(habits.get(dow), journeys.get(i));
         }
-
         // Post processing
         ArrayList<Habit> out = new ArrayList<>();
         for(int i=0; i<7;i++)
@@ -43,7 +42,7 @@ public class CreationHabitSM
             for(int j =0; j<habits.get(i).size();j++)
             {
                 // For each day happen habits if they are large enough and they happen several time
-                if(habits.get(i).get(j).getOccurences().size() > 1 && habits.get(i).get(j).getPath().size()> 3)
+                if(habits.get(i).get(j).getOccurences().size() > 1 && habits.get(i).get(j).getPath().size()> 1)
                     out.add(habits.get(i).get(j));
             }
         }

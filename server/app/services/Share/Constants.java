@@ -28,7 +28,7 @@ public final class Constants
      * The two should be equals
      */
     public static final double ROUNDING = 0.01;
-    public static final double COORDINATE_ERROR_ACCEPTED =0.01;
+    public static final double COORDINATE_ERROR_ACCEPTED =0.01 * 2;
 
     /**
      * Time at which two jounreys are considered in the same habit for the simple model

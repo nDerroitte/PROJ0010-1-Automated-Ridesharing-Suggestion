@@ -101,16 +101,19 @@ public class SimpleHabit extends Habit
 
         // Transform that in number of week
         c.setTimeInMillis(diff);
-        float mDay = c.get(Calendar.DAY_OF_MONTH);
+        double mDay = diff/(60.0*1000*1440); //c.get(Calendar.DAY_OF_MONTH);
         this.oldness = Math.round(mDay/7);
+
+
         if(oldness == 0)
             return;
         
         super.nbPoints = occurences.size();
+        super.offset = occurences.get(0).getTimeInMillis();
         
         // Update the reliability
         double r = 100*this.occurences.size()/this.oldness;
-        this.reliability =  r> 100? 100 :r ;
+        super.reliability =  r> 100? 100 :r ;
     }
 
     /**
