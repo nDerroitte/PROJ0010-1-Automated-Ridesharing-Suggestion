@@ -91,6 +91,8 @@ public class StoreData extends Controller {
 			Journey current_journey = new Journey(point_list);
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
 			journeys.add(current_journey.toDoc());
+			//first encrypt the journey to obtain the byte[] and then we get the journeys in byte{]
+			//replace each string by a byte[] 
 			users.updateOne(eq("user", user.get("user")),set("journeys", journeys));
 			hb.submitTask((String)(user.get("user")), journeys,1);
 		}

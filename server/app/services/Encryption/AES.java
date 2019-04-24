@@ -1,4 +1,4 @@
-package services;
+//package services;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -18,6 +18,7 @@ public class AES {
      
      public AES(SecretKey key) throws EncryptionException {
     	try {
+            int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
             ecipher = Cipher.getInstance("AES");
             dcipher = Cipher.getInstance("AES");
             ecipher.init(Cipher.ENCRYPT_MODE, key);
@@ -33,24 +34,31 @@ public class AES {
     /*
 	 * This function takes in argument a String and returns a corresponding encrypted String.
 	 */
-    public String encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
+    public byte[] encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
         try {
-            byte[] utf8 = str.getBytes("UTF-8");
-            byte[] enc = ecipher.doFinal(utf8);
-             
-            return new String(Base64.getEncoder().encode(enc), "UTF-8");
+            StringBuilder SB = new StringBuilder();
+			SB.append(str);
+			while(SB.length()%16!=0){
+				SB.append("0");
+			}
+			str = SB.toString();
+            byte[] returnB = str.getBytes("UTF-8");
+            byte[] encry = ecipher.doFinal(returnB);
+            return encry;
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-        	throw new EncryptionException("Error in doFinal : decrypting with encryption cipher or vice-versa");
+        	throw new EncryptionException("Error in doFinal: " + e.getMessage());
         }
     }
 
-    public String decrypt(String str) throws IOException, EncryptionException {
+    public String decrypt(byte[] byteArray) throws IOException, EncryptionException {
         try {
-            byte[] dec = new String(Base64.getDecoder().decode(str)).getBytes();
-            byte[] utf8 = dcipher.doFinal(dec);
-            return new String(utf8, "UTF-8");
+            if(byteArray.length%16!=0){
+                return "bad encryption sequence";
+            }
+            byte[] dcrypt = dcipher.doFinal(byteArray);
+            return new String(dcrypt, "UTF-8");
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-        	throw new EncryptionException("Error in doFinal : decrypting with encryption cipher or vice-versa");
+        	throw new EncryptionException("Error in doFinal: " + e.getMessage());
         }
     }
 }
