@@ -73,6 +73,7 @@ public class CreationHabitSM
                 {
                     SimpleHabit habitSM = (SimpleHabit) h;
                     CreationHabitSM.unused_journeys.addAll(habitSM.getJourneys());
+                    continue;
                 }
                 writer.println(h);
                 writer.printf("========================================================================================\n");
