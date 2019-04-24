@@ -98,7 +98,6 @@ public class IntegrateTest {
         CompletionStage<WSResponse> completionstage = ws.url("/remove_user?user=" + user + "&password=" + password)
                 .get();
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println(result.getBody());
         if (assertion) {
             assertEquals(OK, result.getStatus());
             assertTrue(result.getBody().contains("succes"));
@@ -114,7 +113,6 @@ public class IntegrateTest {
         CompletionStage<WSResponse> completionstage = ws.url("/store_data?user=" + user + "&password=" + password)
                 .addCookie(cookie.get()).post(body);
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println(result.getBody());
         assertEquals(OK, result.getStatus());
     }
 
@@ -124,7 +122,6 @@ public class IntegrateTest {
     public void get_habit() throws Exception {
         CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user).get();
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println(result.getBody());
         assertEquals(OK, result.getStatus());
         assertTrue(result.getBody().contains("computing"));
     }

@@ -36,6 +36,10 @@ public class Habit
      * Number of occurences
      */
     public int nbPoints;
+    /**
+     * standard Deviation
+     */
+    public double standardDeviation;
 
     /**
      * Transform the habit to the Document format
@@ -63,6 +67,7 @@ public class Habit
         doc.put("firstLocation",firstLocation.toDoc()); 
         doc.put("lastLocation",lastLocation.toDoc()); 
         doc.put("nbPoints",nbPoints);
+        doc.put("standardDeviation",standardDeviation);
         return doc;
     }
 
@@ -81,7 +86,8 @@ public class Habit
         h.reliability = (Double) doc.get("reliability");
         h.firstLocation = (Coordinate) doc.get("firstLocation");
         h.lastLocation = (Coordinate) doc.get("lastLocation");
-        h.nbPoints = (int) doc.get("nbPoints");
+        h.nbPoints = (Integer) doc.get("nbPoints");
+        h.standardDeviation= (Double) doc.get("standardDeviation");
 	    return h;
     }
 
@@ -90,7 +96,8 @@ public class Habit
      * @return  the string corresponding to this class
      */
     public String toString(){
-        return "Period: " + period + "\nReliability: " + reliability + "\nOffset: " + new Date(offset).toString() + "\nFirst Location: " + firstLocation + "\nLast Location: " + lastLocation  + "\nNumber of occurrences: " + nbPoints; 
+        double standardDeviationDisp  = Math.round(standardDeviation*100.0)/100.0;
+        return "Period: " + period + "\nReliability: " + reliability + "\nOffset: " + new Date(offset).toString() + "\nFirst Location: " + firstLocation + "\nLast Location: " + lastLocation  + "\nNumber of occurrences: " + nbPoints+"\nStandard Deviation: " +standardDeviationDisp + "min."; 
     }
 
 

@@ -69,12 +69,13 @@ public class CreationHabitSM
             writer.printf("User %s.\n\n", user);
             for(Habit h : out)
             {
+                SimpleHabit habitSM = (SimpleHabit) h;
                 if(h.reliability < 55.0)
                 {
-                    SimpleHabit habitSM = (SimpleHabit) h;
                     CreationHabitSM.unused_journeys.addAll(habitSM.getJourneys());
                     continue;
                 }
+                habitSM.updateSD();
                 writer.println(h);
                 writer.printf("========================================================================================\n");
             }

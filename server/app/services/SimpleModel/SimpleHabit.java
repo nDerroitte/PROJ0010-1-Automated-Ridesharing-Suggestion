@@ -203,6 +203,44 @@ public class SimpleHabit extends Habit
     }
 
     /**
+     * Update the super standard deviation variable
+     */
+    public void updateSD()
+    {
+        ArrayList<Long> sdArray = new ArrayList<>();
+        for(Journey j : journeys)
+        {
+            sdArray.add((j.getFirstPointTime().getTimeInMillis()/60000)%(10080));
+        }
+        standardDeviation  = Math.sqrt(getVariance(sdArray));
+    }
+
+
+    /**
+     * Generate the mean of a table
+     * @param tab ArrayList of int
+     * @return the mean (double)
+     */
+    private double getMean(ArrayList<Long> tab) {
+        double sum = 0.0;
+        for(Long a : tab)
+            sum += a;
+        return sum/tab.size();
+    }
+
+    /**
+     * Get the variance of a table
+     * @param tab Arraylist of int 
+     * @return the variance (double)
+     */
+    private double getVariance(ArrayList<Long> tab) {
+        double mean = getMean(tab);
+        double num = 0.0;
+        for(Long a : tab)
+            num += (a-mean)*(a-mean);
+        return num/(tab.size());
+    }
+    /**
      * Overwrite the toString method
      * @return the string correspinding to this class
      */
