@@ -120,11 +120,7 @@ public class IntegrateTest {
      * Compute the habit of user and write them in a file.
      */
     public void get_habit() throws Exception {
-<<<<<<< HEAD
-        CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user + "&method=" + 3).get();
-=======
         CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user).get();
->>>>>>> d022205ea2516d747b8b8422bc41d7bcfc7bcb91
         WSResponse result = completionstage.toCompletableFuture().get();
         assertEquals(OK, result.getStatus());
         assertTrue(result.getBody().contains("computing"));
