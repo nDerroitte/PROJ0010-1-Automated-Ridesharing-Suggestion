@@ -98,7 +98,6 @@ public class IntegrateTest {
         CompletionStage<WSResponse> completionstage = ws.url("/remove_user?user=" + user + "&password=" + password)
                 .get();
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println(result.getBody());
         if (assertion) {
             assertEquals(OK, result.getStatus());
             assertTrue(result.getBody().contains("succes"));
@@ -110,12 +109,10 @@ public class IntegrateTest {
      */
     public void store_data() throws Exception {
         String body = json();
-        System.out.println(body);
         TimeUnit.SECONDS.sleep(1);
         CompletionStage<WSResponse> completionstage = ws.url("/store_data?user=" + user + "&password=" + password)
                 .addCookie(cookie.get()).post(body);
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println(result.getBody());
         assertEquals(OK, result.getStatus());
     }
 
@@ -123,9 +120,8 @@ public class IntegrateTest {
      * Compute the habit of user and write them in a file.
      */
     public void get_habit() throws Exception {
-        CompletionStage<WSResponse> completionstage = ws.url("/get_habit?user=" + user + "&method=" + 1).get();
+        CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user + "&method=" + 3).get();
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println(result.getBody());
         assertEquals(OK, result.getStatus());
         assertTrue(result.getBody().contains("computing"));
     }
@@ -205,12 +201,10 @@ public class IntegrateTest {
         String out = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         ArrayList<Long> dates = new TestComputeHabit().new_data(period, spread, reliability, base_date, noise, range);
-        System.out.println("date in habit: " + dates.size());
         for (long date : dates) {
             out += "{\"UserId\": \"" + user + "\",\"Points\" : [";
             ArrayList<Point> journey = journey(start, end, date);
             boolean first = true;
-            System.out.println("Point in journey: " + journey.size());
             for (Point point : journey) {
                 if (!first) {
                     out += ",";
@@ -240,13 +234,13 @@ public class IntegrateTest {
         Coordinate hec1 = new Coordinate(50.639,5.567);
         Coordinate hec2 = new Coordinate(50.6318,5.5653);
         Coordinate montef = new Coordinate(50.5858,5.5591);
+        Coordinate market = new Coordinate(50.567,5.547);
 
         // go to academy the Wednesday at 18:35
         reliability = 8.0/15; //-4 for hoolyday -3 dont go.
         spread = 5;
         long base_date = sdf.parse("2019-01-09 18-35-00").getTime();
         out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,academy);
-        System.out.println("OUT: " + out);
         
         //go back at 19:40
         base_date = sdf.parse("2019-01-09 19-40-00").getTime();
@@ -320,7 +314,6 @@ public class IntegrateTest {
         out += GenerateHabit(period, spread, reliability, base_date, noise, range,home,montef);
         base_date = sdf.parse("2019-01-11 11-30-00").getTime();
         out += GenerateHabit(period, spread, reliability, base_date, noise, range,montef,home);
-        System.out.println(out);
         return out;
     }
 

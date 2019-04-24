@@ -81,7 +81,6 @@ public class UserGM {
                 habit.firstLocation = ((JourneyPath) pair.getKey()).start;
                 habit.lastLocation = ((JourneyPath) pair.getKey()).end;
             }          
-            System.out.println("number of habit find: " + new_habit.size());         
             habits.addAll(new_habit);
                  
         }
@@ -117,7 +116,6 @@ public class UserGM {
             FileWriter fw = new FileWriter(folderString+"/2/habits.txt", false);
             PrintWriter writer = new PrintWriter(fw);
             writer.printf("User %s.\n\n", user_id);
-            System.out.println(habits.size());
             for(Habit h : habits)
             {
                 writer.println(h);
