@@ -24,7 +24,7 @@ GET /get_data						controllers.GetData.get_data(user,password)
 POST /store_data 					controllers.StoreData.store_data
 
 #Compute habit of a user
-GET /compute_habit 						controllers.GetHabit.compute_habit(user,method)
+GET /compute_habit 						controllers.GetHabit.compute_habit(user)
 
 #Integrate geolife data to DB				
 GET /geolife						controllers.IntegrateGeolife.integrate_geolife()
