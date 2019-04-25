@@ -26,9 +26,6 @@ POST /store_data 					controllers.StoreData.store_data
 #Compute habit of a user
 GET /compute_habit 						controllers.GetHabit.compute_habit(user)
 
-#Integrate geolife data to DB				
-GET /geolife						controllers.IntegrateGeolife.integrate_geolife()
-
 #writing stat about finded habit per method
 GET /habit_stat                     controllers.MethodStat.compute()
 
