@@ -26,25 +26,12 @@ POST /store_data 					controllers.StoreData.store_data
 #Compute habit of a user
 GET /compute_habit 						controllers.GetHabit.compute_habit(user)
 
-#Integrate geolife data to DB				
-GET /geolife						controllers.IntegrateGeolife.integrate_geolife()
-
 #send habit of a user
 GET /get_habit                      controllers.GetHabit.get_habit(user,password)
 
 #update habit of a user
 GET /update_habit                   controllers.GetHabit.update_habit(user,password)
 
-#swagger
-### NoDocs ###
-GET   /docs/swagger-ui/*file        controllers.Assets.at(path:String="/public/lib/swagger-ui", file:String)
-
-### NoDocs ###
-GET   /assets/*file                 controllers.Assets.versioned(path="/public", file: Asset)
-
-
-
-#doc generated at http://localhost:9000/docs/swagger-ui/index.html?url=/assets/swagger.json
 
 
 
