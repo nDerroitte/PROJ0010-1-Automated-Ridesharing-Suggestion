@@ -9,9 +9,10 @@ The different communication between a mobile phone using our application and the
 | Check user id	|	GET /sign_in	|	`user`,`password` |	**HTTP 200**, *"succes"* + session cookie; <br> **HTTP 200**, *"user doesn't exist"* ;<br> **HTTP 200**, *"incorrect password"*	|
 | Send new password	|	GET /forgotten_password	|`user`, `email`|**HTTP 200** *"email send"* ; <br>**HTTP 200**, *"user doesn't exist"*; <br>**HTTP 200**, *"invalid email"*;	|
 | Remove user from database| GET /remove_user|`user`,`password`|**HTTP 200**, "user succesfully removed"; <br> **HTTP 200**, *"incorrect password"*;<br> **HTTP 200**, *"user does not exist";*|
-| Store points in the database |POST /store_data |`JSON` (see below) |**HTTP 400**, *"cookie required"*; <br>**HTTP 400**, *"cookie badly set"*;<br> **HTTP 400**, *"bad Calendar format"*; <br>**HTTP 200**|
-
-| Send back habit of a user | GET /compute_habit | `user` | **HTTP 200**, *"computing..."*; <br> **HTTP 200**, *"user doesn't exist"*|
+| Store points in the database |POST /store_data |`JSON` (see below) |**HTTP 400**, *"cookie required"*; <br>**HTTP 400**, *"cookie badly set"*;<br> **HTTP 400**, *"bad Calendar format"*; <br>**HTTP 200**, *" "*|
+| Launch computation of the habit of one user | GET /compute_habit | `user` | **HTTP 200**, *"computing..."*; <br> **HTTP 200**, *"user doesn't exist"*|
+| Launch computation of the habit of all user | GET /compute_habit | `user` = all |**HTTP 200**, *"computing..."*;|
+| Send back habit of a user | GET /get_habit | `user`,`password`|**HTTP 200**, *"user doesn't exist or incorrect password"*| **HTTP 200**, *"JSON of HABIT see below"*|
 ## Json format
 The Json that is provide in the body of the POST request can be described as : 
 ```sh
