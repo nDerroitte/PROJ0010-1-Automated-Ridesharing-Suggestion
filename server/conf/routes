@@ -26,9 +26,6 @@ POST /store_data 					controllers.StoreData.store_data
 #Compute habit of a user
 GET /compute_habit 						controllers.GetHabit.compute_habit(user)
 
-#writing stat about finded habit per method
-GET /habit_stat                     controllers.MethodStat.compute()
-
 #send habit of a user
 GET /get_habit                      controllers.GetHabit.get_habit(user,password)
 
