@@ -120,11 +120,7 @@ public class IntegrateTest {
      * Compute the habit of user and write them in a file.
      */
     public void get_habit() throws Exception {
-<<<<<<< HEAD
-        CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user + "&method=" + 3).get();
-=======
         CompletionStage<WSResponse> completionstage = ws.url("/compute_habit?user=" + user).get();
->>>>>>> d022205ea2516d747b8b8422bc41d7bcfc7bcb91
         WSResponse result = completionstage.toCompletableFuture().get();
         assertEquals(OK, result.getStatus());
         assertTrue(result.getBody().contains("computing"));
@@ -237,6 +233,8 @@ public class IntegrateTest {
         Coordinate rcae = new Coordinate(50.577, 5.569);
         Coordinate montef = new Coordinate(50.5858, 5.5591);
         Coordinate market = new Coordinate(50.5697,5.550);
+        Coordinate restaurant = new Coordinate(50.5661,5.54655);
+        Coordinate cinema = new Coordinate(50.6433,5.56789);
 
         // go to academy the Wednesday at 18:35
         reliability = 8.0 / 15; // -4 for hoolyday -3 dont go.
@@ -319,9 +317,38 @@ public class IntegrateTest {
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
 
         //go to hypermarket the weekend
+        base_date = sdf.parse("2019-01-06 00-00-00").getTime();
         spread = 1440;
         reliability = 0.9;
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, market);
         noise = 2;
+
+        //go back
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, market, home);
+
+        //go to restaurant one week over two
+        base_date = sdf.parse("2019-01-12 00-19-00").getTime();
+        spread = 60;
+        reliability = 0.6;
+        period = 2*10080;
+        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, home, restaurant);
+        //goback
+        base_date = sdf.parse("2019-01-12 00-21-00").getTime();
+        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, restaurant, home);
+
+        //go to cinema once a month
+        base_date = sdf.parse("2019-01-13 00-18-00").getTime();
+        period = 31*1440;
+        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, home, cinema);
+        //goback
+        base_date = sdf.parse("2019-01-13 00-21-00").getTime();
+        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, cinema, home);
+
+
+
+
+
+
 
 
         return out;
