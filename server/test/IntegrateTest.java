@@ -50,8 +50,8 @@ public class IntegrateTest {
      */
     @Test
     public void integrate_test() throws Exception {
-        erase_user(false);
-        sign_up();
+        //erase_user(false);
+        //sign_up();
         sign_in();
         store_data();
         get_habit();
@@ -108,12 +108,18 @@ public class IntegrateTest {
      * store user data
      */
     public void store_data() throws Exception {
+        System.out.println("COUCOU");
         String body = json();
-        TimeUnit.SECONDS.sleep(1);
+        System.out.println("TOI");
+        //TimeUnit.SECONDS.sleep(1);
+        System.out.println("COMMNET");
         CompletionStage<WSResponse> completionstage = ws.url("/store_data?user=" + user + "&password=" + password)
                 .addCookie(cookie.get()).post(body);
+                System.out.println("VA");
         WSResponse result = completionstage.toCompletableFuture().get();
+        System.out.println("TU ");
         assertEquals(OK, result.getStatus());
+        System.out.println("?");
     }
 
     /**
@@ -226,7 +232,7 @@ public class IntegrateTest {
         int spread = 5;
         double reliability = 8.0 / 15;
         int noise = 1;
-        long range = 10080 * 15;
+        long range = 10080 * 1;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Coordinate home = new Coordinate(50.5732, 5.5400);
         Coordinate academy = new Coordinate(50.5916, 5.4962);

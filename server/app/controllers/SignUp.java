@@ -28,7 +28,6 @@ import services.EncryptionException;
 import services.Decrypt;
 import services.Encrypt;
 import services.AES;
-import services.EncryptedData;
 
 public class SignUp extends Controller {
 	
@@ -39,9 +38,9 @@ public class SignUp extends Controller {
 		this.database = db.get_database();	
 	}
 	
-	public Result sign_up(String a_user, String a_password,String email) throws Exception{
+	public Result sign_up(String a_user, String a_password,String email) throws EncryptionException{
 		MongoCollection<Document> users = database.getCollection("users");
-		 //Encrypt a user pour avoir la meme chsose 
+		 //Encrypt a user 
 		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
 		ArrayList<Byte> email_E = Encrypt.encrypt(email);

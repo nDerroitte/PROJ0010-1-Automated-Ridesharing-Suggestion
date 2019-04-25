@@ -63,7 +63,7 @@ public class Decrypt {
 
 		return res;
 	}
-
+	//PAS UTILE TO DO REMOVE IT 
 	private static String readFile(String path) throws Exception {
 		File file = new File(path);
 		FileInputStream fis = new FileInputStream(file.getPath());

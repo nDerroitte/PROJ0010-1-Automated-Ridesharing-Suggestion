@@ -26,6 +26,10 @@ import services.HabitGenerator;
 import services.MongoInterface;
 import services.Habit;
 import java.text.ParseException;
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 
 @Singleton
 public class GetHabit extends Controller {
@@ -39,31 +43,33 @@ public class GetHabit extends Controller {
 		this.hb = habit_generator;
 	}
 
-	public Result compute_habit(String a_user) {
+	public Result compute_habit(String a_user) throws EncryptionException{
+		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		MongoCollection<Document> users = database.getCollection("users");
 		if(a_user.equals("all")){
 			System.out.println("Computing habit of all user");
 			MongoCursor<Document> cursor = users.find().iterator();
-			try {
+			//try {
 				while (cursor.hasNext()) {
 					Document user = cursor.next();
-					//Decrypt le string user.get(user)						
-					hb.submitTask((String) user.get("user"));
+					//Decrypt le string user.get(user)	
+					String decrypted_user = Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+					hb.submitTask(decrypted_user);
 					//utiliser le crypter 
-					System.out.println("User: " + user.get("user") + " is submit");
+					System.out.println("User: " + decrypted_user + " is submit");
 				}
-			} 
-			catch(Exception e){
-				e.printStackTrace();
-			}
-			finally {
+			//} 
+			//catch(Exception e){
+			//	e.printStackTrace();
+			//}
+			//finally {
 				cursor.close();
-			}
+			//}
 			return ok("computing...");
 		}
 		else{
 			//encrypter le a_usre 
-			Document user = users.find(and(eq("user", a_user))).first();
+			Document user = users.find(and(eq("user", a_user_E))).first();
 			if(user != null) {
 				hb.submitTask(a_user);
 				return ok("computing...");
@@ -73,9 +79,11 @@ public class GetHabit extends Controller {
 
 	}
 
-	public Result get_habit(String a_user,String a_password) throws ParseException{
+	public Result get_habit(String a_user,String a_password) throws ParseException, EncryptionException{
 		//encrypt the user and password (reusse the code)
-		Document user = database.getCollection("users").find(and(eq("user", a_user), eq("password", a_password))).first();
+		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
+		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
+		Document user = database.getCollection("users").find(and(eq("user", a_user_E), eq("password", a_password_E))).first();
 		ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
 		String out = "";
 		if (user == null){

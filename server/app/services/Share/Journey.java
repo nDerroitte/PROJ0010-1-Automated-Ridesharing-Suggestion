@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import org.bson.Document;
 import java.text.ParseException;
-
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 /**
  * Journey class representing a journey of the habit (from a time and path perspective)
  */
@@ -51,13 +54,14 @@ public class Journey
      * Allow to transform this object to a Document. Used to store the Jounrey in the database
      * @return a Document object corresponding to this class
      */
-    public  Document toDoc()
+    public  Document toDoc() throws EncryptionException
     {
         //Encrypt
         Document doc = new Document();
         ArrayList<Document> doc_meeting_point = new ArrayList<>();
         for(int i =0; i < this.meeting_points.size();i++)
             doc_meeting_point.add(meeting_points.get(i).toDoc());
+        //ArrayList<Byte> a_user_E = Encrypt.encrypt(doc_meeting_point);
         doc.put("meeting_point",doc_meeting_point);
         return doc;
 
@@ -69,7 +73,7 @@ public class Journey
      * @param doc the Document object to read from
      * @return  a Jounrey object corresponding to the Document.
      */
-    public static Journey fromDoc(Document doc) throws ParseException
+    public static Journey fromDoc(Document doc) throws ParseException, EncryptionException
     {
         //Decrypt pas ici vu que point le fait 
         ArrayList<Document> doc_meeting_point = (ArrayList<Document>)doc.get("meeting_point");

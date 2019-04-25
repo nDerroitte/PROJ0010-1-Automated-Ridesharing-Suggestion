@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.Calendar;
 import org.bson.Document;
 import java.text.ParseException;
+import services.EncryptionException;
 /**
  * Test the class Point
  * @see [[Point]]
@@ -17,7 +18,7 @@ public class TestPoint {
      * @throws ParseException
      */
     @Test
-    public void fromto_doc_and_equal() throws ParseException{
+    public void fromto_doc_and_equal() throws ParseException, EncryptionException{
         Calendar date = Calendar.getInstance();      
         Point p = new Point(date, new Coordinate(10,20));  
         Document doc = p.toDoc();       

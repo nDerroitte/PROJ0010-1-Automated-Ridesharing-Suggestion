@@ -5,7 +5,11 @@ import services.*;
 import java.text.ParseException;
 import java.util.Date;
 import com.mongodb.client.*;
-
+import java.util.ArrayList;
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 
 /**
  * Parent class of the two habit class. Allow (mainly) to generate/get the doc for the database
@@ -45,16 +49,23 @@ public class Habit
      * Transform the habit to the Document format
      * @return the document correspondng to the habit
      */
-    public Document toDoc()
+    public Document toDoc() throws EncryptionException
     {
         //Encrypt
         Document doc = new Document();
-        doc.put("period",period); //Encrypt
-        doc.put("offset",offset); //Encrypt
-        doc.put("reliability",this.reliability); //Encrypt
+        ArrayList<Byte> period_E = Encrypt.encrypt(Long.toString(period));
+        ArrayList<Byte> offset_E = Encrypt.encrypt(Long.toString(offset));
+        ArrayList<Byte> reliability_E = Encrypt.encrypt(Double.toString(this.reliability));
+        ArrayList<Byte> nbPoints_E = Encrypt.encrypt(Integer.toString(nbPoints));
+        ArrayList<Byte> standardDeviation_E = Encrypt.encrypt(Double.toString(standardDeviation));
+
+        doc.put("period",period_E); //Encrypt
+        doc.put("offset",offset_E); //Encrypt
+        doc.put("reliability",reliability_E); //Encrypt
         doc.put("firstLocation",firstLocation.toDoc()); //NE PAS Encrypt
         doc.put("lastLocation",lastLocation.toDoc()); //NE PAS Encrypt
-        doc.put("nbPoints",nbPoints); //Encrypt
+        doc.put("nbPoints",nbPoints_E); //Encrypt
+        doc.put("standardDeviation",standardDeviation_E);
         return doc;
     }
 
@@ -64,8 +75,8 @@ public class Habit
         doc.put("period",period); 
         doc.put("offset",offset); 
         doc.put("reliability",this.reliability); 
-        doc.put("firstLocation",firstLocation.toDoc()); 
-        doc.put("lastLocation",lastLocation.toDoc()); 
+        doc.put("firstLocation",firstLocation.toDocNotEncrypted()); 
+        doc.put("lastLocation",lastLocation.toDocNotEncrypted()); 
         doc.put("nbPoints",nbPoints);
         doc.put("standardDeviation",standardDeviation);
         return doc;
@@ -77,17 +88,23 @@ public class Habit
      * @return h the habit generated
      * @throws ParseException
      */
-    public static Habit fromDoc(Document doc)throws ParseException
+    public static Habit fromDoc(Document doc)throws ParseException, EncryptionException
     {
         //Decrypt
         Habit h = new Habit();
-	    h.period = (Long) doc.get("period");
-	    h.offset = (Long) doc.get("offset");
-        h.reliability = (Double) doc.get("reliability");
+        String period_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("period"));
+        String offset_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("offset"));
+        String reliability_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("reliability"));
+        String nbPoints_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("nbPoints"));
+        String standardDeviation_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("standardDeviation"));
+
+	    h.period = Long.parseLong(period_D);//(Long) doc.get("period");
+	    h.offset = Long.parseLong(offset_D);//(Long) doc.get("offset");
+        h.reliability = Double.parseDouble(reliability_D) ;//(Double) doc.get("reliability");
         h.firstLocation = (Coordinate) doc.get("firstLocation");
         h.lastLocation = (Coordinate) doc.get("lastLocation");
-        h.nbPoints = (Integer) doc.get("nbPoints");
-        h.standardDeviation= (Double) doc.get("standardDeviation");
+        h.nbPoints = Integer.parseInt(nbPoints_D); //(Integer) doc.get("nbPoints");
+        h.standardDeviation= Double.parseDouble(standardDeviation_D);//(Double) doc.get("standardDeviation");
 	    return h;
     }
 

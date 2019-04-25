@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 
 @Singleton
 public class SignIn extends Controller {
@@ -32,17 +36,20 @@ public class SignIn extends Controller {
 		this.database = db.get_database();
 	}
 
-	public Result sign_in(String a_user, String a_password) {
+	public Result sign_in(String a_user, String a_password) throws EncryptionException {
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
 		//Encrypt a_user and a_pawwrods 
-		UpdateResult updateresult = users.updateOne(and(eq("user", a_user),eq("password", a_password)),set("key",key));
+		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
+		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
+		
+		UpdateResult updateresult = users.updateOne(and(eq("user", a_user_E),eq("password", a_password_E)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
 			return ok("success");
 		}
 		//encrypt a_user 
-		if (users.find(eq("user",a_user)).first() == null){
+		if (users.find(eq("user",a_user_E)).first() == null){
 			return ok("user doesn't exist");		
 		}
 

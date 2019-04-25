@@ -21,9 +21,11 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 
-
- 
 
 @Singleton
 public class GetData extends Controller {
@@ -35,10 +37,12 @@ public class GetData extends Controller {
 		this.database = db.get_database();
 	}
 
-	public Result get_data(String a_user, String a_password) {
+	public Result get_data(String a_user, String a_password) throws EncryptionException{
 		MongoCollection<Document> users = database.getCollection("users");
 		//encrypt a_user et a_passward 
-		Document user = users.find(and(eq("user", a_user), eq("password", a_password))).first();
+		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
+		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
+		Document user = users.find(and(eq("user", a_user_E), eq("password", a_password_E))).first();
 		StringBuffer data = new StringBuffer();
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
@@ -58,7 +62,7 @@ public class GetData extends Controller {
 			return ok(data.toString());
 		}
 		//Encrypt the a_user so use the a_user encrypted 
-		if (users.find(eq("user",a_user)).first() == null){
+		if (users.find(eq("user",a_user_E)).first() == null){
 			return ok("user doesn't exist");		
 		}
 

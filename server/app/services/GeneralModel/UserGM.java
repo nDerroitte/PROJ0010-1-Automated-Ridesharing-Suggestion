@@ -26,6 +26,11 @@ import org.bson.Document;
 
 import java.text.ParseException;
 
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
+
 /**
  * Compute all habit of an user
  */
@@ -64,7 +69,7 @@ public class UserGM {
     /**
      * Launch the computation of the habits.
      */
-    public void createHabits() {
+    public void createHabits() throws EncryptionException{
 
         // Compute habit on all data
         HashMap<JourneyPath, ArrayList<Journey>> sorted_journey = sortJourneyByPath();
@@ -184,9 +189,10 @@ public class UserGM {
         return out;
     }
 
-    public void habitToDB(LinkedList<Habit> new_habits){
+    public void habitToDB(LinkedList<Habit> new_habits) throws EncryptionException{
         //Encrypt user id
-        Document user = db.find(eq("user", user_id)).first();
+        ArrayList<Byte> user_id_E = Encrypt.encrypt(user_id);
+        Document user = db.find(eq("user", user_id_E)).first();
         //Decrypt
         //laisser les habits cryptée
         ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
@@ -198,6 +204,6 @@ public class UserGM {
             habits.add(h.toDoc());
         }
         //Encrypt user id  
-        db.updateOne(eq("user",user_id),set("habits", habits));
+        db.updateOne(eq("user",user_id_E),set("habits", habits));
     }
 }

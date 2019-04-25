@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 
-
- 
 
 @Singleton
 public class ForgottenPassword extends Controller {
@@ -41,35 +43,38 @@ public class ForgottenPassword extends Controller {
 	// This function is called when the server is ask to give a new password.
 	// It sends an email to the address given in argument, if and only if
 	// this email and the username corresponds to an existing user in the database.
-	public Result forgotten_password(String a_user, String a_email){
+	public Result forgotten_password(String a_user, String a_email) throws EncryptionException{
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
 		//Encrypt the a_user, on encrypt pas key (cookies)
 		//byte[] a_user_E = encryption(a_user);
 		//remplacer tous les a_user par a_user_E
-
-		UpdateResult updateresult = users.updateOne(eq("user", a_user),set("key",key));
+		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
+		ArrayList<Byte> a_email_E = Encrypt.encrypt(a_email);
+		UpdateResult updateresult = users.updateOne(eq("user", a_user_E),set("key",key));
 		
 		//TODO check
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
 			//Encrypt a_email, encrypt a_user(deja fait)
-			//byte[] email_E = encrypt(email);
 			// changer le e_mail remplcae par e_mail_E sauf dans le add to laisqser le vraie email
-			if (users.find(and(eq("user", a_user), eq("email", a_email))).first() != null) {
+			if (users.find(and(eq("user", a_user_E), eq("email", a_email_E))).first() != null) {
 				//Decrypt le password 
+				ArrayList<Byte> arr = (ArrayList<Byte>)users.find(eq("user", a_user_E)).first().get("password");
+				String mdp = Decrypt.decrypt(arr);
+
 				Email email = new Email()
 					.setSubject("Demande de récupération du mot de passe")
 					.setFrom("Covoituliège <Proj00102018Covoituliege@gmail.com>")
 					.addTo(a_email)
-					.setBodyText("Votre mot de passe est " + users.find(eq("user", a_user)).first().get("password") + ".");
+					.setBodyText("Votre mot de passe est " + mdp + ".");
 				mailerClient.send(email);
 			}
 
 			return ok("username OK");
 		}
 		//use the a_user encrypt ed 
-		if (users.find(eq("user",a_user)).first() == null){
+		if (users.find(eq("user",a_user_E)).first() == null){
 			return ok("user doesn't exist");		
 		}
 

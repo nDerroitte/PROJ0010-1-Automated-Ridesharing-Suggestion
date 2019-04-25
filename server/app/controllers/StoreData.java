@@ -31,6 +31,10 @@ import java.util.UUID;
 import java.util.Optional;
 import java.util.Calendar;
 import services.*;
+import services.EncryptionException;
+import services.Decrypt;
+import services.Encrypt;
+import services.AES;
 
 @Singleton
 public class StoreData extends Controller {
@@ -48,7 +52,7 @@ public class StoreData extends Controller {
 	// Each journey is parsed independently, so that this is easier for the client
 	// to handle wifi unavailability, and is stored in the database in a Journey format (cf class).
 	@BodyParser.Of(BodyParser.TolerantText.class)
-	public Result store_data() throws Exception{
+	public Result store_data() throws Exception, EncryptionException{
 		String out = "";
 		int nb_journey = 0;
 		String[] data = request().body().asText().split("data_splitter");
@@ -60,20 +64,26 @@ public class StoreData extends Controller {
 		}
 		String cookieValue = cookie.value();
 		Document user = null;
+		int k =0;
+		int p = 0;
 		for (String jSonString : data) {
+			System.out.println("COMPTEUR = "+k);
+			k++;
 			reader = Json.createReader(new StringReader(jSonString));
 			dataUnit = reader.readObject();
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
 			//Encrypt le "data unit get string (user id)""
-			user = users.find(eq("user", dataUnit.getString("UserId"))).first();
+			user = users.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();
 			
 			if (user == null || !user.get("key").equals(cookieValue)) {
 				out += "invalid cookie/user";
 				continue;
 			}
 			ArrayList<Point> point_list = new ArrayList<>();
-			for (JsonValue point : dataUnit.getJsonArray("Points")) {				
+			for (JsonValue point : dataUnit.getJsonArray("Points")) {
+				System.out.println("VALEUR DE P = "+p);
+				p++;				
 				JsonObject _point = (JsonObject)(point);
 				Calendar cal;
 				try {
@@ -102,7 +112,8 @@ public class StoreData extends Controller {
 		}	
 		if(user != null){
 			 //Decrypt the user.get 
-			hb.submitTask((String)(user.get("user")));
+			String decrypted_user = Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+			hb.submitTask(decrypted_user);
 		}		
 		return ok(out + " " + nb_journey + "data length: " + data.length);
 	}
