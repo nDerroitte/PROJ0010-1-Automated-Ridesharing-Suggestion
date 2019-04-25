@@ -52,6 +52,7 @@ public class Point
      */
     public Document toDoc()
     {
+        //Encrypt
         Document doc = new Document();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
@@ -74,6 +75,7 @@ public class Point
      */
     static public Point FromDoc(Document doc) throws ParseException
     {
+        //Decrypt
         String string_time = (String)doc.get("time");
         Calendar time = Constants.stringToCalendar(string_time);
 

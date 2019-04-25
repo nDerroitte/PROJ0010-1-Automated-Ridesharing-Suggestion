@@ -50,6 +50,12 @@ Future<File> get _bufferedPoints async {
   return File('$path/points');
 }
 
+/// Getter for the file that contains the current user id
+Future<File> get _userId async {
+  final path = await _localPath;
+  return File('$path/userId');
+}
+
 /// Write 'data' in the file 'where'
 _writeInFile(String data, File where) async {
   RandomAccessFile file = await where.open(mode: FileMode.append);
@@ -136,7 +142,9 @@ Future<List<String>> getLastTimedLoc() async {
 
 /// Create and store a journey from the currently buffered points,
 /// end the active journey and erase the buffered points
-writeJourneyFromBufferedPoints(UserInfo user) async {
+writeJourneyFromBufferedPoints() async {
+  String userId = await _readFile(await _userId);
+  UserInfo user = UserInfo(userId);
   List<String> points = (await _readFile(await _bufferedPoints)).split("\n");
   /// Once again, the split method return a last empty string
   points = points.sublist(0, points.length - 1);
@@ -197,4 +205,10 @@ Future<bool> isLocListenerStarted() async {
     return false;
   }
   return true;
+}
+
+storeUserId(String id) async {
+  File file = await _userId;
+  await _clearFile(file);
+  await _writeInFile(id, file);
 }

@@ -24,8 +24,8 @@ import java.util.concurrent.Future;
 
 import services.HabitGenerator;
 import services.MongoInterface;
-
- 
+import services.Habit;
+import java.text.ParseException;
 
 @Singleton
 public class GetHabit extends Controller {
@@ -46,8 +46,10 @@ public class GetHabit extends Controller {
 			MongoCursor<Document> cursor = users.find().iterator();
 			try {
 				while (cursor.hasNext()) {
-					Document user = cursor.next();						
+					Document user = cursor.next();
+					//Decrypt le string user.get(user)						
 					hb.submitTask((String) user.get("user"));
+					//utiliser le crypter 
 					System.out.println("User: " + user.get("user") + " is submit");
 				}
 			} 
@@ -60,6 +62,7 @@ public class GetHabit extends Controller {
 			return ok("computing...");
 		}
 		else{
+			//encrypter le a_usre 
 			Document user = users.find(and(eq("user", a_user))).first();
 			if(user != null) {
 				hb.submitTask(a_user);
@@ -70,7 +73,8 @@ public class GetHabit extends Controller {
 
 	}
 
-	public Result get_habit(String a_user,String a_password){
+	public Result get_habit(String a_user,String a_password) throws ParseException{
+		//encrypt the user and password (reusse the code)
 		Document user = database.getCollection("users").find(and(eq("user", a_user), eq("password", a_password))).first();
 		ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
 		String out = "";
@@ -78,7 +82,8 @@ public class GetHabit extends Controller {
 			return ok("user doesn't exist");		
 		}
 		for(Document habit: habits){
-			out += habit.toJson();
+			Document habit_D = (Habit.fromDoc(habit)).toDocNotEncrypted();
+			out += habit_D.toJson();
 			out += "data_splitter";
 		}
 		return ok(out.toString());
