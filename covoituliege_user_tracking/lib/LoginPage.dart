@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:latlong/latlong.dart';
-
+import 'package:simple_permissions/simple_permissions.dart';
 import 'package:flutter/material.dart';
 
 import 'Cst.dart';
@@ -101,8 +100,16 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  /// Request all permissions needed by the application
+  /// (shouldn't show anything if permission are already granted)
+  _requestPermissions() async {
+    await SimplePermissions.requestPermission(Permission.AlwaysLocation);
+    await SimplePermissions.requestPermission(Permission.WhenInUseLocation);;
+  }
+
   @override
   void initState() {
+    _requestPermissions();
     super.initState();
     _username = InputText(
       labelText: 'Identifiant',

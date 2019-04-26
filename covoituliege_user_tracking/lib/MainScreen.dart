@@ -4,15 +4,14 @@ import 'package:connectivity/connectivity.dart';
 import 'package:intl/intl.dart';
 import 'package:geofencing/geofencing.dart';
 import 'package:latlong/latlong.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
-import 'dart:ui';
 
 import 'Cst.dart';
 import 'UserInfo.dart';
 import 'FileHandler.dart';
 import 'serverCommunication.dart';
 import 'PrintDataScreen.dart';
+import 'PrintAllDataScreen.dart';
 
 /// This class represents the main screen of the application. It allows the user
 /// to launch the position tracking as well as printing and deleting buffered data.
@@ -44,6 +43,9 @@ class _MainScreenState extends State<MainScreen> {
       List<TimedLocation> locations) async {
     /// These variables are used to avoid accessing files multiple times when
     /// not necessary
+    for (TimedLocation loc in locations) {
+      storeReceivedPoint(loc.calendar, loc.latitude, loc.longitude);
+    }
     String lastCalendar;
     double lastLat;
     double lastLon;
@@ -114,7 +116,8 @@ class _MainScreenState extends State<MainScreen> {
     registerLocListener(newPointsBatchCallback, timeIntervalBetweenPoints,
         maxWaitTimeForUpdates);
     await startedLocListener();
-    /*List<TimedLocation> test1 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 15-01-24"),
+    /*TODO remove (later)
+    List<TimedLocation> test1 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 15-01-24"),
     TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-03-45"),
     TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-06-38"),
     TimedLocation.fromExplicit("50.0000024", "50.00000012", "2019-04-23 16-09-21")];
@@ -205,6 +208,15 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  /// Used for testing only.
+  /// Push the screen showing all received points.
+  _printAllDataScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PrintAllDataScreen()),
+    );
+  }
+
   /// Wrapper checking whether the app should show first a play or a stop button
   /// Needed because the app can be killed at anytime when in background
   _playOrStop() async {
@@ -253,13 +265,20 @@ class _MainScreenState extends State<MainScreen> {
               ),
               Divider(),
               ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Effacer les données'),
-                  onTap: clearFile),
+                leading: Icon(Icons.settings),
+                title: Text('Effacer les données'),
+                onTap: clearFile,
+              ),
               ListTile(
-                  leading: Icon(Icons.help),
-                  title: Text('Afficher les données locales'),
-                  onTap: _printDataScreen),
+                leading: Icon(Icons.help),
+                title: Text('Afficher les données locales'),
+                onTap: _printDataScreen,
+              ),
+              ListTile(
+                leading: Icon(Icons.help),
+                title: Text('Afficher tout les points reçus'),
+                onTap: _printAllDataScreen,
+              ),
             ],
           ),
         ),

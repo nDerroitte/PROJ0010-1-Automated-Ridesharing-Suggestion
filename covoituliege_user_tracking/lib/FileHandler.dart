@@ -50,6 +50,13 @@ Future<File> get _bufferedPoints async {
   return File('$path/points');
 }
 
+/// Used for testing only.
+/// Getter for the file that contains all received points.
+Future<File> get _receivedPoints async {
+  final path = await _localPath;
+  return File('$path/receivedPoints');
+}
+
 /// Getter for the file that contains the current user id
 Future<File> get _userId async {
   final path = await _localPath;
@@ -111,6 +118,14 @@ Future<String> _readFile(File which) async {
 storePoint(String calendar, String lat, String lon) async {
   await _writeInFile(calendar + "," + lat + "," + lon + "\n", await _bufferedPoints);
   await _startJourney();
+}
+
+/// Used for testing only.
+/// Store the given point (time and position), it can be retrieved later
+/// with getAllReceivedPoints.
+/// The calendar should be formatted as "yyyy-MM-dd HH-mm-ss"
+storeReceivedPoint(String calendar, String lat, String lon) async {
+  await _writeInFile(calendar + "," + lat + "," + lon + "\n", await _receivedPoints);
 }
 
 /// Store the given point as a geofence center
@@ -207,8 +222,34 @@ Future<bool> isLocListenerStarted() async {
   return true;
 }
 
+/// Store the user id in a file so that it can be reused even if
+/// the application is killed by the OS (currently used only in local function
+/// writeJourneyFromBufferedPoints)
 storeUserId(String id) async {
   File file = await _userId;
   await _clearFile(file);
   await _writeInFile(id, file);
+}
+
+/// Used for testing only.
+/// Returns a printable string containing all received points
+Future<String> getAllReceivedPoints() async {
+  String rawFileContent = await _readFile(await _receivedPoints);
+  List<String> pointList = rawFileContent.split("\n");
+  List<String> calLatLon;
+  StringBuffer res = StringBuffer();
+  for (String point in pointList) {
+    if (point == "") {
+      continue;
+    }
+    calLatLon = point.split(",");
+    res.write("calendar : ");
+    res.writeln(calLatLon[0]);
+    res.write("latitude : ");
+    res.writeln(calLatLon[1]);
+    res.write("longitude : ");
+    res.writeln(calLatLon[2]);
+    res.writeln();
+  }
+  return res.toString();
 }
