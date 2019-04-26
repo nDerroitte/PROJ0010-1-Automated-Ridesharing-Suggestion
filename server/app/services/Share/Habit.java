@@ -101,8 +101,8 @@ public class Habit
 	    h.period = Long.parseLong(period_D);//(Long) doc.get("period");
 	    h.offset = Long.parseLong(offset_D);//(Long) doc.get("offset");
         h.reliability = Double.parseDouble(reliability_D) ;//(Double) doc.get("reliability");
-        h.firstLocation = (Coordinate) doc.get("firstLocation");
-        h.lastLocation = (Coordinate) doc.get("lastLocation");
+        h.firstLocation = Coordinate.fromDoc( (Document) doc.get("firstLocation")) ;
+        h.lastLocation = Coordinate.fromDoc( (Document) doc.get("lastLocation")) ;
         h.nbPoints = Integer.parseInt(nbPoints_D); //(Integer) doc.get("nbPoints");
         h.standardDeviation= Double.parseDouble(standardDeviation_D);//(Double) doc.get("standardDeviation");
 	    return h;
