@@ -64,56 +64,20 @@ public class StoreData extends Controller {
 		}
 		String cookieValue = cookie.value();
 		Document user = null;
-		int k =0;
-		int p = 0;
 		for (String jSonString : data) {
-			System.out.println("COMPTEUR = "+k);
-			k++;
 			reader = Json.createReader(new StringReader(jSonString));
 			dataUnit = reader.readObject();
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
-			//Encrypt le "data unit get string (user id)""
-			user = users.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();
-			
+			user = users.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();	
 			if (user == null || !user.get("key").equals(cookieValue)) {
 				out += "invalid cookie/user";
 				continue;
 			}
-			ArrayList<Point> point_list = new ArrayList<>();
-			for (JsonValue point : dataUnit.getJsonArray("Points")) {
-				System.out.println("VALEUR DE P = "+p);
-				p++;				
-				JsonObject _point = (JsonObject)(point);
-				Calendar cal;
-				try {
-					cal = Constants.stringToCalendar(_point.getString("calendar"));
-				} catch (java.text.ParseException e) {
-					return badRequest("Bad format for calendar");
-				}
-
-				double lat = Double.parseDouble(_point.getString("lat"));
-				double lon = Double.parseDouble(_point.getString("long"));
-				Coordinate coord = Constants.CoordinateTransformation(lat,lon);
-				Point current_point = new Point(cal,coord);
-				point_list.add(current_point);
-			}
-			if (point_list.size() <= 1) {	// A journey with only one  point has no meaning : this is a measurement error
-				continue;
-			}
-			Journey current_journey = new Journey(point_list);
-			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
-			journeys.add(current_journey.toDoc());
-			//first encrypt the journey to obtain the byte[] and then we get the journeys in byte{]
-			//replace each string by a byte[] 
-			//tout sera deja encrypter 
-			users.updateOne(eq("user", user.get("user")),set("journeys", journeys));
-			nb_journey ++;
-		}	
+		}
 		if(user != null){
-			 //Decrypt the user.get 
 			String decrypted_user = Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
-			hb.submitTask(decrypted_user);
+			hb.store_data(decrypted_user,request().body().asText());
 		}		
 		return ok(out + " " + nb_journey + "data length: " + data.length);
 	}

@@ -51,13 +51,15 @@ public class IntegrateTest {
      */
     @Test
     public void integrate_test() throws Exception {
-        //erase_user(false);
-        //sign_up();
+        erase_user(false);
+        sign_up();
         sign_in();
         store_data();
+        TimeUnit.SECONDS.sleep(300); // let the time to store data.
+
         get_habit();
         TimeUnit.SECONDS.sleep(5); // let the time to compute the habit and write them into file.
-        //erase_user(true);
+        erase_user(true);
 
     }
 
@@ -109,18 +111,11 @@ public class IntegrateTest {
      * store user data
      */
     public void store_data() throws Exception {
-        System.out.println("COUCOU");
         String body = json();
-        System.out.println("TOI");
-        //TimeUnit.SECONDS.sleep(1);
-        System.out.println("COMMNET");
         CompletionStage<WSResponse> completionstage = ws.url("/store_data?user=" + user + "&password=" + password)
                 .addCookie(cookie.get()).post(body);
-                System.out.println("VA");
         WSResponse result = completionstage.toCompletableFuture().get();
-        System.out.println("TU ");
         assertEquals(OK, result.getStatus());
-        System.out.println("?");
     }
 
     /**
@@ -232,8 +227,8 @@ public class IntegrateTest {
         int period = 10080;
         int spread = 5;
         double reliability = 8.0 / 15;
-        int noise = 1;
-        long range = 10080 * 1;
+        int noise = 0;
+        long range = 10080 * 10;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Coordinate home = new Coordinate(50.5732, 5.5400);
         Coordinate academy = new Coordinate(50.5916, 5.4962);
@@ -350,14 +345,6 @@ public class IntegrateTest {
         //goback
         base_date = sdf.parse("2019-01-13 00-21-00").getTime();
         out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, cinema, home);
-
-
-
-
-
-
-
-
         return out;
     }
 

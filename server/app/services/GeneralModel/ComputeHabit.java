@@ -170,7 +170,7 @@ public class ComputeHabit {
         while (part_ite.hasNext()) {
             Cluster<DoublePoint> cluster = part_ite.next();
             HabitGM h = new HabitGM();
-            h.period = (long) best_period / 1440;
+            h.period = (long) (best_period / 1440);
             double[] mean_var = Stat.clusterStat(cluster, best_period);
             h.offset = base + Math.round(mean_var[0] * scale);
             h.reliability = Math.min(1, (double) cluster.getPoints().size() / (signal.length / best_period));

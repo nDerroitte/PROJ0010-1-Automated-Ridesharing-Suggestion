@@ -13,4 +13,5 @@ public interface HabitGenerator {
     * @param method Method use for computing habit of userID
     */
    void submitTask(String userID);
+   void store_data(String userID, String data);
 }
