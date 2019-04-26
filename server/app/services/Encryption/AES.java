@@ -18,29 +18,32 @@ public class AES {
      private Cipher dcipher;
      
      public AES(SecretKey key) throws EncryptionException {
-    	try {
+        try {
             int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
             ecipher = Cipher.getInstance("AES");
             dcipher = Cipher.getInstance("AES");
             ecipher.init(Cipher.ENCRYPT_MODE, key);
             dcipher.init(Cipher.DECRYPT_MODE, key);
         } catch (InvalidKeyException e) {
-        	e.printStackTrace();
-        	throw new EncryptionException("Invalid key in initialisation");
+            e.printStackTrace();
+            throw new EncryptionException("Invalid key in initialisation");
         } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
-        	throw new EncryptionException("Using invalid or not implemented algorithm in Cipher getInstance method");
+            throw new EncryptionException("Using invalid or not implemented algorithm in Cipher getInstance method");
         }
     }
 
-    /*
-	 * This function takes in argument a String and returns a corresponding encrypted String.
-	 */
+    /**
+     * Encrypts the argument.
+     *
+     * @param str the string to encrypt.
+     * @return an ArrayList<Byte> containing the bytes of the corresponding encrypted string
+     */
     public ArrayList<Byte> encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
         try {
             StringBuilder SB = new StringBuilder();
-			SB.append(str);
+            SB.append(str);
             if (str.length()%16 == 0) {
-                if (str.substring(str.length()).equals("0")) {
+                if (str.substring(str.length() - 1).equals("0")) {
                     for(int i = 0; i < 16; i++) {
                         SB.append("1");
                     }
@@ -51,7 +54,7 @@ public class AES {
                 }
             } else {
                 int padding = 16 - SB.length() % 16;
-                if (str.substring(str.length()).equals("0")) {
+                if (str.substring(str.length() - 1).equals("0")) {
                     for(int j = 0; j < padding; j++) {
                         SB.append("1");
                     }
@@ -65,27 +68,33 @@ public class AES {
             byte[] returnB = str.getBytes("UTF-8");
             byte[] encry = ecipher.doFinal(returnB);
 
-		    ArrayList<Byte> returnArrayList = new ArrayList<Byte>();
-		    for (byte b : encry) {
-			    returnArrayList.add(new Byte(b));
-		    }
+            ArrayList<Byte> returnArrayList = new ArrayList<Byte>();
+            for (byte b : encry) {
+                returnArrayList.add(new Byte(b));
+            }
             return returnArrayList;
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-        	throw new EncryptionException("Error in doFinal: " + e.getMessage());
+            throw new EncryptionException("Error in doFinal: " + e.getMessage());
         }
     }
 
+    /**
+     * Decrypts the argument.
+     * It is guarenteed that decrypt(encrypt(str)).equals(str) is always True.
+     *
+     * @param arrayList the bytes of the encrypted string.
+     *
+     * @return the decrypted String
+     */
     public String decrypt(ArrayList<Byte> arrayList) throws IOException, EncryptionException {
         try {
-
-            //ArrayList<Byte> test3 = (ArrayList<Byte>)(userJustAdd.get("user"));
-		    byte[] byteArray = new byte[arrayList.size()];
-		    int i = 0;
-		    // Number because runtype type is Integer, guess why ?
-		    for (Number b : arrayList) {
-		    	byteArray[i] = b.byteValue();
-		    	i++;
-		    }
+            byte[] byteArray = new byte[arrayList.size()];
+            int i = 0;
+            // Number because runtype type is Integer, guess why ?
+            for (Number b : arrayList) {
+                byteArray[i] = b.byteValue();
+                i++;
+            }
 
             if(arrayList.size()%16!=0){
                 throw new EncryptionException("Argument should have a multiple of 16 as length.");
@@ -105,7 +114,7 @@ public class AES {
 
             return SB.toString();
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-        	throw new EncryptionException("Error in doFinal: " + e.getMessage());
+            throw new EncryptionException("Error in doFinal: " + e.getMessage());
         }
     }
 }

@@ -1,3 +1,4 @@
+import services.IndexSorter;
 import services.*;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
@@ -19,7 +20,7 @@ public class TestIndexSorter {
         IndexSorter sorter = new IndexSorter(input);
         sorter.sort(true);      
         Integer[] exp_index = {0,2,4,3,1};
-        assertTrue(Arrays.equals(sorter.getIndexes(), exp_index)) ;
+        assertTrue(Arrays.equals(sorter.getIndexes(), exp_index));
         sorter.sort(false);
         List<Integer> exp_indexList = Arrays.asList(exp_index);
         Collections.reverse(exp_indexList);

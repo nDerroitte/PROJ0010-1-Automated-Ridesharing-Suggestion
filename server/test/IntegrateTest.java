@@ -12,6 +12,7 @@ import play.mvc.Http;
 import play.mvc.Http.Status;
 import play.mvc.Result;
 import play.test.Helpers;
+import services.Coordinate;
 import services.*;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import java.util.*;
@@ -135,7 +136,7 @@ public class IntegrateTest {
     /**
      * 
      * @param base_value value without noise
-     * @param noise      maximum noise added/substract to base_value
+     * @param noise      maximum noise added/subtract to base_value
      * @return base_value +- uniform[-noise,+noise]
      */
     private double addnoise(double base_value, double noise) {
