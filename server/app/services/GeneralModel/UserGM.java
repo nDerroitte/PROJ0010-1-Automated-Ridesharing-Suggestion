@@ -72,11 +72,13 @@ public class UserGM {
     public void createHabits() throws EncryptionException{
 
         // Compute habit on all data
+        System.out.println("Sorting journey by path");
         HashMap<JourneyPath, ArrayList<Journey>> sorted_journey = sortJourneyByPath();
         Iterator it = sorted_journey.entrySet().iterator();
         LinkedList<Habit> habits = new LinkedList<>();
-        
+        System.out.println("Sorting journey by path done");
         while (it.hasNext()) {
+            System.out.println("computing habit for journey with given start, end point");
             LinkedList<Habit> new_habit = new LinkedList<>();
             Map.Entry pair = (Map.Entry) it.next();
             ArrayList<Journey> data = (ArrayList<Journey>) pair.getValue();
@@ -91,7 +93,6 @@ public class UserGM {
         }
         habitsTofile(habits);
         habitToDB(habits);
-
     }
 
     /**

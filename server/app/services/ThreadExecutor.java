@@ -19,8 +19,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.*;
-
+import java.text.SimpleDateFormat;
 import java.io.*;
 import javax.json.*;
 import javax.inject.*;
@@ -115,8 +116,9 @@ class ComputationUnit implements Runnable {
             UserSimpleModel simple_user = new UserSimpleModel(user_id, database);
             ArrayList<Journey> unused_journey = simple_user.createHabits();
             UserGM user_gm = new UserGM(user_id, database, unused_journey);
+            System.out.println("use general model");
             user_gm.createHabits();
-
+            System.out.println("Habit computed with general model");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -137,6 +139,23 @@ class StoreData implements Runnable {
         this.hb = hb;
     }
 
+    public void check_journey(Journey journey) throws ParseException, EncryptionException{
+        Journey unchanged = journey;             
+        Document doc = journey.toDoc();       
+        Journey changed = Journey.fromDoc(doc);
+        if(!unchanged.equals(changed)){
+            System.err.println("INVALID ENCRYPTION FOR JOURNEY: " + journey);
+        }
+    }
+
+    public void check_point(Point p) throws ParseException, EncryptionException{
+        Document doc = p.toDoc();       
+        Point p2 = Point.FromDoc(doc);
+        if(!p2.equals(p)){
+            System.err.println("INVALID ENCRYPTION FOR Point: " + p);
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -152,14 +171,26 @@ class StoreData implements Runnable {
                 reader.close();
                 user = database.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();
                 ArrayList<Point> point_list = new ArrayList<>();
+
+                //debugging
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+
                 for (JsonValue point : dataUnit.getJsonArray("Points")) {
                     JsonObject _point = (JsonObject) (point);
                     Calendar cal;
                     cal = Constants.stringToCalendar(_point.getString("calendar"));
+
+                    //debugging
+                    Date date = cal.getTime();
+                    if(date.getTime() > sdf.parse("2021-00-00 00-00-00").getTime() ){
+                        System.out.println("TOO LARGE DATE IN THREAD EXECUTOR \n" + point );
+                    }
+
                     double lat = Double.parseDouble(_point.getString("lat"));
                     double lon = Double.parseDouble(_point.getString("long"));
                     Coordinate coord = Constants.CoordinateTransformation(lat, lon);
                     Point current_point = new Point(cal, coord);
+                    check_point(current_point);
                     point_list.add(current_point);
                 }
                 // A journey with only one point has no meaning : this is a measurement error
@@ -169,6 +200,7 @@ class StoreData implements Runnable {
                 Journey current_journey = new Journey(point_list);
                 ArrayList<Document> journeys = (ArrayList<Document>) (user.get("journeys"));
                 journeys.add(current_journey.toDoc());
+                //check_journey(current_journey); deja des erreurs avec point, autant ne pas encombre tout de suite avec journey
                 // first encrypt the journey to obtain the byte[] and then we get the journeys
                 // in byte{]
                 // replace each string by a byte[]

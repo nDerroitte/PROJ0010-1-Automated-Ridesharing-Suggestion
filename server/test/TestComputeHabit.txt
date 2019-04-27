@@ -53,7 +53,7 @@ public class TestComputeHabit {
             curent_date += period*scale;
         }
         for(int i=0 ; i < noise; i++){
-            out.add(base_date + java.util.concurrent.ThreadLocalRandom.current().nextLong(range*scale) % range) ;
+            out.add(base_date + java.util.concurrent.ThreadLocalRandom.current().nextLong(range*scale));
         }
         return out;
     }
@@ -67,6 +67,21 @@ public class TestComputeHabit {
         ComputeHabit ch = new ComputeHabit(empty,1440);
         assertTrue(ch.getHabit().size() == 0);
     } 
+
+    /**
+     * Check the internal signal rpresentation of the data.
+     */
+    @Test 
+    public void signal(){
+        ArrayList<Long> data = new ArrayList<>();
+        data.add(Long.valueOf(6*60000));
+        data.add(Long.valueOf(2*60000));
+        data.add(Long.valueOf(8*60000));
+        ComputeHabit ch = new ComputeHabit(data,1);
+        double[] out = ch.getSignal();
+        double[] expected_out = {1,0,0,0,1,0,1};
+        assertTrue(Arrays.equals(expected_out,out));
+    }
 
     /**
      * Check if the habit find is the expected one.

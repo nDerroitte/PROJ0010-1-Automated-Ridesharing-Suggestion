@@ -10,7 +10,7 @@ import java.util.ListIterator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Date;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.ml.clustering.DBSCANClusterer;
 import org.apache.commons.math3.ml.clustering.DoublePoint;
@@ -54,11 +54,6 @@ public class ComputeHabit {
     private Long base;
 
     /**
-     * end = highest index in the input.
-     */
-    private Long end;
-
-    /**
      * Explicit binary signal of the internal representation of the input.
      */
     private double[] signal;
@@ -67,6 +62,8 @@ public class ComputeHabit {
      * The algorithm only considered period that are multiple of minimal_period.
      */
     private int minimal_period = 1440; // minimal period in minute
+
+    private int signal_length = 0;
 
     /**
      * 
@@ -82,13 +79,15 @@ public class ComputeHabit {
         int signal_size = 0;
         if (array.size() > 0) {
             base = array.get(0);
-            end = array.get(array.size() - 1);
             signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;
+            System.out.println("Signal size: " + signal_size);
+            System.out.println("last date: " + new Date(array.get(array.size() - 1)).toString());
         }
         this.minimal_period = min_period;
         index = new Long[array.size()];
         Iterator<Long> ite = array.iterator();
         signal = new double[signal_size];
+        signal_length = signal_size;
         int i = 0;
         int j = 0;
 
@@ -110,14 +109,6 @@ public class ComputeHabit {
     }
 
     /**
-     * Return {@link signal signal}
-     * @return The signal representation of the data
-     */
-    public double[] getSignal() {
-        return this.signal.clone();
-    }
-
-    /**
      * Return the habits.
      * @return The habits computed from the date passed to the {@link ComputeHabit constructor}
      */
@@ -132,19 +123,21 @@ public class ComputeHabit {
         List<Cluster<DoublePoint>> best_partition = new LinkedList<>();
 
         // get the possible period.
+        System.out.println("computing period");
         HashSet<Integer> periods = find_period();
+        System.out.println("select " + periods.size() + " out of " + (signal_length/minimal_period) + " possible period");
+        signal = null; //for recovering memory
         Iterator<Integer> ite = periods.iterator();
 
+        System.out.println("select best partition");
         // iterate over the finded period.
         for (int i = 0; ite.hasNext(); i++) {
             Integer period = ite.next();
 
             // format input for clustering
             ArrayList<DoublePoint> index = format_signal(period);
-
             // perform the clustering
             List<Cluster<DoublePoint>> partition = cluster(index, period);
-
             // evaluate the partition quality
             double score = partitionScore(partition, period, index.size());
 
@@ -157,6 +150,7 @@ public class ComputeHabit {
                 best_partition = partition;
             }
         }
+        System.out.println("Selecting best partition done");
 
         // if no habit detected, return an empty list.
         if (best_period == 0) {
@@ -169,14 +163,15 @@ public class ComputeHabit {
         // write the finded habits
         while (part_ite.hasNext()) {
             Cluster<DoublePoint> cluster = part_ite.next();
-            HabitGM h = new HabitGM();
-            h.period = (long) (best_period / 1440);
+            Habit h = new Habit();
+            System.out.println(best_period);
+            h.period = best_period / 1440;
             double[] mean_var = Stat.clusterStat(cluster, best_period);
             h.offset = base + Math.round(mean_var[0] * scale);
-            h.reliability = Math.min(1, (double) cluster.getPoints().size() / (signal.length / best_period));
-            h.spread = mean_var[1];
-            h.nbPoints = cluster.getPoints().size();
-        
+            h.reliability = 100*Math.min(1, (double) cluster.getPoints().size() / (signal_length/best_period));
+            h.standardDeviation = mean_var[1];
+            h.nbPoints =signal_length/best_period;
+            
             habits.add(h);
         }
         return habits;
@@ -191,7 +186,7 @@ public class ComputeHabit {
      * @return A score measuring the quality of a clustering.
      */
     private double partitionScore(List<Cluster<DoublePoint>> part, int period, int nb_point) {
-        PartitionStat stat = new PartitionStat(part, signal.length / period, period, nb_point);
+        PartitionStat stat = new PartitionStat(part,signal_length/period, period, nb_point);
         stat.compute();
         return Stat.mean(stat.getReliability()) / ((stat.getNoise() + 0.0000001) * Stat.mean(stat.getStd()));
     }
@@ -217,7 +212,7 @@ public class ComputeHabit {
             return new HashSet<Integer>();
         }
 
-        double[] result = autocorr.compute(signal, signal.length / 2);
+        double[] result = autocorr.compute(signal, signal_length / 2);
         if (result.length == 0) {
             return new HashSet<Integer>();
         }
@@ -231,7 +226,7 @@ public class ComputeHabit {
         HashSet<Integer> periods = new HashSet<>();
 
         // only consider the top 0.001 most probable period and forget the other.
-        for (int i = 0; i < (int) ranked_period.length * 0.001 + 1; i++) {
+        for (int i = 0; i < Math.min(100,(int) ranked_period.length * 0.001 + 1); i++) {
 
             // round the period to the closest multiple of a day.
             int candidate = Math.round(ranked_period[i] / minimal_period) * minimal_period;
@@ -269,7 +264,7 @@ public class ComputeHabit {
     private List<Cluster<DoublePoint>> cluster(ArrayList<DoublePoint> index, int period) {
         LinkedList<Cluster<DoublePoint>> out = new LinkedList<Cluster<DoublePoint>>();
         // impose a minimum reliability of 50%
-        Integer min_point = Math.max(signal.length / (2 * period), 2);
+        Integer min_point = Math.max(signal_length / (2 * period), 2);
 
         // try to get an idea of a good epsilon value for dbscan.
         ArrayRealVector original = toRealVector(index);

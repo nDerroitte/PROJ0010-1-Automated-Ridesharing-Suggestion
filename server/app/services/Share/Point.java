@@ -125,7 +125,7 @@ public class Point
      */
     @Override
     public String toString(){
-        return "time: " + time.toString() + " position: " + position.toString();
+        return "time: " + time.getTime().toString() + " position: " + position.toString();
     }
 }
 

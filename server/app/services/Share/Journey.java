@@ -95,4 +95,14 @@ public class Journey
         }
         return false;
     }
+
+    @Override
+    public String toString(){
+        String out = "";
+        for(Point p : meeting_points){
+           out += p.toString() + "\n";
+        }
+        out += "==============================================";
+        return out;
+    }
 }

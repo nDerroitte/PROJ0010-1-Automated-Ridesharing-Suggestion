@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CompletionStage;
 import java.util.Optional;
 import play.libs.ws.*;
+import java.util.Date;
 
 public class IntegrateTest {
 
@@ -55,12 +56,9 @@ public class IntegrateTest {
         sign_up();
         sign_in();
         store_data();
-        TimeUnit.SECONDS.sleep(300); // let the time to store data.
-
+        TimeUnit.SECONDS.sleep(280); // let the time to store data.
         get_habit();
-        TimeUnit.SECONDS.sleep(5); // let the time to compute the habit and write them into file.
         erase_user(true);
-
     }
 
     /**
@@ -203,6 +201,7 @@ public class IntegrateTest {
         String out = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         ArrayList<Long> dates = new TestComputeHabit().new_data(period, spread, reliability, base_date, noise, range);
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         for (long date : dates) {
             out += "{\"UserId\": \"" + user + "\",\"Points\" : [";
             ArrayList<Point> journey = journey(start, end, date);
@@ -211,6 +210,16 @@ public class IntegrateTest {
                 if (!first) {
                     out += ",";
                 }
+                try {
+                    if (date > sdf.parse("2021-00-00 00-00-00").getTime()) {
+                        System.err.println("TOO LARGE !" + new Date(date) + " for generating habit between "
+                                + start + " and " + end);
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 out += "{\"calendar\": \"" + sdf.format(date) + "\",";
                 out += "\"lat\":\"" + point.getPosition().getX() + "\",";
                 out += "\"long\":\"" + point.getPosition().getY() + "\"}";
@@ -228,15 +237,15 @@ public class IntegrateTest {
         int spread = 5;
         double reliability = 8.0 / 15;
         int noise = 0;
-        long range = 10080 * 10;
+        long range = 10080 * 15;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Coordinate home = new Coordinate(50.5732, 5.5400);
         Coordinate academy = new Coordinate(50.5916, 5.4962);
         Coordinate rcae = new Coordinate(50.577, 5.569);
         Coordinate montef = new Coordinate(50.5858, 5.5591);
-        Coordinate market = new Coordinate(50.5697,5.550);
-        Coordinate restaurant = new Coordinate(50.5661,5.54655);
-        Coordinate cinema = new Coordinate(50.6433,5.56789);
+        Coordinate market = new Coordinate(50.5697, 5.550);
+        Coordinate restaurant = new Coordinate(50.5661, 5.54655);
+        Coordinate cinema = new Coordinate(50.6433, 5.56789);
 
         // go to academy the Wednesday at 18:35
         reliability = 8.0 / 15; // -4 for hoolyday -3 dont go.
@@ -318,33 +327,33 @@ public class IntegrateTest {
         base_date = sdf.parse("2019-01-11 11-30-00").getTime();
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
 
-        //go to hypermarket the weekend
+        // go to hypermarket the weekend
         base_date = sdf.parse("2019-01-06 00-00-00").getTime();
         spread = 1440;
         reliability = 0.9;
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, market);
-        noise = 2;
+        // noise = 2;
 
-        //go back
+        // go back
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, market, home);
 
-        //go to restaurant one week over two
+        // go to restaurant one week over two
         base_date = sdf.parse("2019-01-12 00-19-00").getTime();
         spread = 60;
         reliability = 0.6;
-        period = 2*10080;
-        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, home, restaurant);
-        //goback
+        period = 2 * 10080;
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, restaurant);
+        // goback
         base_date = sdf.parse("2019-01-12 00-21-00").getTime();
-        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, restaurant, home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, restaurant, home);
 
-        //go to cinema once a month
+        // go to cinema once a month
         base_date = sdf.parse("2019-01-13 00-18-00").getTime();
-        period = 31*1440;
-        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, home, cinema);
-        //goback
+        period = 31 * 1440;
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, cinema);
+        // goback
         base_date = sdf.parse("2019-01-13 00-21-00").getTime();
-        out +=  GenerateHabit(period, spread, reliability, base_date, noise, range, cinema, home);
+        out += GenerateHabit(period, spread, reliability, base_date, noise, range, cinema, home);
         return out;
     }
 
