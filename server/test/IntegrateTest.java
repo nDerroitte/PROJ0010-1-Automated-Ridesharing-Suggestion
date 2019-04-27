@@ -56,7 +56,7 @@ public class IntegrateTest {
         sign_up();
         sign_in();
         store_data();
-        TimeUnit.SECONDS.sleep(280); // let the time to store data.
+        TimeUnit.SECONDS.sleep(400); // let the time to store data.
         get_habit();
         erase_user(true);
     }
@@ -237,7 +237,7 @@ public class IntegrateTest {
         int spread = 5;
         double reliability = 8.0 / 15;
         int noise = 0;
-        long range = 10080 * 15;
+        long range = 10080 * 8;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Coordinate home = new Coordinate(50.5732, 5.5400);
         Coordinate academy = new Coordinate(50.5916, 5.4962);

@@ -144,7 +144,7 @@ class StoreData implements Runnable {
         Document doc = journey.toDoc();       
         Journey changed = Journey.fromDoc(doc);
         if(!unchanged.equals(changed)){
-            System.err.println("INVALID ENCRYPTION FOR JOURNEY: " + journey);
+            System.out.println("INVALID ENCRYPTION FOR JOURNEY: " + journey);
         }
     }
 
@@ -152,7 +152,7 @@ class StoreData implements Runnable {
         Document doc = p.toDoc();       
         Point p2 = Point.FromDoc(doc);
         if(!p2.equals(p)){
-            System.err.println("INVALID ENCRYPTION FOR Point: " + p);
+            System.err.println("INVALID ENCRYPTION original point: " + p + " \n transformed one: " + p2);
         }
     }
 

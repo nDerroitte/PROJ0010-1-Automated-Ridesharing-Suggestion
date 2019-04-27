@@ -65,6 +65,8 @@ public class ComputeHabit {
 
     private int signal_length = 0;
 
+    private long max_range = 365*2*24*60*60*1000; //maximum allowed range in millis
+
     /**
      * 
      * @param array      Input binary signal, represented by a list of non-zero
@@ -76,12 +78,31 @@ public class ComputeHabit {
 
         // init some internal variable
         Collections.sort(array);
+        Date now = new Date();
+        int max_date = Collections.binarySearch(array,now.getTime() + 24*60*60*1000);
+        if(max_date > 0){
+            array =new ArrayList(array.subList(0,max_date-1)) ; //cut date that are after one day from now
+        }
+        else{
+            System.out.println("length: " + array.size());
+            System.out.println("max_date: " + max_date);
+            array =new ArrayList(array.subList(0,-max_date-1)) ; //cut date that are after one day from now
+        }
         int signal_size = 0;
         if (array.size() > 0) {
+            long end = array.get(array.size() - 1);
             base = array.get(0);
-            signal_size = Math.toIntExact((array.get(array.size() - 1) - base) / scale) + 1;
-            System.out.println("Signal size: " + signal_size);
-            System.out.println("last date: " + new Date(array.get(array.size() - 1)).toString());
+            signal_size = Math.toIntExact((end  - base) / scale) + 1;
+            if(signal_size > max_range){
+                //cut too far past information.
+                int start = Collections.binarySearch(array, array.get(array.size()-1) - max_range);
+                if(start < 0){
+                    array = new ArrayList(array.subList(-start-2, array.size())); //cut too past data
+                }
+                else{
+                    array = new ArrayList(array.subList(start-2, array.size()));
+                }
+            }
         }
         this.minimal_period = min_period;
         index = new Long[array.size()];
