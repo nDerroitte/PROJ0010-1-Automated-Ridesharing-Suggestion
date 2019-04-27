@@ -109,7 +109,9 @@ public class AES {
                     SB.setLength(--initLength);
                 }
             }else if (returned.substring(returned.length()-1).equals("1")){
-                SB.setLength(--initLength);
+                while(SB.substring(SB.length()-1).equals("1")){
+                    SB.setLength(--initLength);
+                }
             }
 
             return SB.toString();

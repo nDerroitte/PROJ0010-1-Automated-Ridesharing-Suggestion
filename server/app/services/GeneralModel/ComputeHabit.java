@@ -65,7 +65,7 @@ public class ComputeHabit {
 
     private int signal_length = 0;
 
-    private long max_range = 365*2*24*60*60*1000; //maximum allowed range in millis
+    private long max_range = 365*2*24*60; //maximum allowed range in millis
 
     /**
      * 
@@ -79,14 +79,18 @@ public class ComputeHabit {
         // init some internal variable
         Collections.sort(array);
         Date now = new Date();
-        int max_date = Collections.binarySearch(array,now.getTime() + 24*60*60*1000);
+        int max_date = Collections.binarySearch(array,now.getTime() + 24*60*scale);
         if(max_date > 0){
+            System.out.println(new Date(array.get(max_date)));
             array =new ArrayList(array.subList(0,max_date-1)) ; //cut date that are after one day from now
         }
         else{
-            System.out.println("length: " + array.size());
-            System.out.println("max_date: " + max_date);
-            array =new ArrayList(array.subList(0,-max_date-1)) ; //cut date that are after one day from now
+            if(max_date == 0){
+                array = new ArrayList<>();
+            }
+            else{
+                array =new ArrayList(array.subList(0,-max_date-1)) ; //cut date that are after one day from now
+            }
         }
         int signal_size = 0;
         if (array.size() > 0) {
@@ -144,13 +148,10 @@ public class ComputeHabit {
         List<Cluster<DoublePoint>> best_partition = new LinkedList<>();
 
         // get the possible period.
-        System.out.println("computing period");
         HashSet<Integer> periods = find_period();
-        System.out.println("select " + periods.size() + " out of " + (signal_length/minimal_period) + " possible period");
         signal = null; //for recovering memory
         Iterator<Integer> ite = periods.iterator();
 
-        System.out.println("select best partition");
         // iterate over the finded period.
         for (int i = 0; ite.hasNext(); i++) {
             Integer period = ite.next();
@@ -171,7 +172,6 @@ public class ComputeHabit {
                 best_partition = partition;
             }
         }
-        System.out.println("Selecting best partition done");
 
         // if no habit detected, return an empty list.
         if (best_period == 0) {
@@ -185,7 +185,6 @@ public class ComputeHabit {
         while (part_ite.hasNext()) {
             Cluster<DoublePoint> cluster = part_ite.next();
             Habit h = new Habit();
-            System.out.println(best_period);
             h.period = best_period / 1440;
             double[] mean_var = Stat.clusterStat(cluster, best_period);
             h.offset = base + Math.round(mean_var[0] * scale);

@@ -75,10 +75,10 @@ public class TestComputeHabit {
     public void simpleHabit(){
         int period = 10080;
         int spread = 0;
-        double reliability = 1;
+        double reliability = 100;
         int noise = 0;
         long range = 5*period;
-        int offset = 1440;
+        long offset = new Date().getTime()-range*60000;
         Habit expected_out = new Habit();     
         ArrayList<Long> data = new_data(period,spread,reliability,offset,noise,range);
         expected_out.offset = data.get(0);
@@ -104,7 +104,7 @@ public class TestComputeHabit {
                 //generate fake data:
                 long range = 10080*15;
                 ArrayList<Long> raw_data = new ArrayList<Long>();
-                long base_date = new Date().getTime();
+                long base_date = new Date().getTime()-range*60000;
                 for(int i=0; i < j; i++){
                     base_date += 1440;
                     raw_data.addAll(new_data(10080,60,0.7,base_date,0,range));

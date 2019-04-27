@@ -28,11 +28,9 @@ public class Autocorr{
  */
     public double[] compute(double[] data, int max_lag){
 
-        System.out.println("data length: " + data.length);
         //find $a the closest power of two bigger or equal to data.length
         double a = FastMath.log(2,data.length-0.00001);
         double next_2 = Math.pow(2,Math.ceil(a));
-        System.out.println("next_2: " + next_2);
         
         //zero pad the data to have an array of size $a
         double[] input = Arrays.copyOf(data,(int)next_2);

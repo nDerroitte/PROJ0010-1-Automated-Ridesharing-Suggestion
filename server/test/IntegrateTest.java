@@ -350,6 +350,7 @@ public class IntegrateTest {
         // go to cinema once a month
         base_date = sdf.parse("2019-01-13 00-18-00").getTime();
         period = 31 * 1440;
+        reliability = 1;
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, cinema);
         // goback
         base_date = sdf.parse("2019-01-13 00-21-00").getTime();

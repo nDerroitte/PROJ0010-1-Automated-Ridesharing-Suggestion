@@ -139,23 +139,6 @@ class StoreData implements Runnable {
         this.hb = hb;
     }
 
-    public void check_journey(Journey journey) throws ParseException, EncryptionException{
-        Journey unchanged = journey;             
-        Document doc = journey.toDoc();       
-        Journey changed = Journey.fromDoc(doc);
-        if(!unchanged.equals(changed)){
-            System.out.println("INVALID ENCRYPTION FOR JOURNEY: " + journey);
-        }
-    }
-
-    public void check_point(Point p) throws ParseException, EncryptionException{
-        Document doc = p.toDoc();       
-        Point p2 = Point.FromDoc(doc);
-        if(!p2.equals(p)){
-            System.err.println("INVALID ENCRYPTION original point: " + p + " \n transformed one: " + p2);
-        }
-    }
-
     @Override
     public void run() {
         try {
@@ -180,17 +163,10 @@ class StoreData implements Runnable {
                     Calendar cal;
                     cal = Constants.stringToCalendar(_point.getString("calendar"));
 
-                    //debugging
-                    Date date = cal.getTime();
-                    if(date.getTime() > sdf.parse("2021-00-00 00-00-00").getTime() ){
-                        System.out.println("TOO LARGE DATE IN THREAD EXECUTOR \n" + point );
-                    }
-
                     double lat = Double.parseDouble(_point.getString("lat"));
                     double lon = Double.parseDouble(_point.getString("long"));
                     Coordinate coord = Constants.CoordinateTransformation(lat, lon);
                     Point current_point = new Point(cal, coord);
-                    check_point(current_point);
                     point_list.add(current_point);
                 }
                 // A journey with only one point has no meaning : this is a measurement error
@@ -200,11 +176,6 @@ class StoreData implements Runnable {
                 Journey current_journey = new Journey(point_list);
                 ArrayList<Document> journeys = (ArrayList<Document>) (user.get("journeys"));
                 journeys.add(current_journey.toDoc());
-                //check_journey(current_journey); deja des erreurs avec point, autant ne pas encombre tout de suite avec journey
-                // first encrypt the journey to obtain the byte[] and then we get the journeys
-                // in byte{]
-                // replace each string by a byte[]
-                // tout sera deja encrypter
                 database.updateOne(eq("user", user.get("user")), set("journeys", journeys));
             }
             if (user != null) {
