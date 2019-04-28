@@ -8,10 +8,14 @@ import java.util.ArrayList;
  */
 public interface HabitGenerator {
    /**
-    * 
-    * @param userID a user
-    * @param method Method use for computing habit of userID
+    * Compute the habit of an user.
+    * @param userID ID of the user
     */
    void submitTask(String userID);
+   /**
+    * Push the data of a user into the database. 
+    * @param userID a user iD
+    * @param data the data to be pushed.
+    */
    void store_data(String userID, String data);
 }

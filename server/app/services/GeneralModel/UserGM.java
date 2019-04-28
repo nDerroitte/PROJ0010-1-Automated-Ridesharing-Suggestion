@@ -57,7 +57,6 @@ public class UserGM {
      * Extract the data of user_id and set the method used for computing habits.
      * @param user_id ID of the user
      * @param database Entry point to DB containt user journey.
-     * @param mode Tell which method to use for computing all habit.
      * @throws ParseException if the document from the DB cannot be instance in a java class.
      */
     public UserGM(String user_id, MongoCollection<Document> database, ArrayList<Journey> journeys) throws ParseException {

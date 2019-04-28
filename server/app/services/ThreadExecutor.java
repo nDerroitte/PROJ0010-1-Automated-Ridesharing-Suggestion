@@ -28,13 +28,8 @@ import javax.inject.*;
 import com.google.common.util.concurrent.*;
 
 /**
- * Implement the thread pool for computing the habits of an user
- * 
+ * Implement the thread pool for computing the habits or storing the journey of an user
  * The thread pool is an unbouded single thread.
- * 
- * @see submitTask(String,int) for requesting the computation of the habit of an
- *      user.
- * @author Cedric
  */
 @Singleton
 public class ThreadExecutor implements HabitGenerator {
@@ -64,18 +59,6 @@ public class ThreadExecutor implements HabitGenerator {
     /**
      * 
      * @param userID : id of the user for who we want to compute its habits.
-     * @param method : an integer saying which method to use.
-     *               <ul>
-     *               <li>method = 0: use of the general model with a period which is
-     *               a multiple of 1 day
-     *               <li>method = 1: use of the general model with a period which is
-     *               a multiple of 7 day
-     *               <li>method = 2: use of general model with period multiple of 1
-     *               and sort the journey by day
-     *               <li>method = 3: use of the simple model
-     *               </ul>
-     * @see services.UserGM for general model
-     * @see services.UserSimpleModel for the simple model
      * 
      */
     @Override
@@ -154,9 +137,6 @@ class StoreData implements Runnable {
                 reader.close();
                 user = database.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();
                 ArrayList<Point> point_list = new ArrayList<>();
-
-                //debugging
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 
                 for (JsonValue point : dataUnit.getJsonArray("Points")) {
                     JsonObject _point = (JsonObject) (point);

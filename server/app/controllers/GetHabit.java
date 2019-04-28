@@ -53,18 +53,12 @@ public class GetHabit extends Controller {
 				while (cursor.hasNext()) {
 					Document user = cursor.next();
 					//Decrypt le string user.get(user)	
-					String decrypted_user = Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+					String decrypted_user =  Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+					System.out.println("User: " + decrypted_user + " is submit");
 					hb.submitTask(decrypted_user);
 					//utiliser le crypter 
-					System.out.println("User: " + decrypted_user + " is submit");
 				}
-			//} 
-			//catch(Exception e){
-			//	e.printStackTrace();
-			//}
-			//finally {
 				cursor.close();
-			//}
 			return ok("computing...");
 		}
 		else{

@@ -75,7 +75,6 @@ public class SimpleHabit extends Habit
 
     /**
      * Add a new occurence to the list of occurence of the habit
-     * @param date: the date where the new jounrey happened
      */
     public void addOccurence(Journey new_journey)
     {
