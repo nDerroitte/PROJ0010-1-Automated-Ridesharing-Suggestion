@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     if (goodId && goodPassword && goodConfirmation && goodEmail) {
       int signUpResult =
-          await ServerCommunication.sendSignUp(_username.text, _password.text, _email.text);
+          await sendSignUp(_username.text, _password.text, _email.text);
       if (signUpResult == signUpOK) {
         Navigator.pop(context);
         return;

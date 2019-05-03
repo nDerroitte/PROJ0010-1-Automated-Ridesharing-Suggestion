@@ -5,6 +5,7 @@ class TimedLocation {
   String longitude;
   String calendar;
 
+  // Not used anymore, kept just in case.
   TimedLocation.fromExplicit(String latitude, String longitude, String calendar) {
     this.latitude = latitude;
     this.longitude = longitude;

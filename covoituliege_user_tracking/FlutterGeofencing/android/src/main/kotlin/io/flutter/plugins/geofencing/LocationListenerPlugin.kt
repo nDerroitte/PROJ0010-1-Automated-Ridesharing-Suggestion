@@ -64,9 +64,9 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
             val callbackHandle = args!![0] as Long
             val interval = args[1] as Int
             val maxWaitTime = args[2] as Int
-            val locRequest = LocationRequest().setInterval(interval.toLong()) // 2 min 30
-                    .setMaxWaitTime(maxWaitTime.toLong())    //1 hour
-                    .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+            val locRequest = LocationRequest().setInterval(interval.toLong())
+                    .setMaxWaitTime(maxWaitTime.toLong())
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             val pIntent = getLocListenerPendingIntent(context, callbackHandle)
             fusedLocationProviderClient.requestLocationUpdates(locRequest, pIntent).run {
                 addOnSuccessListener {
@@ -81,7 +81,7 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
         }
 
         @JvmStatic
-        private fun removeLocationListener(context : Context,
+        private fun removeLocationListener(context: Context,
                                            fusedLocationProviderClient: FusedLocationProviderClient,
                                            args: ArrayList<*>?,
                                            result: Result) {
@@ -101,9 +101,10 @@ class LocationListenerPlugin(context: Context, activity: Activity?) : MethodCall
 
         @JvmStatic
         private fun getLocListenerPendingIntent(context: Context,
-                                                callbackHandle : Long) : PendingIntent {
+                                                callbackHandle: Long): PendingIntent {
             val intent = Intent(context, LocationListenerBroadcastReceiver::class.java)
                     .setType(callbackHandle.toString())
+            // We use setType because the location updates have no result if we put an extra
             return PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
     }

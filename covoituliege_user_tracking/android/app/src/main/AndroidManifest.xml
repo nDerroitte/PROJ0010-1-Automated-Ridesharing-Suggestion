@@ -23,8 +23,12 @@
         android:icon="@mipmap/ic_launcher">
         <receiver android:name="io.flutter.plugins.geofencing.LocationListenerBroadcastReceiver"
             android:enabled="true" android:exported="true"/>
+        <receiver android:name="io.flutter.plugins.geofencing.WifiWaitingBroadcastReceiver"
+            android:enabled="true" android:exported="true"/>
 
         <service android:name="io.flutter.plugins.geofencing.LocationListenerService"
+            android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
+        <service android:name="io.flutter.plugins.geofencing.WifiWaitingService"
             android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
         <activity
             android:name=".MainActivity"

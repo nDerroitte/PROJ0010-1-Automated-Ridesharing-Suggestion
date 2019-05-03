@@ -14,8 +14,8 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception { 
         try{
-            /*
-        byte[] k4Encrypted = Encrypt.encrypt("87f0056b10cb51e87b8b41388e4152096533750ca4b63870ccdf05b85b3d81e3329764092a743378003cbcc070c2abd3e95d2fa006427db87197c75554e5a3ed");
+            
+       /* ArrayList<Byte> k4Encrypted = Encrypt.encrypt("87f0056b10cb51e87b8b41388e4152096533750ca4b63870ccdf05b85b3d81e3329764092a743378003cbcc070c2abd3e95d2fa006427db87197c75554e5a3ed");
         FileOutputStream fos = new FileOutputStream("text8.txt");
         fos.write(k4Encrypted);
         byte[] array = Files.readAllBytes(new File("text8.txt").toPath());

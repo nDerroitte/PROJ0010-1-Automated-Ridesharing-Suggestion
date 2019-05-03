@@ -7,7 +7,6 @@ import 'package:latlong/latlong.dart';
 import 'dart:async';
 
 import 'Cst.dart';
-import 'UserInfo.dart';
 import 'FileHandler.dart';
 import 'serverCommunication.dart';
 import 'PrintDataScreen.dart';
@@ -16,11 +15,9 @@ import 'PrintAllDataScreen.dart';
 /// This class represents the main screen of the application. It allows the user
 /// to launch the position tracking as well as printing and deleting buffered data.
 class MainScreen extends StatefulWidget {
-  final UserInfo user;
-  final ServerCommunication serverCommunication;
-  final bool anonymous;
+  final String username;
 
-  MainScreen(this.user, this.serverCommunication, [this.anonymous = false]);
+  MainScreen(this.username);
 
   @override
   _MainScreenState createState() => new _MainScreenState();
@@ -29,12 +26,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   Function _pressedOnOff;
   IconData _onOffIcon;
-  static UserInfo _user;
-  Stream<ConnectivityResult> _onConnectivityChanged;
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
-  bool _waitingForWifi = false;
-  ServerCommunication _serverCommunication;
-  bool _anonymous;
 
   /// Function called periodically by the background location listener,
   /// it receives a list of locations (which are supposed to be ordered from
@@ -105,6 +96,7 @@ class _MainScreenState extends State<MainScreen> {
         inJourney = true;
       }
     }
+    _sendJourneys();
   }
 
   /// This function clear the buffer and starts a new position tracking process.
@@ -116,46 +108,6 @@ class _MainScreenState extends State<MainScreen> {
     registerLocListener(newPointsBatchCallback, timeIntervalBetweenPoints,
         maxWaitTimeForUpdates);
     await startedLocListener();
-    /*TODO remove (later)
-    List<TimedLocation> test1 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 15-01-24"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-03-45"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 16-06-38"),
-    TimedLocation.fromExplicit("50.0000024", "50.00000012", "2019-04-23 16-09-21")];
-    List<TimedLocation> test2 = [TimedLocation.fromExplicit("45.0", "50.0", "2019-04-23 16-13-18"),
-    TimedLocation.fromExplicit("40.0", "50.0", "2019-04-23 16-16-45"),
-    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-19-26")];
-    List<TimedLocation> test3 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-22-47"),
-    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-25-37"),
-    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-28-19")];
-    List<TimedLocation> test4 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-31-36"),
-    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-34-18"),
-    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-37-01"),
-    TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-40-08")];
-    List<TimedLocation> test5 = [TimedLocation.fromExplicit("35.0", "50.0", "2019-04-23 16-43-51"),
-    TimedLocation.fromExplicit("38.0", "50.0", "2019-04-23 16-46-12"),
-    TimedLocation.fromExplicit("42.0", "50.0", "2019-04-23 16-49-51"),
-    TimedLocation.fromExplicit("44.5", "50.0", "2019-04-23 16-53-08")];
-    List<TimedLocation> test6 = [TimedLocation.fromExplicit("46.8521", "50.0", "2019-04-23 16-57-51")];
-    List<TimedLocation> test7 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-01-00")];
-    List<TimedLocation> test8 = [TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-03-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-06-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-09-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-12-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-15-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-18-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-21-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-24-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-27-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-30-00"),
-    TimedLocation.fromExplicit("50.0", "50.0", "2019-04-23 17-33-00")];
-    await newPointsBatchCallback(test1);
-    await newPointsBatchCallback(test2);
-    await newPointsBatchCallback(test3);
-    await newPointsBatchCallback(test4);
-    await newPointsBatchCallback(test5);
-    await newPointsBatchCallback(test6);
-    await newPointsBatchCallback(test7);
-    await newPointsBatchCallback(test8);*/
 
     setState(() {
       _pressedOnOff = _stop;
@@ -179,25 +131,26 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   /// Sends buffered journeys to the server. Called when the user connects.
-  _sendJourneys() async {
-    ConnectivityResult connectivity = await Connectivity().checkConnectivity();
+  static _sendJourneys() async {
+    if (!(await isAnonymous())) {
+      ConnectivityResult connectivity = await Connectivity().checkConnectivity();
 
-    /// We try to send the data, if it fails (likely because wifi is not available),
-    /// we wait for the state of the connectivity to change and we retry.
-    /// If a data unit was collected anonymously, it is filled with the current username.
-    if (connectivity == ConnectivityResult.wifi &&
-        await _serverCommunication.sendJourneys((await readFile()).replaceAll(
-            RegExp("\"UserId\":\"\""),
-            "\"UserId\":\"" + _user.getId() + "\""))) {
-      clearFile();
-      _waitingForWifi = false;
-    } else {
-      _connectivitySubscription =
-          _onConnectivityChanged.listen((ConnectivityResult result) {
-        _connectivitySubscription.cancel();
-        _sendJourneys();
-      });
+      /// We try to send the data, if it fails (likely because wifi is not available),
+      /// we keep the data in a file and we will retry later.
+      /// If a data unit was collected anonymously, it is filled with the current username.
+      if (connectivity == ConnectivityResult.wifi &&
+          await sendJourneys((await readFile()).replaceAll(
+              RegExp("\"UserId\":\"\""),
+              "\"UserId\":\"" + await getUserId() + "\""))) {
+        clearFile();
+      }
     }
+  }
+
+  /// Clear the stored data related to debug / test
+  _clearDebugData() async {
+    await clearFile();
+    await clearReceivedPoints();
   }
 
   /// Push the screen showing buffered journeys.
@@ -230,20 +183,16 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {});
   }
 
+  _sendJourneyWithIdWrapper(String username) async {
+    await storeUserId(username);
+    await _sendJourneys();
+  }
+
   @override
   void initState() {
     super.initState();
-    _user = widget.user;
-    storeUserId(_user.getId());
-    _anonymous = widget.anonymous;
-    if (!_anonymous && !_waitingForWifi) {
-      _sendJourneys();
-      _waitingForWifi = true;
-    }
-
-    _onConnectivityChanged = Connectivity().onConnectivityChanged.skip(1);
-    _waitingForWifi = false;
-    _serverCommunication = widget.serverCommunication;
+    String _username = widget.username;
+    _sendJourneyWithIdWrapper(_username);
     _playOrStop();
   }
 
@@ -267,7 +216,7 @@ class _MainScreenState extends State<MainScreen> {
               ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Effacer les données'),
-                onTap: clearFile,
+                onTap: _clearDebugData,
               ),
               ListTile(
                 leading: Icon(Icons.help),

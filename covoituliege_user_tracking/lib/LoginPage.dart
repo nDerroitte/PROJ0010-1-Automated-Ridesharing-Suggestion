@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'Cst.dart';
 import 'TextInput.dart';
 import 'MainScreen.dart';
-import 'UserInfo.dart';
 import 'serverCommunication.dart';
 import 'ForgottenPasswordScreen.dart';
 import 'SignUpScreen.dart';
@@ -30,12 +29,11 @@ class _LoginPageState extends State<LoginPage> {
   InputText _password;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  ServerCommunication _serverCommunication;
 
   /// Ask the server to check the username-password pair, and push the tracking screen if yes.
   /// If the connection fails, the cause is given to the user.
   _connection() async {
-    int connectionResult = await _serverCommunication.checkConnection(
+    int connectionResult = await checkConnection(
         _usernameController.text, _passwordController.text);
     setState(() {
       if (connectionResult == passwordOK) {
@@ -43,7 +41,8 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(
             builder: (context) => MainScreen(
-                UserInfo(_usernameController.text), _serverCommunication),
+                  _usernameController.text,
+                ),
           ),
         );
       } else if (connectionResult == anonymousConnexion) {
@@ -51,9 +50,7 @@ class _LoginPageState extends State<LoginPage> {
           context,
           MaterialPageRoute(
             builder: (context) => MainScreen(
-                  UserInfo(_usernameController.text),
-                  _serverCommunication,
-                  true,
+                  _usernameController.text,
                 ),
           ),
         );
@@ -104,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
   /// (shouldn't show anything if permission are already granted)
   _requestPermissions() async {
     await SimplePermissions.requestPermission(Permission.AlwaysLocation);
-    await SimplePermissions.requestPermission(Permission.WhenInUseLocation);;
+    await SimplePermissions.requestPermission(Permission.WhenInUseLocation);
   }
 
   @override
@@ -156,8 +153,6 @@ class _LoginPageState extends State<LoginPage> {
     ];
 
     _listViewContent = _baseListViewContent;
-
-    _serverCommunication = ServerCommunication();
   }
 
   @override

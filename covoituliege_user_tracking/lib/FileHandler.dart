@@ -63,6 +63,12 @@ Future<File> get _userId async {
   return File('$path/userId');
 }
 
+/// Getter for the file that contains the cookie
+Future<File> get _cookie async {
+  final path = await _localPath;
+  return File('$path/cookie');
+}
+
 /// Write 'data' in the file 'where'
 _writeInFile(String data, File where) async {
   RandomAccessFile file = await where.open(mode: FileMode.append);
@@ -75,6 +81,11 @@ _writeInFile(String data, File where) async {
 /// Delete buffered journeys
 clearFile() async {
   await _clearFile(await _journeyData);
+}
+
+/// Delete received points
+clearReceivedPoints() async {
+  await _clearFile(await _receivedPoints);
 }
 
 /// Delete buffered points
@@ -223,12 +234,21 @@ Future<bool> isLocListenerStarted() async {
 }
 
 /// Store the user id in a file so that it can be reused even if
-/// the application is killed by the OS (currently used only in local function
-/// writeJourneyFromBufferedPoints)
+/// the application is killed by the OS
 storeUserId(String id) async {
   File file = await _userId;
   await _clearFile(file);
   await _writeInFile(id, file);
+}
+
+/// Tells whether the latest connection was anonymous
+isAnonymous() async {
+  return (await _readFile(await _userId)) == "";
+}
+
+/// Retrieves the latest stored user id
+getUserId() async {
+  return await _readFile(await _userId);
 }
 
 /// Used for testing only.
@@ -243,6 +263,11 @@ Future<String> getAllReceivedPoints() async {
       continue;
     }
     calLatLon = point.split(",");
+    if (calLatLon.length < 3) {
+      res.writeln("calLatLon too small : " + point);
+      res.writeln();
+      continue;
+    }
     res.write("calendar : ");
     res.writeln(calLatLon[0]);
     res.write("latitude : ");
@@ -252,4 +277,16 @@ Future<String> getAllReceivedPoints() async {
     res.writeln();
   }
   return res.toString();
+}
+
+/// Stores the given cookie, replacing the previous one
+storeCookie(String cookie) async {
+  File file = await _cookie;
+  await _clearFile(file);
+  await _writeInFile(cookie, file);
+}
+
+/// Retrieves the last stored cookie
+Future<String> getCookie() async {
+  return await _readFile(await _cookie);
 }

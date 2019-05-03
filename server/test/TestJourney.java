@@ -1,6 +1,7 @@
 
 import services.Point;
 import services.Coordinate;
+import services.Journey;
 import services.*;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
