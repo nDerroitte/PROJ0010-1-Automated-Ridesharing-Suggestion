@@ -130,5 +130,33 @@ public class Habit
         }
         return false;
     }
+
+    /**
+     * Return true if h and self match.
+     * 
+     * The two habit mathc if:
+     *  -they have the same period
+     *  -
+     *  
+     * @param h
+     * @return
+     */
+    public boolean match(Habit h){
+        if(h.period != this.period){
+            return false;
+        }
+        int period_in_minut = (int) period*24*60;
+        CircularDist circ_dist = new CircularDist(period_in_minut);
+        double std = Math.min(standardDeviation,h.standardDeviation);
+        int offset1 = (int) ((offset / 60000) % period_in_minut);
+        int offset2 = (int) ((h.offset / 60000) % period_in_minut);
+        int dist = circ_dist.compute(offset1,offset2);
+        if(dist < std){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     
 }
