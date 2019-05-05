@@ -1,0 +1,45 @@
+spawn openssl req -new -key spem2.key -out spem2.csr
+
+#set send_human {.1 .3 1 .05 2}
+#set send_slow {1 0.1}
+lassign $argv arg1
+
+expect {
+    "Country Name" {exp_send "BE\r"}
+}
+
+expect {
+    "State or Province Name"    {exp_send "Liege\r"}
+}
+
+expect {
+    "Locality Name"    {exp_send "Theux\r"}
+}
+
+expect {
+    "Organization Name"    {exp_send "CharlierEngineering\r"}
+}
+
+expect {
+    "Organizational Unit Name"    {exp_send "\r"}
+}
+
+expect {
+    "Common Name"    {exp_send "$arg1\r"}
+}
+
+expect {
+    "Email Address"    {exp_send "Constance.charlier@gmail.com\r"}
+}
+
+expect {
+    "A challenge password" {exp_send "9dh4gkd8\r"}
+}
+
+expect {
+    "An optional company name" {exp_send "\r"}
+}
+
+expect {
+    eof
+}
