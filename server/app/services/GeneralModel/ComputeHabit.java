@@ -206,9 +206,9 @@ public class ComputeHabit {
      * @return A score measuring the quality of a clustering.
      */
     private double partitionScore(List<Cluster<DoublePoint>> part, int period, int nb_point) {
+        double occurence = signal_length/period;
         PartitionStat stat = new PartitionStat(part,signal_length/period, period, nb_point);
-        stat.compute();
-        return Stat.mean(stat.getReliability()) / ((stat.getNoise() + 0.0000001) * Stat.mean(stat.getStd()));
+        return (occurence * Stat.mean(stat.getReliability())) /  Stat.mean(stat.getStd());
     }
 
     // convert an ArrayList of DoublePoint to an ArrayRealVector

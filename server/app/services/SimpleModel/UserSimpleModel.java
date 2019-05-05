@@ -75,10 +75,7 @@ public class UserSimpleModel
          //Encrypt user id 
         ArrayList<Byte> user_id_E = Encrypt.encrypt(user_id);
         Document user = db.find(eq("user", user_id_E)).first();
-        ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
-        if(habits == null){
-            habits = new ArrayList<Document>();
-        }
+        ArrayList<Document> habits = new ArrayList<Document>();
         for(Habit h : new_habits){
             habits.add(h.toDoc());
         }

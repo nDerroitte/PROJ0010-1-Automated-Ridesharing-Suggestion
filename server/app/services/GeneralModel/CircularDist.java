@@ -43,6 +43,20 @@ public class CircularDist implements DistanceMeasure{
         }
         return Math.min(period+a_ - b_, b_- a_);
     }
+
+    public int compute(int a,int b) throws IllegalArgumentException{
+        if(a < 0 || b < 0){
+            throw new IllegalArgumentException();
+        }
+        int a_ = a % period;
+        int b_ = b % period;
+        if(a_ > b_){
+            int c = a_;
+            a_ = b_;
+            b_ = c;
+        }
+        return Math.min(period+a_ - b_, b_- a_);
+    }
 }
 
  
