@@ -82,7 +82,7 @@ class _ForgottenPasswordScreenState extends State<ForgottenPasswordScreen> {
         if (newPasswordResult == httpError) {
           _listViewContent += <Widget>[
             Text(
-              serverError,
+              httpErrorText,
               style: warningStyle,
             ),
           ];

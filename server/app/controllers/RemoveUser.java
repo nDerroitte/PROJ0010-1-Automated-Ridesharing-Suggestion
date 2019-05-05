@@ -38,15 +38,13 @@ public class RemoveUser extends Controller {
 		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
 		MongoCollection<Document> users = database.getCollection("users");
-		//Encrypt a_user et a_password
 		DeleteResult delete_result = users.deleteMany(and(eq("user",a_user_E),eq("password",a_password_E)));
 		if (delete_result.getDeletedCount() == 1){
-			return ok("user data succesfully removed");				
+			return ok("user succesfully removed");				
 		}
-		//ENcrypt use the a_user_E encrypted
 		if(users.find(eq("user",a_user_E)).first() != null){
 			return ok("incorrect password");
 		}
-		return ok("user not exist");
+		return ok("user doesn't exist");
 	}
 }

@@ -84,7 +84,7 @@ Future<bool> sendJourneys(String jsonData) async {
 /// possible results
 Future<int> checkConnection(String username, String password) async {
   if (username == "" && password == "") {
-    return anonymousConnexion;
+    return anonymousConnection;
   }
   HttpClientResponse response;
   try {
@@ -101,7 +101,38 @@ Future<int> checkConnection(String username, String password) async {
   if (response.statusCode == 200) {
     switch (await _responseBody(response)) {
       case "connection OK":
-        return passwordOK;
+        return credentialsOK;
+
+      case "user doesn't exist":
+        return invalidUsername;
+
+      case "incorrect pasword":
+        return invalidPassword;
+
+      default:
+        return httpError;
+    }
+  } else {
+    return httpError;
+  }
+}
+
+/// Tries to delete the user corresponding to the given log,
+/// see Cst.dart for the different possible results
+Future<int> deleteAccount(String username, String password) async {
+  HttpClientResponse response;
+  try {
+    response = await _get(
+        serverURL + "remove_user?user=" + username + "&password=" + password);
+  } catch (exception) {
+    print(exception);
+    return httpError;
+  }
+
+  if (response.statusCode == 200) {
+    switch (await _responseBody(response)) {
+      case "user succesfully removed":
+        return credentialsOK;
 
       case "user doesn't exist":
         return invalidUsername;

@@ -112,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (signUpResult == httpError) {
           _listViewContent += <Widget>[
             Text(
-              serverError,
+              httpErrorText,
               style: warningStyle,
             ),
           ];

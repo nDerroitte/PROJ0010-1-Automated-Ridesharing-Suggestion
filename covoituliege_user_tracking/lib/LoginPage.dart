@@ -8,6 +8,7 @@ import 'MainScreen.dart';
 import 'serverCommunication.dart';
 import 'ForgottenPasswordScreen.dart';
 import 'SignUpScreen.dart';
+import 'DeleteAccount.dart';
 
 import 'dart:ui';
 
@@ -36,16 +37,7 @@ class _LoginPageState extends State<LoginPage> {
     int connectionResult = await checkConnection(
         _usernameController.text, _passwordController.text);
     setState(() {
-      if (connectionResult == passwordOK) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MainScreen(
-                  _usernameController.text,
-                ),
-          ),
-        );
-      } else if (connectionResult == anonymousConnexion) {
+      if (connectionResult == credentialsOK || connectionResult == anonymousConnection) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -66,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
             break;
 
           case httpError:
-            errorExplanation = serverError;
+            errorExplanation = httpErrorText;
         }
         _listViewContent = _baseListViewContent +
             <Widget>[
@@ -89,12 +81,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  /// Function called by the "S'inscrire" text, it simply pushes the SignUp screen.
+  /// Function called by the "Inscription" text, it simply pushes the SignUp screen.
   _signUp() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SignUpScreen()),
     );
+  }
+
+  /// Function called by the "Delete account" text, it simply pushes the DeleteAccount screen.
+  _deleteAccount() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DeleteAccountScreen(
+              _usernameController.text, _passwordController.text),
+        ));
   }
 
   /// Request all permissions needed by the application
@@ -148,8 +150,12 @@ class _LoginPageState extends State<LoginPage> {
           onTap: _forgottenPassword),
       ListTile(
           leading: Icon(Icons.settings),
-          title: Text("S'inscrire"),
+          title: Text("Inscription"),
           onTap: _signUp),
+      ListTile(
+          leading: Icon(Icons.settings),
+          title: Text("Suppression de compte"),
+          onTap: _deleteAccount),
     ];
 
     _listViewContent = _baseListViewContent;

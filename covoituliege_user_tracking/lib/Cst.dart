@@ -6,8 +6,8 @@ final minPauseTimeBetweenJourneys = Duration(minutes: 20);
 const dateFormat = 'yyyy-MM-dd HH-mm-ss';
 
 /// Location Listener parameters
-const timeIntervalBetweenPoints = 2000; //TODO 2 min 30
-const maxWaitTimeForUpdates = 5000; //TODO 1 hour
+const timeIntervalBetweenPoints = 150000; //2 min 30 sec
+const maxWaitTimeForUpdates = 3600000;  //1 hour
 
 /// Different text styles.
 const _fontSize = 18.0;
@@ -20,16 +20,16 @@ const confirmationStyle =
     TextStyle(fontSize: _fontSize, color: Colors.lightGreenAccent);
 
 const serverURL = "https://spem2.montefiore.ulg.ac.be/";
-const serverError =
-    'Erreur serveur, veuillez réessayer. Si le problème persiste, merci de contacter le service technique.';
+const httpErrorText =
+    'Erreur inattendue, veuillez réessayer. Si le problème persiste, merci de contacter le service technique.';
 
 const httpError = -1;
 
 /// Possible connection results.
 const invalidUsername = 0;
 const invalidPassword = 1;
-const passwordOK = 2;
-const anonymousConnexion = 7;
+const credentialsOK = 2;
+const anonymousConnection = 7;
 
 /// Possible sign up results.
 const signUpOK = 3;
