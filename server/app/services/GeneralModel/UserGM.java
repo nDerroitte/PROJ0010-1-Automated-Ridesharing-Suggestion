@@ -43,10 +43,6 @@ public class UserGM {
      * id of the user
      */
     private String user_id;
-    /**
-     * Tell which method to use when computing the habits
-     */
-    private int mode;
 
     /**
      * entry point to the database
@@ -92,16 +88,6 @@ public class UserGM {
     }
 
     /**
-     * Print a list of habits.
-     * @param habits
-     */
-    public void printHabits(LinkedList<Habit> habits) {
-        for (Habit habit : habits) {
-            System.out.println(habit.toString());
-        }
-    }
-
-    /**
      * Write a list of habit into file.
      * @param habits List of habits
      */
@@ -130,28 +116,6 @@ public class UserGM {
             System.err.println("Error writing in file.");
             e.printStackTrace();
         }
-    }
-    /**
-     * Sort journey by day.
-     * @param journeys: list of journey to sort.
-     * @return An hash set. Each value store the journey that start at same week day.
-     * The mapping key,day is given by the class Calendar.
-     * @see Calendar
-     */
-    HashMap<Integer, ArrayList<Journey>> sortJourneyByDay(ArrayList<Journey> journeys) {
-        HashMap<Integer, ArrayList<Journey>> out = new HashMap<>();
-        for (Journey journey : journeys) {
-            Calendar date_journey = journey.getFirstPointTime();
-            int key = date_journey.get(Calendar.DAY_OF_WEEK) - 1;
-            if (out.containsKey(key)) {
-                out.get(key).add(journey);
-            } else {
-                ArrayList<Journey> array = new ArrayList<>();
-                array.add(journey);
-                out.put(key, array);
-            }
-        }
-        return out;
     }
 
     /**
@@ -186,18 +150,20 @@ public class UserGM {
         return out;
     }
 
+    /**
+     * 
+     * @param new_habits List of habit to push into the DB
+     * @throws EncryptionException encryotion goes wrong.
+     */
     public void habitToDB(LinkedList<Habit> new_habits) throws EncryptionException{
         //Encrypt user id
         ArrayList<Byte> user_id_E = Encrypt.encrypt(user_id);
         Document user = db.find(eq("user", user_id_E)).first();
-        //Decrypt
-        //laisser les habits cryptée
         ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
         if(habits == null){
             habits = new ArrayList<Document>();
         }
         for(Habit h : new_habits){
-            //ce sera deja crypter ici 
             habits.add(h.toDoc());
         }
         //Encrypt user id  
