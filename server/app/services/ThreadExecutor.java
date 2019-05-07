@@ -70,6 +70,12 @@ public class ThreadExecutor implements HabitGenerator {
         }
     }
 
+    /**
+     * Submit task for storing data
+     * 
+     * @param userID Owner of the data
+     * @param data Data to store
+     */
     @Override
     public void store_data(String userID, String data){
         this.worker.submit(new StoreData(this,users,userID,data));
@@ -78,7 +84,7 @@ public class ThreadExecutor implements HabitGenerator {
 }
 
 /**
- * Worker of ThreadExecutor
+ * Worker responsible for computing user habit.
  */
 class ComputationUnit implements Runnable {
     private final String user_id;
@@ -94,14 +100,19 @@ class ComputationUnit implements Runnable {
         this.database = database;
     }
 
+    /**
+     * Compute user habit
+     */
     public void run() {
         try {
+            //first use the simple model
             UserSimpleModel simple_user = new UserSimpleModel(user_id, database);
+
+            //use the general model to find the habit that the simple one cannot find
             ArrayList<Journey> unused_journey = simple_user.createHabits();
             UserGM user_gm = new UserGM(user_id, database, unused_journey);
-            System.out.println("use general model");
             user_gm.createHabits();
-            System.out.println("Habit computed with general model");
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,12 +120,23 @@ class ComputationUnit implements Runnable {
     }
 }
 
+/**
+ * Worker responsible for toring user data.
+ */
 class StoreData implements Runnable {
     private final String user_id;
     private final MongoCollection<Document> database;
     private final String[] data;
     HabitGenerator hb;
 
+    /**
+     * Store user data into DB and ask for computing its habit.
+     * 
+     * @param hb        entry point for requesting the computation of a user habits.
+     * @param db        entry point to the database
+     * @param userID    ID of the user
+     * @param raw_data  data to store
+     */
     public StoreData(HabitGenerator hb, MongoCollection<Document> db, String userID, String raw_data) {
         user_id = userID;
         this.data = raw_data.split("data_splitter");
@@ -122,6 +144,9 @@ class StoreData implements Runnable {
         this.hb = hb;
     }
 
+    /**
+     * Push data into the database.
+     */
     @Override
     public void run() {
         try {

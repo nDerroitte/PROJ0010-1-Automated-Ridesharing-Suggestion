@@ -42,13 +42,12 @@ public class IntegrateGeolife extends Controller {
     }
 
     /**
-     * This controller integrate the geolife database into mongodb.
-     * We use a controller because of lack of privileges on spem2,
-     * and no time to wait for an answer.
-     * The code is kept for eventual re-use,
-     * but the corresponding route is probably already deleted.
+     * This controller integrate the geolife database into mongodb. We use a
+     * controller because of lack of privileges on spem2, and no time to wait for an
+     * answer. The code is kept for eventual re-use, but the corresponding route is
+     * probably already deleted.
      */
-    public Result integrate_geolife() throws Exception{
+    public Result integrate_geolife() throws Exception {
         String username;
         String password = "geolife_1_3";
         String email = "hellogoodbye1853@gmail.com";
@@ -74,7 +73,7 @@ public class IntegrateGeolife extends Controller {
             journey_list = new ArrayList<Document>();
             for (final File journey : trajectory_dir.listFiles()) {
                 prev_cal = null;
-                prev_lat = -500;    // -500 is out of the ranges
+                prev_lat = -500; // -500 is out of the ranges
                 prev_lon = -500;
                 point_list = new ArrayList<Point>();
                 fis = new FileInputStream(journey.getPath());
@@ -82,7 +81,7 @@ public class IntegrateGeolife extends Controller {
                 br = new BufferedReader(isr);
                 while (br.ready()) {
                     cur_line = br.readLine().split(",");
-                    if(!cur_line[0].contains(".")){
+                    if (!cur_line[0].contains(".")) {
                         continue;
                     }
                     cur_line[6] = cur_line[6].replace(':', '-');
@@ -93,7 +92,8 @@ public class IntegrateGeolife extends Controller {
                     }
                     lat = Double.parseDouble(cur_line[0]);
                     lon = Double.parseDouble(cur_line[1]);
-                    if (prev_cal == null || (Math.abs(cal.getTime().getTime() - prev_cal.getTime().getTime()) >= 150000 && distance(lat, prev_lat, lon, prev_lon, 0, 0) >= 1000)) {
+                    if (prev_cal == null || (Math.abs(cal.getTime().getTime() - prev_cal.getTime().getTime()) >= 150000
+                            && distance(lat, prev_lat, lon, prev_lon, 0, 0) >= 1000)) {
                         coord = Constants.CoordinateTransformation(lat, lon);
                         cur_point = new Point(cal, coord);
                         point_list.add(cur_point);
@@ -113,7 +113,8 @@ public class IntegrateGeolife extends Controller {
             ArrayList<Byte> a_password_E = Encrypt.encrypt(password);
             ArrayList<Byte> email_E = Encrypt.encrypt(email);
 
-            Document new_user = new Document("user", a_user_E).append("password", a_password_E).append("email",email_E).append("journeys", journey_list);
+            Document new_user = new Document("user", a_user_E).append("password", a_password_E).append("email", email_E)
+                    .append("journeys", journey_list);
             users.insertOne(new_user);
         }
         return ok();

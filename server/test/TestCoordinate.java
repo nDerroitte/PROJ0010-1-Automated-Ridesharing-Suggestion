@@ -33,12 +33,22 @@ public class TestCoordinate {
         double y2 = y1 + Constants.COORDINATE_ERROR_ACCEPTED/1.00001;
         double x3 = x1 + 1.00001 * Constants.COORDINATE_ERROR_ACCEPTED;
         double y3 = y1 + 1.00001 * Constants.COORDINATE_ERROR_ACCEPTED;
+        double x4 = x1 - Constants.COORDINATE_ERROR_ACCEPTED/1.00001;
+        double y4 = y1 - Constants.COORDINATE_ERROR_ACCEPTED/1.00001;
+        double x5 = x1 - 1.00001 * Constants.COORDINATE_ERROR_ACCEPTED;
+        double y5 = y1 - 1.00001 * Constants.COORDINATE_ERROR_ACCEPTED;   
 
         assertTrue(new Coordinate(x1,y1).isSame(new Coordinate(x2,y2)) 
             && new Coordinate(x2,y2).isSame(new Coordinate(x1,y1)));
 
         assertTrue(! new Coordinate(x1,y1).isSame(new Coordinate(x3,y3)) 
             && ! new Coordinate(x3,y3).isSame(new Coordinate(x1,y1)));
+
+        assertTrue( new Coordinate(x1,y1).isSame(new Coordinate(x4,y4)) 
+            &&  new Coordinate(x4,y4).isSame(new Coordinate(x1,y1)));
+        
+        assertTrue(! new Coordinate(x1,y1).isSame(new Coordinate(x5,y5)) 
+            && ! new Coordinate(x5,y5).isSame(new Coordinate(x1,y1)));
     }
 
     /**

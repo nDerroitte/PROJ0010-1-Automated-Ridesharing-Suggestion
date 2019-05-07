@@ -28,10 +28,17 @@ public class Habit
      * Period of the habit
      */
     public long period;
+
     /**
-     * Offset of the habit
+     * First departure date of the habit
      */
     public long offset;
+
+    /**
+     * Arrival time of the habit
+     */
+    public long arrival_time;
+
     /**
      * Reliability of the habit
      */
@@ -126,7 +133,9 @@ public class Habit
     public boolean equals(Object o){
         if( o instanceof Habit){
             Habit h = (Habit) o;
-            return h.offset == offset && h.period == period && h.reliability == reliability;
+            return h.offset == offset && h.period == period && h.reliability == reliability 
+                && nbPoints == h.nbPoints && standardDeviation == h.standardDeviation
+                && firstLocation.isSame(h.firstLocation) && lastLocation.isSame(h.lastLocation);
         }
         return false;
     }
@@ -145,13 +154,16 @@ public class Habit
         if(h.period != this.period){
             return false;
         }
-        int period_in_minut = (int) period*24*60;
-        CircularDist circ_dist = new CircularDist(period_in_minut);
+        if(!firstLocation.isSame(h.firstLocation) || !lastLocation.isSame(h.lastLocation)){
+            return false;
+        }
+        int period_in_minute = (int) period*24*60;
+        CircularDist circ_dist = new CircularDist(period_in_minute);
         double std = Math.min(standardDeviation,h.standardDeviation);
-        int offset1 = (int) ((offset / 60000) % period_in_minut);
-        int offset2 = (int) ((h.offset / 60000) % period_in_minut);
-        int dist = circ_dist.compute(offset1,offset2);
-        if(dist < std){
+        System.out.println("minimul std: " + std);
+        double dist = circ_dist.compute(offset,h.offset);
+        System.out.println("Dist between offset: " + dist);
+        if((double) dist < std){
             return true;
         }
         else{

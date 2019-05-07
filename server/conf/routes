@@ -32,6 +32,12 @@ GET /get_habit                      controllers.GetHabit.get_habit(user,password
 #update habit of a user
 GET /update_habit                   controllers.GetHabit.update_habit(user,password)
 
+GET /geolife                         controllers.IntegrateGeolife.integrate_geolife()
+
+#compare user
+
+GET /compare_user                   controllers.CompareUser.compare_user(user1,user2)
+
 
 
 

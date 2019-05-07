@@ -29,6 +29,9 @@ public class MongoDB implements MongoInterface{
 	MongoClient mongoClient = new MongoClient();
 	MongoDatabase database = mongoClient.getDatabase("covoituliege");
 
+	/**
+	 * Give entry point to the database.
+	 */
 	@Override
 	public MongoDatabase get_database() {
        	return this.database;

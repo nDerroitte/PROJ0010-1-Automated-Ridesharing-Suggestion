@@ -25,7 +25,7 @@ import org.apache.commons.math3.ml.clustering.Cluster;
  * 
  * The stochastic process has the following characterisitc:
  * <ul>
- * <li>Period</li>
+ * <li>Period</li>          
  * <li>Reliability</li>
  * <li>Spread</li>
  * <li>Offset</li>
@@ -206,9 +206,27 @@ public class ComputeHabit {
      * @return A score measuring the quality of a clustering.
      */
     private double partitionScore(List<Cluster<DoublePoint>> part, int period, int nb_point) {
-        double occurence = signal_length/period;
-        PartitionStat stat = new PartitionStat(part,signal_length/period, period, nb_point);
-        return (occurence * Stat.mean(stat.getReliability())) /  Stat.mean(stat.getStd());
+        PartitionStat stat = new PartitionStat(part, signal.length / period, period, nb_point);
+        stat.compute();
+        double occ = (signal.length / period);
+        double reliability = Stat.mean(stat.getReliability());
+        double std = Stat.mean(stat.getStd());
+        double score = reliability /  std;
+
+        //Add some manual filter to favorise/penalize some habit
+        if(period % 10080 == 0 && period < 10080*4){
+            score *= occ;
+        }
+        if(std < 60*4){
+            score *= occ;
+        }
+        if(std/period > 0.01 && period % 10080 != 0){
+            return Double.NEGATIVE_INFINITY;
+        }
+        if(std/period > 0.05){
+            return Double.NEGATIVE_INFINITY;
+        }
+        return score;
     }
 
     // convert an ArrayList of DoublePoint to an ArrayRealVector
@@ -238,11 +256,12 @@ public class ComputeHabit {
         }
         // remove useless result
         result[0] = 0.0;
-
+      
         // sort period from the most probable to the less one.
         IndexSorter is = new IndexSorter(result);
         is.sort(false);
         Integer[] ranked_period = is.getIndexes();
+
         HashSet<Integer> periods = new HashSet<>();
 
         // only consider the top 0.001 most probable period and forget the other.

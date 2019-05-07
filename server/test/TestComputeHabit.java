@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 
 import akka.dispatch.forkjoin.ThreadLocalRandom;
+import jdk.jfr.Timestamp;
 
 import static org.junit.Assert.*;
 import services.CircularDist;
@@ -91,11 +92,39 @@ public class TestComputeHabit {
         assertEquals(expected_out,habits.getFirst());
     }
 
+    @Test 
+    public void too_in_the_future(){
+        int period = 10080;
+        int spread = 0;
+        double reliability = 100;
+        int noise = 0;
+        long range = 5*period;
+        long base_date = new Date().getTime()+range*60000;  
+        ArrayList<Long> data = new_data( period,  spread,  reliability,  base_date, noise,  range);     
+        ComputeHabit ch = new ComputeHabit(data,1440);
+        LinkedList<Habit> habits = ch.getHabit(); 
+        assertTrue(habits.size() == 0);
+    }
+
+    
+    public void too_in_the_past(){
+        int period = 10080;
+        int spread = 0;
+        double reliability = 100;
+        int noise = 0;
+        long range = 5*period;
+        long offset =1000;  
+        long base_date = 0;     
+        ArrayList<Long> data = new_data(period,  spread,  reliability,  base_date, noise,  range);
+        ComputeHabit ch = new ComputeHabit(data,1440);
+        LinkedList<Habit> habits = ch.getHabit(); 
+        assertTrue(habits.size() == 0);
+    }
+
     /**
      * evaluate the computeHabit performence.
      * @throws IOException
      */
-    @Test
     public void testSignal() throws IOException{
 
         int[] hit = new int[5];

@@ -56,9 +56,9 @@ public class IntegrateTest {
         sign_up();
         sign_in();
         store_data();
-        TimeUnit.SECONDS.sleep(400); // let the time to store data.
+        TimeUnit.SECONDS.sleep(600); // let the time to store data.
         get_habit();
-        erase_user(true);
+        //erase_user(true);
     }
 
     /**
@@ -196,6 +196,21 @@ public class IntegrateTest {
         return out;
     }
 
+    /**
+     * Generate the habit as the GSM will do it.
+     * 
+     * @param period
+     * @param spread
+     * @param reliability
+     * @param base_date
+     * @param noise
+     * @param range
+     * @param start
+     * @param end
+     * @return
+     * 
+     * 
+     */
     public String GenerateHabit(int period, int spread, double reliability, long base_date, int noise, long range,
             Coordinate start, Coordinate end) {
         String out = "";
@@ -231,13 +246,18 @@ public class IntegrateTest {
         return out;
     }
 
+    /**
+     * 
+     * @return
+     * @throws Exception
+     */
     public String json() throws Exception {
         String out = "";
         int period = 10080;
         int spread = 5;
         double reliability = 8.0 / 15;
         int noise = 0;
-        long range = 10080 * 8;
+        long range = 10080 * 15;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         Coordinate home = new Coordinate(50.5732, 5.5400);
         Coordinate academy = new Coordinate(50.5916, 5.4962);
@@ -247,6 +267,8 @@ public class IntegrateTest {
         Coordinate restaurant = new Coordinate(50.5661, 5.54655);
         Coordinate cinema = new Coordinate(50.6433, 5.56789);
 
+        //18 habit described;
+        
         // go to academy the Wednesday at 18:35
         reliability = 8.0 / 15; // -4 for hoolyday -3 dont go.
         spread = 5;
@@ -324,6 +346,8 @@ public class IntegrateTest {
         // go to and back DL
         base_date = sdf.parse("2019-01-11 09-00-00").getTime();
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, montef);
+
+        //goback
         base_date = sdf.parse("2019-01-11 11-30-00").getTime();
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, montef, home);
 
@@ -332,7 +356,6 @@ public class IntegrateTest {
         spread = 1440;
         reliability = 0.9;
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, market);
-        // noise = 2;
 
         // go back
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, market, home);
@@ -351,6 +374,7 @@ public class IntegrateTest {
         base_date = sdf.parse("2019-01-13 00-18-00").getTime();
         period = 31 * 1440;
         reliability = 1;
+        spread = 3*1440;
         out += GenerateHabit(period, spread, reliability, base_date, noise, range, home, cinema);
         // goback
         base_date = sdf.parse("2019-01-13 00-21-00").getTime();
