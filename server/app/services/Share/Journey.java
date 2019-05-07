@@ -51,6 +51,16 @@ public class Journey
     }
 
     /**
+     * Get the time of the last point
+     * @return
+     */
+    public Calendar getLastPointTime()
+    {
+        int max_size = meeting_points.size() - 1;
+        return meeting_points.get(max_size).getTime();
+    }
+
+    /**
      * Allow to transform this object to a Document. Used to store the Jounrey in the database
      * @return a Document object corresponding to this class
      */

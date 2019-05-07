@@ -53,6 +53,7 @@ public class SimpleHabit extends Habit
         super.lastLocation = journey.getPath().get(journey.getPath().size()-1);
         super.offset =  occurences.get(0).getTimeInMillis();
         super.nbPoints = 1;
+        super.arrival_time = journey.getLastPointTime().getTimeInMillis();
     }
 
     /**
