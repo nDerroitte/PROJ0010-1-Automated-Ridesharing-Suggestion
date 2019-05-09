@@ -46,7 +46,7 @@ public class SignIn extends Controller {
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user_E),eq("password", a_password_E)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
-			return ok("success");
+			return ok("connection OK");
 		}
 		//encrypt a_user 
 		if (users.find(eq("user",a_user_E)).first() == null){

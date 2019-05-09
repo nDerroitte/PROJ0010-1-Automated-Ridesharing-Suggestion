@@ -4,7 +4,7 @@ import 'Cst.dart';
 
 /// This class represents a text input with a little label (labelText argument)
 /// showing which information the user should write in the input.
-/// The color argument is the background color of the text,
+/// The color argument is the background color of the widget,
 /// the controller argument is a TextInputController that enables the caller
 /// to get the current input.
 /// The obscureText argument tells whether the text should be hidden or not

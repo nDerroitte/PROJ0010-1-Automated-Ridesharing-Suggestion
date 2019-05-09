@@ -26,7 +26,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   TextEditingController _passwordController = TextEditingController();
 
   /// Ask the server to delete the account, and push the LoginPage screen if it worked.
-  /// If the deletion fails, the cause is given to the user.
+  /// If the deletion fails, the cause is shown to the user.
   _deleteAccount() async {
     int deleteResult = await deleteAccount(
         _usernameController.text, _passwordController.text);

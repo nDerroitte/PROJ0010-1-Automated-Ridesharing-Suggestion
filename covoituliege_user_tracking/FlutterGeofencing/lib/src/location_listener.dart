@@ -1,10 +1,12 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:geofencing/src/timed_location.dart';
+import 'package:geofencing/src/callback_dispatcher.dart';
 
+/// Unregister the service related to the given callback, started sooner with
+/// the function below. Unregistering a not registered service is simply a noOp.
 void removeLocListener(void Function(List<TimedLocation> locations) callback) {
   final List<dynamic> args = <dynamic>[
     PluginUtilities.getCallbackHandle(callback).toRawHandle()
@@ -13,6 +15,11 @@ void removeLocListener(void Function(List<TimedLocation> locations) callback) {
       .invokeMethod('LocationListenerPlugin.removeLocationListener', args);
 }
 
+/// Starts a service that will receive location updates from the OS.
+/// When an update is received, a job scheduler is started and at some point,
+/// the provided callback will be called with the provided locations, represented
+/// by a list of TimedLocations.
+/// The two last arguments are used to tune the speed of the updates.
 void registerLocListener(
     void Function(List<TimedLocation> locations) callback,
     int timeIntervalBetweenPoints,
@@ -27,28 +34,12 @@ void registerLocListener(
       .invokeMethod('LocationListenerPlugin.registerLocationListener', args);
 }
 
+/// Initializes the service used above to register and unregister location
+/// services.
 void initialize() {
   final List<dynamic> args = <dynamic>[
     PluginUtilities.getCallbackHandle(callbackDispatcher).toRawHandle()
   ];
   MethodChannel('plugins.flutter.io/loc_listener_plugin')
       .invokeMethod('LocationListenerPlugin.initializeService', args);
-}
-
-void callbackDispatcher() {
-  const MethodChannel _backgroundChannel =
-      MethodChannel('plugins.flutter.io/loc_listener_plugin_background');
-  WidgetsFlutterBinding.ensureInitialized();
-
-  _backgroundChannel.setMethodCallHandler((MethodCall call) async {
-    final List<dynamic> args = call.arguments;
-    final Function callback = PluginUtilities.getCallbackFromHandle(
-        CallbackHandle.fromRawHandle(args[0]));
-    assert(callback != null);
-    List<TimedLocation> locations = List<TimedLocation>();
-    args[1].forEach((dynamic e) => locations.add(TimedLocation(e)));
-    await callback(locations);
-  });
-
-  _backgroundChannel.invokeMethod('LocationListenerService.initialized');
 }

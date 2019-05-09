@@ -12,6 +12,8 @@ class PrintDataScreen extends StatefulWidget {
 }
 
 class _PrintDataScreenState extends State<PrintDataScreen> {
+  // Initialize _data with an empty Text to avoid null pointer exception
+  // that can occur because of the asynchronous _printData() execution
   Text _data = Text(
     "",
     style: textStyle,

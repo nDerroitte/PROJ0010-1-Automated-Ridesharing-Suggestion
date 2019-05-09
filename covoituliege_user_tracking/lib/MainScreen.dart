@@ -30,18 +30,26 @@ class _MainScreenState extends State<MainScreen> {
   /// Function called periodically by the background location listener,
   /// it receives a list of locations (which are supposed to be ordered from
   /// oldest to newest), analyzes them and store relevant data to be sent later.
+  /// The different locations are stored directly in a file (with storePoint)
+  /// because the application may get killed and re-opened between two different
+  /// calls. Every volatile information is obviously lost if this happens.
+  /// This function must be static in order for the handle method to work
+  /// (see FlutterGeofencing/lib/scr/*.dart)
   static Future<void> newPointsBatchCallback(
       List<TimedLocation> locations) async {
-    /// These variables are used to avoid accessing files multiple times when
-    /// not necessary
     for (TimedLocation loc in locations) {
       storeReceivedPoint(loc.calendar, loc.latitude, loc.longitude);
     }
+    /// These variables are used to avoid accessing files multiple times when
+    /// not necessary
     String lastCalendar;
     double lastLat;
     double lastLon;
     List<String> lastTimedLoc = await getLastTimedLoc();
     if (lastTimedLoc == null) {
+      // The first time the callback is launched, no previous location is stored.
+      // We thus register the previous location as the first one, which will
+      // then simply be ignored by the loop below.
       if (locations.length > 0) {
         lastCalendar = locations[0].calendar;
         lastLat = double.parse(locations[0].latitude);
@@ -62,6 +70,15 @@ class _MainScreenState extends State<MainScreen> {
       distance = DistanceVincenty().distance(LatLng(lastLat, lastLon),
           LatLng(double.parse(loc.latitude), double.parse(loc.longitude)));
       if (inJourney) {
+        // During a journey, a location is added if the distance between it
+        // and the previous one is more than minDistanceNewJourney (see Cst)
+        // and if the time interval is less than minPauseTimeBetweenJourneys.
+        // If the time interval is larger (no matter the distance), the journey
+        // is considered over.
+        // When a journey ends, the current location is added to complete it,
+        // if not too far from the previous one. If the location is too far,
+        // we consider that it belongs to the next journey and thus we don't
+        // want to add it to the current one.
         if (DateFormat(dateFormat)
             .parse(lastCalendar)
             .add(minPauseTimeBetweenJourneys)
@@ -85,6 +102,15 @@ class _MainScreenState extends State<MainScreen> {
           lastLon = double.parse(loc.longitude);
         }
       } else if (distance > minDistanceNewJourney) {
+        // When the user is static (not in a journey), the algorithm acts
+        // as a geofence and will simply discards any location until finding one
+        // that is far enough from the geofence center.
+        // Once such a location is encountered, a journey is started
+        // with 2 locations : the geofence center (which should be the end of
+        // the previous journey), and the current location. Obviously a time
+        // interval is created between these points. Another way of starting
+        // a journey would be to use the last measured location
+        // as first location, when relevant.
         newCalendar = DateFormat(dateFormat).format(DateFormat(dateFormat)
             .parse(loc.calendar)
             .subtract(Duration(minutes: 2, seconds: 30)));
@@ -99,12 +125,13 @@ class _MainScreenState extends State<MainScreen> {
     _sendJourneys();
   }
 
-  /// This function clear the buffer and starts a new position tracking process.
+  /// This function clears the buffers and starts a new position tracking process.
   /// It also updates the button so that it's now a stop button.
   /// It is called when the user taps on the start button.
   _start() async {
     await clearBuffers();
     //TODO implement location batches on IOs side
+    // see FlutterGeofencing/lib/scr/*.dart for details about the registering of Android services.
     registerLocListener(newPointsBatchCallback, timeIntervalBetweenPoints,
         maxWaitTimeForUpdates);
     await startedLocListener();
@@ -183,6 +210,8 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {});
   }
 
+  /// Wrapper used to store the user id and then send the buffered journeys
+  /// with this user id. Needed because the initState function can't be async.
   _sendJourneyWithIdWrapper(String username) async {
     await storeUserId(username);
     await _sendJourneys();

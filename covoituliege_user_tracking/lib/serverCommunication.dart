@@ -15,7 +15,7 @@ Future<HttpClient> _secureClient() async {
   SecurityContext context = SecurityContext();
   final _cert = await rootBundle.load("spem2.pem");
   context.setTrustedCertificatesBytes(
-      _cert.buffer.asUint8List(_cert.offsetInBytes, _cert.lengthInBytes));
+      _cert.buffer.asUint8List());
   return HttpClient(context: context);
 }
 
@@ -91,6 +91,7 @@ Future<int> checkConnection(String username, String password) async {
     response = await _get(
         serverURL + "sign_in?user=" + username + "&password=" + password);
   } catch (exception) {
+    print(exception);
     return httpError;
   }
   String cookie = response.headers.value("set-cookie");
@@ -125,7 +126,6 @@ Future<int> deleteAccount(String username, String password) async {
     response = await _get(
         serverURL + "remove_user?user=" + username + "&password=" + password);
   } catch (exception) {
-    print(exception);
     return httpError;
   }
 
