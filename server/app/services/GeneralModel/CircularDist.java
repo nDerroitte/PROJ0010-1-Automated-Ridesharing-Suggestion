@@ -44,7 +44,7 @@ public class CircularDist implements DistanceMeasure{
     }
 
     /**
-     * Compute the circular distance between two date.
+     * Compute the circular distance in minute between two date if the time unit of period is the minute.
      * 
      * @param a A data in millisecond
      * @param b Another data in millisecond

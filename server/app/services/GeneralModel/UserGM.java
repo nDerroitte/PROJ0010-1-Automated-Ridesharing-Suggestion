@@ -79,6 +79,7 @@ public class UserGM {
             for(Habit habit : new_habit){
                 habit.firstLocation = ((JourneyPath) pair.getKey()).start;
                 habit.lastLocation = ((JourneyPath) pair.getKey()).end;
+                habit.arrival_time = average_arrival_time(habit, data);
             }          
             habits.addAll(new_habit);
                  
@@ -87,6 +88,20 @@ public class UserGM {
         habitToDB(habits);
     }
 
+    public long average_arrival_time(Habit h, ArrayList<Journey> journeys){
+        int count = 0;
+        long avg_duration = 0;
+        CircularDist computer = new CircularDist((int)h.period*1440);
+        for(Journey j : journeys){
+            if(computer.compute(h.offset,j.getFirstPointTime().getTimeInMillis()) < h.standardDeviation){
+                avg_duration += j.getLastPointTime().getTimeInMillis() - j.getFirstPointTime().getTimeInMillis();
+                count ++;
+            }
+        }
+        avg_duration /= count;
+        return h.offset + avg_duration;
+    }
+        
     /**
      * Write a list of habit into file.
      * @param habits List of habits

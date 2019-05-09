@@ -49,22 +49,18 @@ public class GetData extends Controller {
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
 			for (Document journey : journeys) {
-				//TO DO changer ceci avec un getFromDoc
 				journey_object = Journey.fromDoc(journey);
-				ArrayList<Coordinate> meeting_poin = journey_object.getPath();
-				for (Coordinate c : meeting_poin){
-					System.out.println(c);
-				}
+				ArrayList<Coordinate> meeting_point = journey_object.getPath();
 				ArrayList<Document> doc_meeting_point = (ArrayList<Document>)journey.get("meeting_point");
 				for (Document doc_point : doc_meeting_point) {
+					Point point = Point.FromDoc(doc_point);
 					data.append("datetime: ");
-					data.append((String)doc_point.get("time") + "\n");
-					ArrayList<Number> coordinates = (ArrayList<Number>)doc_point.get("position");
-					data.append("latitude: ");
-					data.append(coordinates.get(0).toString() + "\n");
-					data.append("longitude: ");
-					data.append(coordinates.get(1).toString() + "\n\n");
+					data.append(point.getTime().getTime().toString() + "\n");
+					data.append("GPS coordinate: ");
+					Coordinate coordinates = point.getPosition();
+					data.append(coordinates.toString() + "\n");
 				}
+				System.out.println("Making a journey");
 			}
 			return ok(data.toString());
 		}
