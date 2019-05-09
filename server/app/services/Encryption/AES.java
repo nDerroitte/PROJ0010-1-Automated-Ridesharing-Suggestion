@@ -9,7 +9,6 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
-import java.util.Base64;
 import java.util.ArrayList;
 
 public class AES {
@@ -19,6 +18,7 @@ public class AES {
      
      public AES(SecretKey key) throws EncryptionException {
         try {
+            
             ecipher = Cipher.getInstance("AES");
             dcipher = Cipher.getInstance("AES");
             ecipher.init(Cipher.ENCRYPT_MODE, key);

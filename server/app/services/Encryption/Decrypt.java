@@ -5,11 +5,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -52,26 +48,4 @@ public class Decrypt {
         //String k4 = Decrypt.decrypt(readFile("k7.txt"), ke);
         return k1;
     }
-
-    /*private static String xor(String str1, String str2) {
-        if (str1.getBytes().length != str2.getBytes().length) {
-            return null;
-        }
-        byte[] bytes1 = str1.getBytes();
-        byte[] bytes2 = str2.getBytes();
-        String res = "";
-        for(int i = 0; i < bytes1.length; i++) {
-            res += Integer.toHexString(bytes1[i] ^ bytes2[i]).substring(0,1);
-        }
-
-        return res;
-    }
-    //PAS UTILE TO DO REMOVE IT 
-    private static String readFile(String path) throws Exception {
-        File file = new File(path);
-        FileInputStream fis = new FileInputStream(file.getPath());
-        InputStreamReader isr = new InputStreamReader(fis);
-        BufferedReader br = new BufferedReader(isr);
-        return br.readLine();
-    }*/
 }
