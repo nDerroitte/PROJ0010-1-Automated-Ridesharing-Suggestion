@@ -90,29 +90,6 @@ public class GetHabit extends Controller {
 		}
 		return ok(out.toString());
 	}
-
-	public Result update_habit(String a_user,String password){
-		/*
-		String[] data = request().body().asText().split("data_splitter");
-		JsonReader reader;
-		JsonObject dataUnit;
-		MongoCollection<Document> users = database.getCollection("users");
-		for (String jSonString : data) {
-			reader = Json.createReader(new StringReader(jSonString));
-			dataUnit = reader.readObject();
-			reader.close();
-			Document user = users.find(and(eq("user", a_user), eq("password", a_password))).first();
-			if(user==null){
-				return ok("user not found or incorect password");
-			}
-			users.updateOne(and(eq("user", a_user)));
-
-		}*/
-		return ok("");
-
-
-	}
-
 }
 
 

@@ -211,3 +211,24 @@ Future<int> sendPasswordRequest(String username, String email) async {
     return httpError;
   }
 }
+
+/// Asks the server to compare the 2 given users and to send a json containing
+/// their common habits. Returns the parsed json.
+Future<List<dynamic>> compareUsers(String user1, String user2) async {
+  HttpClientResponse response;
+  try {
+    response = await _get(serverURL +
+        "compare_user?user1=" +
+        user1 +
+        "&user2=" +
+        user2);
+  } catch (exception) {
+    return null;
+  }
+
+  if (response.statusCode == 200) {
+    return json.decode(await _responseBody(response));
+  } else {
+  return null;
+  }
+}

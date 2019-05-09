@@ -220,9 +220,6 @@ public class ComputeHabit {
         if(std < 60*4){
             score *= occ;
         }
-        if(std/period > 0.01 && period % 10080 != 0){
-            return Double.NEGATIVE_INFINITY;
-        }
         if(std/period > 0.05){
             return Double.NEGATIVE_INFINITY;
         }

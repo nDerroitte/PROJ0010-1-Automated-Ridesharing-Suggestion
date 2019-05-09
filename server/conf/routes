@@ -29,15 +29,8 @@ GET /compute_habit 						controllers.GetHabit.compute_habit(user)
 #send habit of a user
 GET /get_habit                      controllers.GetHabit.get_habit(user,password)
 
-#update habit of a user
-GET /update_habit                   controllers.GetHabit.update_habit(user,password)
-
+#integrate the geolife database into our mongoDB database
 GET /geolife                         controllers.IntegrateGeolife.integrate_geolife()
 
 #compare user
-
 GET /compare_user                   controllers.CompareUser.compare_user(user1,user2)
-
-
-
-

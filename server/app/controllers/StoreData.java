@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 import javax.json.*;
 
 import com.fasterxml.jackson.databind.*;
-
+import javax.json.stream.JsonParsingException;
 
 import static com.mongodb.client.model.Filters.*;
 import com.mongodb.client.result.DeleteResult;
@@ -77,7 +77,12 @@ public class StoreData extends Controller {
 		Document user = null;
 		for (String jSonString : data) {
 			reader = Json.createReader(new StringReader(jSonString));
-			dataUnit = reader.readObject();
+			try {
+				dataUnit = reader.readObject();
+			} catch (JsonParsingException e) {
+				out += "json badly formatted";
+				continue;
+			}
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
 			user = users.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();	

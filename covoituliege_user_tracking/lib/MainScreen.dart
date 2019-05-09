@@ -11,6 +11,7 @@ import 'FileHandler.dart';
 import 'serverCommunication.dart';
 import 'PrintDataScreen.dart';
 import 'PrintAllDataScreen.dart';
+import 'CommonHabitsScreen.dart';
 
 /// This class represents the main screen of the application. It allows the user
 /// to launch the position tracking as well as printing and deleting buffered data.
@@ -26,6 +27,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   Function _pressedOnOff;
   IconData _onOffIcon;
+  String _username;
 
   /// Function called periodically by the background location listener,
   /// it receives a list of locations (which are supposed to be ordered from
@@ -197,6 +199,15 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  /// Push the screen showing the habits that the currently connected user
+  /// as in common with an other user.
+  _commonHabitsScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CommonHabitsScreen(_username)),
+    );
+  }
+
   /// Wrapper checking whether the app should show first a play or a stop button
   /// Needed because the app can be killed at anytime when in background
   _playOrStop() async {
@@ -220,7 +231,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    String _username = widget.username;
+    _username = widget.username;
     _sendJourneyWithIdWrapper(_username);
     _playOrStop();
   }
@@ -256,6 +267,11 @@ class _MainScreenState extends State<MainScreen> {
                 leading: Icon(Icons.help),
                 title: Text('Afficher tout les points reçus'),
                 onTap: _printAllDataScreen,
+              ),
+              ListTile(
+                leading: Icon(Icons.help),
+                title: Text('Afficher les habitudes communes'),
+                onTap: _commonHabitsScreen,
               ),
             ],
           ),

@@ -19,6 +19,7 @@ class InputText extends StatelessWidget {
   final TextEditingController controller;
   final bool obscureText;
   final bool emailAddress;
+  final Function onEditingComplete;
 
   InputText({
     @required this.labelText,
@@ -26,6 +27,7 @@ class InputText extends StatelessWidget {
     @required this.controller,
     this.obscureText = false,
     this.emailAddress = false,
+    this.onEditingComplete
   })  : assert(labelText != null),
         assert(color != null),
         assert(controller != null);
@@ -47,6 +49,7 @@ class InputText extends StatelessWidget {
             Expanded(
               child: Container(
                 child: TextFormField(
+                  onEditingComplete: this.onEditingComplete,
                   obscureText: this.obscureText,
                   keyboardType: type,
                   style: textStyle,
