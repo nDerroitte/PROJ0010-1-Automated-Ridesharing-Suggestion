@@ -49,20 +49,17 @@ public class GetHabit extends Controller {
 		if(a_user.equals("all")){
 			System.out.println("Computing habit of all user");
 			MongoCursor<Document> cursor = users.find().iterator();
-			//try {
-				while (cursor.hasNext()) {
-					Document user = cursor.next();
-					//Decrypt le string user.get(user)	
-					String decrypted_user =  Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
-					System.out.println("User: " + decrypted_user + " is submit");
-					hb.submitTask(decrypted_user);
-					//utiliser le crypter 
-				}
-				cursor.close();
+			while (cursor.hasNext()) {
+				Document user = cursor.next();
+					
+				String decrypted_user =  Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+				System.out.println("User: " + decrypted_user + " is submit");
+				hb.submitTask(decrypted_user);
+			}
+			cursor.close();
 			return ok("computing...");
 		}
 		else{
-			//encrypter le a_usre 
 			Document user = users.find(and(eq("user", a_user_E))).first();
 			if(user != null) {
 				hb.submitTask(a_user);
@@ -74,7 +71,7 @@ public class GetHabit extends Controller {
 	}
 
 	public Result get_habit(String a_user,String a_password) throws ParseException, EncryptionException{
-		//encrypt the user and password (reusse the code)
+		
 		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
 		Document user = database.getCollection("users").find(and(eq("user", a_user_E), eq("password", a_password_E))).first();

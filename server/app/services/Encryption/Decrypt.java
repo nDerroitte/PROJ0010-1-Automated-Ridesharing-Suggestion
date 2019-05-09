@@ -14,7 +14,7 @@ public class Decrypt {
         try {
             return decrypt(toDecrypt, getKey());
         } catch (Exception e) {
-            throw new EncryptionException("error during decryption");
+            throw new EncryptionException("Error during decryption");
         }
     }
 

@@ -46,20 +46,14 @@ public class ForgottenPassword extends Controller {
 	public Result forgotten_password(String a_user, String a_email) throws EncryptionException{
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
-		//Encrypt the a_user, on encrypt pas key (cookies)
-		//byte[] a_user_E = encryption(a_user);
-		//remplacer tous les a_user par a_user_E
+	
 		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		ArrayList<Byte> a_email_E = Encrypt.encrypt(a_email);
 		UpdateResult updateresult = users.updateOne(eq("user", a_user_E),set("key",key));
 		
-		//TODO check
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
-			//Encrypt a_email, encrypt a_user(deja fait)
-			// changer le e_mail remplcae par e_mail_E sauf dans le add to laisqser le vraie email
 			if (users.find(and(eq("user", a_user_E), eq("email", a_email_E))).first() != null) {
-				//Decrypt le password 
 				ArrayList<Byte> arr = (ArrayList<Byte>)users.find(eq("user", a_user_E)).first().get("password");
 				String mdp = Decrypt.decrypt(arr);
 
@@ -73,7 +67,7 @@ public class ForgottenPassword extends Controller {
 
 			return ok("username OK");
 		}
-		//use the a_user encrypt ed 
+		
 		if (users.find(eq("user",a_user_E)).first() == null){
 			return ok("user doesn't exist");		
 		}

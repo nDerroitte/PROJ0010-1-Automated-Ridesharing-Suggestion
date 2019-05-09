@@ -40,7 +40,7 @@ public class GetData extends Controller {
 
 	public Result get_data(String a_user, String a_password) throws EncryptionException, ParseException{
 		MongoCollection<Document> users = database.getCollection("users");
-		//encrypt a_user et a_passward 
+		
 		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
 		Document user = users.find(and(eq("user", a_user_E), eq("password", a_password_E))).first();
@@ -64,7 +64,7 @@ public class GetData extends Controller {
 			}
 			return ok(data.toString());
 		}
-		//Encrypt the a_user so use the a_user encrypted 
+		
 		if (users.find(eq("user",a_user_E)).first() == null){
 			return ok("user doesn't exist");		
 		}

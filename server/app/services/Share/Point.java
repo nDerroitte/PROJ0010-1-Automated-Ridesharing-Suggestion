@@ -57,16 +57,10 @@ public class Point
      */
     public Document toDoc() throws EncryptionException
     {
-        //Encrypt
         Document doc = new Document();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         String string_time = sdf.format(this.time.getTime());
-
-        /*ArrayList<Double> coordinates = new ArrayList<>();
-
-        coordinates.add(position.getX());
-        coordinates.add(position.getY());*/
 
         ArrayList<ArrayList<Byte> > coordinates = new ArrayList<>();
         ArrayList<Byte> x_E = Encrypt.encrypt(Double.toString(position.getX()));
@@ -89,14 +83,9 @@ public class Point
      */
     static public Point FromDoc(Document doc) throws ParseException, EncryptionException
     {
-        //Decrypt
         String string_time_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("time"));
-        //String string_time = (String)doc.get("time");
         Calendar time = Constants.stringToCalendar(string_time_D);
-
         ArrayList<ArrayList<Byte> > coordinates = (ArrayList<ArrayList<Byte> >) doc.get("position");
-
-        //ArrayList<Double> coordinates = (ArrayList<Double>)doc.get("position");
         Coordinate position = new Coordinate(Double.parseDouble(Decrypt.decrypt(coordinates.get(0))),Double.parseDouble(Decrypt.decrypt(coordinates.get(1))));
 
         return new Point(time,position);

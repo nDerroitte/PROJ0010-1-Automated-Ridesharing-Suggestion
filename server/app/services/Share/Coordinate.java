@@ -85,7 +85,6 @@ public final class Coordinate {
     }
 
     public Document toDoc() throws EncryptionException {
-        // Encrypt
         Document doc = new Document();
         ArrayList<Byte> x_E = Encrypt.encrypt(Double.toString(x));
         ArrayList<Byte> y_E = Encrypt.encrypt(Double.toString(y));
@@ -103,7 +102,6 @@ public final class Coordinate {
     }
 
     public static Coordinate fromDoc(Document doc) throws EncryptionException {
-        // Decrypt
         String lat_D = Decrypt.decrypt((ArrayList<Byte>) doc.get("lat"));
         String lon_D = Decrypt.decrypt((ArrayList<Byte>) doc.get("long"));
 

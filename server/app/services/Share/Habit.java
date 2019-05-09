@@ -58,7 +58,6 @@ public class Habit
      */
     public Document toDoc() throws EncryptionException
     {
-        //Encrypt
         Document doc = new Document();
         ArrayList<Byte> period_E = Encrypt.encrypt(Long.toString(period));
         ArrayList<Byte> offset_E = Encrypt.encrypt(Long.toString(offset));
@@ -66,12 +65,12 @@ public class Habit
         ArrayList<Byte> nbPoints_E = Encrypt.encrypt(Integer.toString(nbPoints));
         ArrayList<Byte> standardDeviation_E = Encrypt.encrypt(Double.toString(standardDeviation));
 
-        doc.put("period",period_E); //Encrypt
-        doc.put("offset",offset_E); //Encrypt
-        doc.put("reliability",reliability_E); //Encrypt
-        doc.put("firstLocation",firstLocation.toDoc()); //NE PAS Encrypt
-        doc.put("lastLocation",lastLocation.toDoc()); //NE PAS Encrypt
-        doc.put("nbPoints",nbPoints_E); //Encrypt
+        doc.put("period",period_E); 
+        doc.put("offset",offset_E); 
+        doc.put("reliability",reliability_E); 
+        doc.put("firstLocation",firstLocation.toDoc()); 
+        doc.put("lastLocation",lastLocation.toDoc()); 
+        doc.put("nbPoints",nbPoints_E); 
         doc.put("standardDeviation",standardDeviation_E);
         return doc;
     }
@@ -97,7 +96,6 @@ public class Habit
      */
     public static Habit fromDoc(Document doc)throws ParseException, EncryptionException
     {
-        //Decrypt
         Habit h = new Habit();
         String period_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("period"));
         String offset_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("offset"));
@@ -105,13 +103,13 @@ public class Habit
         String nbPoints_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("nbPoints"));
         String standardDeviation_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("standardDeviation"));
 
-	    h.period = Long.parseLong(period_D);//(Long) doc.get("period");
-	    h.offset = Long.parseLong(offset_D);//(Long) doc.get("offset");
-        h.reliability = Double.parseDouble(reliability_D) ;//(Double) doc.get("reliability");
+	    h.period = Long.parseLong(period_D);
+	    h.offset = Long.parseLong(offset_D);
+        h.reliability = Double.parseDouble(reliability_D) ;
         h.firstLocation = Coordinate.fromDoc( (Document) doc.get("firstLocation")) ;
         h.lastLocation = Coordinate.fromDoc( (Document) doc.get("lastLocation")) ;
-        h.nbPoints = Integer.parseInt(nbPoints_D); //(Integer) doc.get("nbPoints");
-        h.standardDeviation= Double.parseDouble(standardDeviation_D);//(Double) doc.get("standardDeviation");
+        h.nbPoints = Integer.parseInt(nbPoints_D); 
+        h.standardDeviation= Double.parseDouble(standardDeviation_D);
 	    return h;
     }
 
