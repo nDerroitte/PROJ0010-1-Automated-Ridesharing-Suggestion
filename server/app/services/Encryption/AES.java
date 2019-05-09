@@ -9,7 +9,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
-//import java.util.Base64;
+import java.util.Base64;
 import java.util.ArrayList;
 
 public class AES {
