@@ -1,0 +1,11 @@
+User 040.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue Mar 24 13:06:29 CET 2009
+First Location: [39.97;116.33]
+Last Location: [39.98;116.34]
+Number of occurrences: 2
+Standard Deviation: 81.5 min.
+ arrival time: Wed Mar 25 00:29:49 CET 2009
+========================================================================================

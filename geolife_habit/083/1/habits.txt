@@ -1,0 +1,11 @@
+User 083.
+
+Period: 7
+Reliability: 66.0
+Offset: Fri Jan 30 10:00:07 CET 2009
+First Location: [39.98;116.3]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 7.5 min.
+ arrival time: Fri Jan 30 11:17:43 CET 2009
+========================================================================================

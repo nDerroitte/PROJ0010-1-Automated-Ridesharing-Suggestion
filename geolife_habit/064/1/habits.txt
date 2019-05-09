@@ -1,0 +1,11 @@
+User 064.
+
+Period: 7
+Reliability: 100.0
+Offset: Wed Aug 20 00:05:36 CEST 2008
+First Location: [39.99;116.31]
+Last Location: [39.98;116.31]
+Number of occurrences: 2
+Standard Deviation: 11.0 min.
+ arrival time: Wed Aug 20 12:47:03 CEST 2008
+========================================================================================

@@ -1,0 +1,65 @@
+User 074.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun Feb 12 09:00:28 CET 2012
+First Location: [39.98;116.31]
+Last Location: [39.97;116.32]
+Number of occurrences: 4
+Standard Deviation: 55.71 min.
+ arrival time: Sun Feb 12 14:38:23 CET 2012
+========================================================================================
+Period: 7
+Reliability: 61.0
+Offset: Mon Jan 09 14:14:34 CET 2012
+First Location: [39.97;116.3]
+Last Location: [39.97;116.33]
+Number of occurrences: 8
+Standard Deviation: 46.5 min.
+ arrival time: Mon Jan 09 14:27:39 CET 2012
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Wed Jan 11 00:32:56 CET 2012
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 6
+Standard Deviation: 14.53 min.
+ arrival time: Wed Jan 11 00:55:59 CET 2012
+========================================================================================
+Period: 7
+Reliability: 90.0
+Offset: Thu Jan 05 00:48:22 CET 2012
+First Location: [39.97;116.32]
+Last Location: [39.97;116.31]
+Number of occurrences: 9
+Standard Deviation: 14.6 min.
+ arrival time: Thu Jan 05 00:52:59 CET 2012
+========================================================================================
+Period: 7
+Reliability: 60.0
+Offset: Thu Jan 12 12:09:07 CET 2012
+First Location: [39.97;116.3]
+Last Location: [39.97;116.33]
+Number of occurrences: 6
+Standard Deviation: 44.76 min.
+ arrival time: Thu Jan 12 13:20:50 CET 2012
+========================================================================================
+Period: 7
+Reliability: 71.0
+Offset: Fri Jan 06 00:35:07 CET 2012
+First Location: [39.97;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 5
+Standard Deviation: 12.95 min.
+ arrival time: Fri Jan 06 00:44:48 CET 2012
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Feb 24 11:46:55 CET 2012
+First Location: [39.98;116.3]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 76.0 min.
+ arrival time: Fri Feb 24 12:04:44 CET 2012
+========================================================================================

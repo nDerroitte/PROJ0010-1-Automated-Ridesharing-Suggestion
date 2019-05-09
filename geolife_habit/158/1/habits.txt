@@ -1,0 +1,11 @@
+User 158.
+
+Period: 7
+Reliability: 100.0
+Offset: Wed Feb 18 01:27:36 CET 2009
+First Location: [31.29;121.51]
+Last Location: [31.29;121.5]
+Number of occurrences: 1
+Standard Deviation: 3.5 min.
+ arrival time: Wed Feb 18 01:32:01 CET 2009
+========================================================================================

@@ -1,0 +1,38 @@
+User 003.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun May 10 22:20:07 CEST 2009
+First Location: [40;116.33]
+Last Location: [40.01;116.32]
+Number of occurrences: 3
+Standard Deviation: 10.62 min.
+ arrival time: Sun May 10 22:25:17 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed Dec 03 23:10:10 CET 2008
+First Location: [40.01;116.32]
+Last Location: [39.99;116.33]
+Number of occurrences: 2
+Standard Deviation: 6.0 min.
+ arrival time: Thu Dec 04 04:48:54 CET 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Fri Oct 24 02:02:27 CEST 2008
+First Location: [40.01;116.32]
+Last Location: [40;116.33]
+Number of occurrences: 24
+Standard Deviation: 85.27 min.
+ arrival time: Fri Oct 24 07:12:09 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 83.0
+Offset: Fri Oct 24 19:29:54 CEST 2008
+First Location: [40;116.33]
+Last Location: [40;116.32]
+Number of occurrences: 5
+Standard Deviation: 80.63 min.
+ arrival time: Sat Oct 25 12:59:35 CEST 2008
+========================================================================================

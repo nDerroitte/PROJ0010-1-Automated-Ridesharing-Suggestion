@@ -1,0 +1,38 @@
+User 089.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun May 18 01:56:26 CEST 2008
+First Location: [39.95;115.89]
+Last Location: [39.96;115.89]
+Number of occurrences: 1
+Standard Deviation: 50.5 min.
+ arrival time: Sun May 18 02:12:02 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Tue May 06 11:59:39 CEST 2008
+First Location: [39.98;116.33]
+Last Location: [39.99;116.45]
+Number of occurrences: 2
+Standard Deviation: 25.0 min.
+ arrival time: Tue May 06 12:21:39 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed Apr 23 02:05:00 CEST 2008
+First Location: [39.98;116.45]
+Last Location: [39.98;116.33]
+Number of occurrences: 3
+Standard Deviation: 47.67 min.
+ arrival time: Wed Apr 23 02:30:22 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 60.0
+Offset: Wed Apr 23 11:14:22 CEST 2008
+First Location: [39.98;116.33]
+Last Location: [39.99;116.46]
+Number of occurrences: 3
+Standard Deviation: 54.74 min.
+ arrival time: Wed Apr 23 12:47:38 CEST 2008
+========================================================================================

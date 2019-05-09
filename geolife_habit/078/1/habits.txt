@@ -1,0 +1,11 @@
+User 078.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun May 11 11:57:47 CEST 2008
+First Location: [39.98;116.33]
+Last Location: [39.97;116.33]
+Number of occurrences: 2
+Standard Deviation: 13.0 min.
+ arrival time: Sun May 11 23:43:46 CEST 2008
+========================================================================================

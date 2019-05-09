@@ -1,0 +1,65 @@
+User 126.
+
+Period: 7
+Reliability: 60.0
+Offset: Sun Apr 27 06:03:48 CEST 2008
+First Location: [39.96;116.4]
+Last Location: [39.98;116.42]
+Number of occurrences: 6
+Standard Deviation: 45.39 min.
+ arrival time: Sun Apr 27 06:40:00 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Sun Jun 29 07:53:40 CEST 2008
+First Location: [39.97;116.31]
+Last Location: [40.01;116.31]
+Number of occurrences: 2
+Standard Deviation: 3.5 min.
+ arrival time: Sun Jun 29 08:54:03 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 21 08:48:41 CEST 2008
+First Location: [39.97;116.42]
+Last Location: [39.98;116.31]
+Number of occurrences: 2
+Standard Deviation: 5.0 min.
+ arrival time: Wed May 21 09:56:22 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 55.0
+Offset: Wed Sep 17 03:27:59 CEST 2008
+First Location: [40.01;116.32]
+Last Location: [39.98;116.33]
+Number of occurrences: 11
+Standard Deviation: 58.88 min.
+ arrival time: Wed Sep 17 04:03:01 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 55.0
+Offset: Thu Sep 18 03:29:01 CEST 2008
+First Location: [40.01;116.32]
+Last Location: [39.98;116.34]
+Number of occurrences: 11
+Standard Deviation: 56.09 min.
+ arrival time: Thu Sep 18 13:01:35 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 55.0
+Offset: Thu Oct 23 17:09:06 CEST 2008
+First Location: [39.98;116.33]
+Last Location: [40;116.32]
+Number of occurrences: 5
+Standard Deviation: 84.21 min.
+ arrival time: Thu Oct 23 17:20:40 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri May 23 09:44:29 CEST 2008
+First Location: [40.01;116.41]
+Last Location: [39.99;116.41]
+Number of occurrences: 1
+Standard Deviation: 65.5 min.
+ arrival time: Fri May 23 10:23:35 CEST 2008
+========================================================================================

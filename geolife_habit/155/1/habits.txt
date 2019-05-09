@@ -1,0 +1,74 @@
+User 155.
+
+Period: 7
+Reliability: 100.0
+Offset: Mon Jun 01 12:21:04 CEST 2009
+First Location: [39.97;116.33]
+Last Location: [40.05;116.41]
+Number of occurrences: 3
+Standard Deviation: 25.0 min.
+ arrival time: Mon Jun 01 14:12:18 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon Jul 20 11:21:04 CEST 2009
+First Location: [39.98;116.33]
+Last Location: [39.86;116.44]
+Number of occurrences: 2
+Standard Deviation: 54.5 min.
+ arrival time: Mon Jul 20 13:22:43 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue Jun 09 00:36:58 CEST 2009
+First Location: [40.05;116.4]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 8.5 min.
+ arrival time: Tue Jun 09 01:13:26 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue Jul 14 09:30:51 CEST 2009
+First Location: [39.91;116.36]
+Last Location: [39.86;116.44]
+Number of occurrences: 4
+Standard Deviation: 4.44 min.
+ arrival time: Tue Jul 14 10:16:47 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed Jul 29 09:34:59 CEST 2009
+First Location: [39.91;116.35]
+Last Location: [39.86;116.44]
+Number of occurrences: 2
+Standard Deviation: 4.0 min.
+ arrival time: Wed Jul 29 10:49:24 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Jul 09 13:04:04 CEST 2009
+First Location: [39.97;116.33]
+Last Location: [39.86;116.44]
+Number of occurrences: 2
+Standard Deviation: 5.5 min.
+ arrival time: Thu Jul 09 14:05:06 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Fri Jul 10 09:31:04 CEST 2009
+First Location: [39.91;116.35]
+Last Location: [39.86;116.44]
+Number of occurrences: 2
+Standard Deviation: 0.0 min.
+ arrival time: Fri Jul 10 14:22:44 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Jul 17 00:07:04 CEST 2009
+First Location: [39.85;116.43]
+Last Location: [39.91;116.36]
+Number of occurrences: 2
+Standard Deviation: 1.5 min.
+ arrival time: Fri Jul 17 01:09:12 CEST 2009
+========================================================================================

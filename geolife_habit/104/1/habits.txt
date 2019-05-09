@@ -1,0 +1,20 @@
+User 104.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue Aug 26 09:48:06 CEST 2008
+First Location: [39.99;116.3]
+Last Location: [39.99;116.3]
+Number of occurrences: 2
+Standard Deviation: 27.0 min.
+ arrival time: Tue Aug 26 14:02:27 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Wed Aug 06 12:01:30 CEST 2008
+First Location: [39.99;116.31]
+Last Location: [39.93;116.3]
+Number of occurrences: 2
+Standard Deviation: 10.5 min.
+ arrival time: Wed Aug 06 19:47:11 CEST 2008
+========================================================================================

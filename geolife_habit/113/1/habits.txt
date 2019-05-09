@@ -1,0 +1,92 @@
+User 113.
+
+Period: 7
+Reliability: 100.0
+Offset: Mon May 17 00:50:36 CEST 2010
+First Location: [40.04;116.4]
+Last Location: [39.98;116.33]
+Number of occurrences: 3
+Standard Deviation: 14.45 min.
+ arrival time: Mon May 17 01:25:46 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon May 17 10:24:38 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.05;116.4]
+Number of occurrences: 3
+Standard Deviation: 3.3 min.
+ arrival time: Mon May 17 11:08:13 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 18 00:35:27 CEST 2010
+First Location: [40.03;116.4]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 2.5 min.
+ arrival time: Tue May 18 01:08:28 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 18 10:19:54 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.05;116.4]
+Number of occurrences: 3
+Standard Deviation: 3.09 min.
+ arrival time: Tue May 18 11:13:29 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 12 10:12:55 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.05;116.4]
+Number of occurrences: 4
+Standard Deviation: 17.18 min.
+ arrival time: Wed May 12 10:54:35 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 19 00:38:29 CEST 2010
+First Location: [40.05;116.4]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 2.0 min.
+ arrival time: Wed May 19 01:25:44 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 13 10:24:00 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.05;116.4]
+Number of occurrences: 3
+Standard Deviation: 3.4 min.
+ arrival time: Thu May 13 11:20:05 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 20 00:34:58 CEST 2010
+First Location: [40.05;116.4]
+Last Location: [39.98;116.33]
+Number of occurrences: 3
+Standard Deviation: 3.56 min.
+ arrival time: Thu May 20 01:26:03 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri May 14 00:37:32 CEST 2010
+First Location: [40.05;116.4]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 1.5 min.
+ arrival time: Fri May 14 01:22:57 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri May 14 13:29:58 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.05;116.4]
+Number of occurrences: 2
+Standard Deviation: 46.5 min.
+ arrival time: Fri May 14 13:59:58 CEST 2010
+========================================================================================

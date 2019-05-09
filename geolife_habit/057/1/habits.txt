@@ -1,0 +1,11 @@
+User 057.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue Jul 31 23:33:47 CEST 2007
+First Location: [39.98;116.34]
+Last Location: [40.01;116.48]
+Number of occurrences: 2
+Standard Deviation: 9.5 min.
+ arrival time: Wed Aug 01 00:48:29 CEST 2007
+========================================================================================

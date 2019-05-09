@@ -1,0 +1,11 @@
+User 129.
+
+Period: 7
+Reliability: 66.0
+Offset: Tue May 06 05:18:52 CEST 2008
+First Location: [39.99;116.32]
+Last Location: [40;116.32]
+Number of occurrences: 2
+Standard Deviation: 23.5 min.
+ arrival time: Tue May 06 10:47:43 CEST 2008
+========================================================================================

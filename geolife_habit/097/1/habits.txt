@@ -1,0 +1,20 @@
+User 097.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue Apr 17 00:42:06 CEST 2007
+First Location: [39.97;116.31]
+Last Location: [39.98;116.32]
+Number of occurrences: 1
+Standard Deviation: 83.0 min.
+ arrival time: Tue Apr 17 00:48:17 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Apr 12 13:46:21 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 2
+Standard Deviation: 47.0 min.
+ arrival time: Thu Apr 12 14:35:34 CEST 2007
+========================================================================================

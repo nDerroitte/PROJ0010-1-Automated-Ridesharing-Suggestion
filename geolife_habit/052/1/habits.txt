@@ -1,0 +1,119 @@
+User 052.
+
+Period: 7
+Reliability: 66.0
+Offset: Sun May 25 05:31:29 CEST 2008
+First Location: [39.99;116.34]
+Last Location: [39.99;116.36]
+Number of occurrences: 2
+Standard Deviation: 39.5 min.
+ arrival time: Mon May 26 05:59:31 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Sun Jul 20 04:49:08 CEST 2008
+First Location: [40;116.37]
+Last Location: [40;116.38]
+Number of occurrences: 2
+Standard Deviation: 37.0 min.
+ arrival time: Sun Jul 20 10:49:38 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Sun Aug 24 23:38:22 CEST 2008
+First Location: [39.97;116.31]
+Last Location: [40.03;116.41]
+Number of occurrences: 2
+Standard Deviation: 2.0 min.
+ arrival time: Mon Aug 25 00:47:35 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon Jun 02 03:46:06 CEST 2008
+First Location: [39.98;116.35]
+Last Location: [39.99;116.35]
+Number of occurrences: 3
+Standard Deviation: 37.25 min.
+ arrival time: Mon Jun 02 08:01:54 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon Aug 25 08:50:06 CEST 2008
+First Location: [40;116.4]
+Last Location: [39.97;116.3]
+Number of occurrences: 2
+Standard Deviation: 88.0 min.
+ arrival time: Mon Aug 25 10:12:02 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 20 09:35:15 CEST 2008
+First Location: [39.97;116.33]
+Last Location: [39.98;116.35]
+Number of occurrences: 2
+Standard Deviation: 55.5 min.
+ arrival time: Tue May 20 14:20:00 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue Aug 19 23:25:04 CEST 2008
+First Location: [39.97;116.31]
+Last Location: [40.03;116.41]
+Number of occurrences: 2
+Standard Deviation: 2.5 min.
+ arrival time: Wed Aug 20 02:40:32 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed Jul 16 08:27:36 CEST 2008
+First Location: [40;116.37]
+Last Location: [40;116.38]
+Number of occurrences: 3
+Standard Deviation: 24.53 min.
+ arrival time: Wed Jul 16 13:43:02 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Feb 28 10:09:38 CET 2008
+First Location: [39.98;116.33]
+Last Location: [39.92;116.25]
+Number of occurrences: 2
+Standard Deviation: 86.5 min.
+ arrival time: Thu Feb 28 11:23:40 CET 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 22 09:00:54 CEST 2008
+First Location: [39.99;116.35]
+Last Location: [39.91;116.24]
+Number of occurrences: 2
+Standard Deviation: 72.5 min.
+ arrival time: Thu May 22 10:40:08 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Thu Jun 12 04:06:39 CEST 2008
+First Location: [39.99;116.35]
+Last Location: [39.99;116.36]
+Number of occurrences: 2
+Standard Deviation: 69.5 min.
+ arrival time: Thu Jun 12 09:05:52 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Jul 17 00:51:09 CEST 2008
+First Location: [40;116.37]
+Last Location: [40;116.38]
+Number of occurrences: 2
+Standard Deviation: 22.0 min.
+ arrival time: Thu Jul 17 12:21:21 CEST 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri May 23 04:40:06 CEST 2008
+First Location: [39.91;116.24]
+Last Location: [39.99;116.35]
+Number of occurrences: 2
+Standard Deviation: 35.0 min.
+ arrival time: Fri May 23 06:52:16 CEST 2008
+========================================================================================

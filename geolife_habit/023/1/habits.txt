@@ -1,0 +1,20 @@
+User 023.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun Jan 25 09:11:35 CET 2009
+First Location: [22.81;108.33]
+Last Location: [22.81;108.33]
+Number of occurrences: 2
+Standard Deviation: 87.0 min.
+ arrival time: Sun Jan 25 12:19:45 CET 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Jan 23 11:44:54 CET 2009
+First Location: [22.81;108.33]
+Last Location: [22.82;108.33]
+Number of occurrences: 2
+Standard Deviation: 40.5 min.
+ arrival time: Fri Jan 23 13:02:59 CET 2009
+========================================================================================

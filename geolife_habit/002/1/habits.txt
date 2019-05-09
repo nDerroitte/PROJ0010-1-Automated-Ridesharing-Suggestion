@@ -1,0 +1,92 @@
+User 002.
+
+Period: 7
+Reliability: 57.0
+Offset: Mon Oct 27 10:38:04 CET 2008
+First Location: [39.9;116.39]
+Last Location: [39.93;116.34]
+Number of occurrences: 11
+Standard Deviation: 29.76 min.
+ arrival time: Mon Oct 27 11:59:10 CET 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Tue Oct 28 00:23:04 CET 2008
+First Location: [39.92;116.34]
+Last Location: [39.9;116.38]
+Number of occurrences: 4
+Standard Deviation: 4.97 min.
+ arrival time: Tue Oct 28 00:42:41 CET 2008
+========================================================================================
+Period: 7
+Reliability: 60.0
+Offset: Tue Oct 28 10:21:58 CET 2008
+First Location: [39.9;116.38]
+Last Location: [39.93;116.34]
+Number of occurrences: 12
+Standard Deviation: 36.22 min.
+ arrival time: Tue Oct 28 11:09:47 CET 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Wed Dec 31 08:10:39 CET 2008
+First Location: [39.9;116.37]
+Last Location: [39.93;116.34]
+Number of occurrences: 2
+Standard Deviation: 83.0 min.
+ arrival time: Wed Dec 31 08:46:19 CET 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Oct 30 00:12:34 CET 2008
+First Location: [39.93;116.34]
+Last Location: [39.9;116.38]
+Number of occurrences: 3
+Standard Deviation: 1.7 min.
+ arrival time: Thu Oct 30 00:40:53 CET 2008
+========================================================================================
+Period: 7
+Reliability: 60.0
+Offset: Thu Nov 06 23:58:07 CET 2008
+First Location: [39.93;116.34]
+Last Location: [39.9;116.38]
+Number of occurrences: 3
+Standard Deviation: 1.25 min.
+ arrival time: Fri Nov 07 00:35:07 CET 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Mar 05 14:03:03 CET 2009
+First Location: [39.9;116.39]
+Last Location: [39.93;116.34]
+Number of occurrences: 2
+Standard Deviation: 6.0 min.
+ arrival time: Thu Mar 05 14:41:46 CET 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Mar 12 13:28:09 CET 2009
+First Location: [39.9;116.38]
+Last Location: [39.9;116.37]
+Number of occurrences: 1
+Standard Deviation: 8.0 min.
+ arrival time: Thu Mar 12 13:41:57 CET 2009
+========================================================================================
+Period: 7
+Reliability: 61.0
+Offset: Fri Oct 31 10:34:59 CET 2008
+First Location: [39.9;116.39]
+Last Location: [39.93;116.34]
+Number of occurrences: 11
+Standard Deviation: 45.98 min.
+ arrival time: Fri Oct 31 11:16:48 CET 2008
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Sat Nov 22 02:33:00 CET 2008
+First Location: [39.93;116.34]
+Last Location: [39.9;116.21]
+Number of occurrences: 2
+Standard Deviation: 29.0 min.
+ arrival time: Sat Nov 22 11:24:51 CET 2008
+========================================================================================

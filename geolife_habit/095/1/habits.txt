@@ -1,0 +1,47 @@
+User 095.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun May 08 16:39:07 CEST 2011
+First Location: [39.97;116.3]
+Last Location: [39.97;116.33]
+Number of occurrences: 2
+Standard Deviation: 9.5 min.
+ arrival time: Sun May 08 16:46:40 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon May 02 01:41:35 CEST 2011
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 2
+Standard Deviation: 0.5 min.
+ arrival time: Mon May 02 01:44:59 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 03 00:40:33 CEST 2011
+First Location: [39.97;116.32]
+Last Location: [39.98;116.31]
+Number of occurrences: 2
+Standard Deviation: 21.0 min.
+ arrival time: Tue May 03 00:54:11 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 03 15:18:37 CEST 2011
+First Location: [39.98;116.31]
+Last Location: [39.98;116.32]
+Number of occurrences: 3
+Standard Deviation: 16.87 min.
+ arrival time: Tue May 03 15:33:00 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Sat Apr 30 15:57:08 CEST 2011
+First Location: [39.98;116.3]
+Last Location: [39.97;116.33]
+Number of occurrences: 4
+Standard Deviation: 18.4 min.
+ arrival time: Sat Apr 30 16:24:39 CEST 2011
+========================================================================================

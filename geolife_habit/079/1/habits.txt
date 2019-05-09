@@ -1,0 +1,47 @@
+User 079.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue May 25 02:06:38 CEST 2010
+First Location: [39.88;116.39]
+Last Location: [39.98;116.34]
+Number of occurrences: 2
+Standard Deviation: 8.5 min.
+ arrival time: Tue May 25 02:40:53 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed Jun 09 12:58:05 CEST 2010
+First Location: [39.99;116.36]
+Last Location: [39.88;116.39]
+Number of occurrences: 2
+Standard Deviation: 66.0 min.
+ arrival time: Wed Jun 09 13:27:40 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 27 01:02:00 CEST 2010
+First Location: [39.88;116.39]
+Last Location: [39.98;116.33]
+Number of occurrences: 3
+Standard Deviation: 4699.69 min.
+ arrival time: Thu May 27 01:57:40 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 27 12:56:04 CEST 2010
+First Location: [39.97;116.33]
+Last Location: [39.88;116.38]
+Number of occurrences: 2
+Standard Deviation: 72.0 min.
+ arrival time: Thu May 27 13:41:04 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri May 28 01:14:35 CEST 2010
+First Location: [39.88;116.39]
+Last Location: [39.98;116.34]
+Number of occurrences: 2
+Standard Deviation: 29.0 min.
+ arrival time: Fri May 28 02:12:10 CEST 2010
+========================================================================================

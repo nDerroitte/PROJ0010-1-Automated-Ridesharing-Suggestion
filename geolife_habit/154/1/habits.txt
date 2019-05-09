@@ -1,0 +1,65 @@
+User 154.
+
+Period: 7
+Reliability: 100.0
+Offset: Sun May 13 14:06:47 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.98;116.35]
+Number of occurrences: 2
+Standard Deviation: 1.0 min.
+ arrival time: Sun May 13 14:31:00 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon May 14 00:55:36 CEST 2007
+First Location: [39.98;116.35]
+Last Location: [39.98;116.34]
+Number of occurrences: 2
+Standard Deviation: 7.5 min.
+ arrival time: Mon May 14 01:19:58 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon May 14 14:23:10 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.98;116.35]
+Number of occurrences: 2
+Standard Deviation: 1.0 min.
+ arrival time: Mon May 14 14:47:02 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 08 12:20:02 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.98;116.35]
+Number of occurrences: 2
+Standard Deviation: 56.0 min.
+ arrival time: Tue May 08 12:49:08 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 09 01:30:10 CEST 2007
+First Location: [39.98;116.35]
+Last Location: [39.98;116.34]
+Number of occurrences: 2
+Standard Deviation: 15.5 min.
+ arrival time: Wed May 09 01:43:35 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 09 12:49:02 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.98;116.35]
+Number of occurrences: 2
+Standard Deviation: 50.0 min.
+ arrival time: Wed May 09 13:27:56 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 10 01:22:33 CEST 2007
+First Location: [39.98;116.35]
+Last Location: [39.98;116.34]
+Number of occurrences: 2
+Standard Deviation: 14.5 min.
+ arrival time: Thu May 10 01:38:08 CEST 2007
+========================================================================================

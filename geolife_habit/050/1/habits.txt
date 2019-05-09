@@ -1,0 +1,11 @@
+User 050.
+
+Period: 7
+Reliability: 100.0
+Offset: Sat Jul 25 13:52:37 CEST 2009
+First Location: [39.99;116.36]
+Last Location: [39.99;116.2]
+Number of occurrences: 2
+Standard Deviation: 31.0 min.
+ arrival time: Sat Jul 25 14:50:27 CEST 2009
+========================================================================================

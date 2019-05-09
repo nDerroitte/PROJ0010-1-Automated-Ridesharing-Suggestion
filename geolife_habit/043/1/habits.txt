@@ -1,0 +1,29 @@
+User 043.
+
+Period: 7
+Reliability: 100.0
+Offset: Wed Jun 10 00:30:28 CEST 2009
+First Location: [39.89;116.68]
+Last Location: [39.89;116.68]
+Number of occurrences: 3
+Standard Deviation: 25.5 min.
+ arrival time: Wed Jun 10 10:17:49 CEST 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Feb 27 02:36:36 CET 2009
+First Location: [39.97;116.31]
+Last Location: [39.97;116.33]
+Number of occurrences: 3
+Standard Deviation: 13.64 min.
+ arrival time: Fri Feb 27 04:01:16 CET 2009
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Mar 13 13:03:24 CET 2009
+First Location: [39.97;116.33]
+Last Location: [39.97;116.3]
+Number of occurrences: 2
+Standard Deviation: 24.5 min.
+ arrival time: Fri Mar 13 16:03:29 CET 2009
+========================================================================================

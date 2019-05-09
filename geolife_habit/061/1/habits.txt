@@ -1,0 +1,38 @@
+User 061.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue Jul 31 11:50:55 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.92;116.28]
+Number of occurrences: 2
+Standard Deviation: 35.5 min.
+ arrival time: Tue Jul 31 12:54:19 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed Aug 01 23:45:29 CEST 2007
+First Location: [39.92;116.28]
+Last Location: [39.98;116.32]
+Number of occurrences: 2
+Standard Deviation: 2.0 min.
+ arrival time: Thu Aug 02 00:33:21 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Aug 02 12:04:35 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.92;116.28]
+Number of occurrences: 2
+Standard Deviation: 9.0 min.
+ arrival time: Thu Aug 02 13:40:28 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu Aug 02 23:46:13 CEST 2007
+First Location: [39.92;116.28]
+Last Location: [39.98;116.32]
+Number of occurrences: 2
+Standard Deviation: 11.0 min.
+ arrival time: Fri Aug 03 00:42:34 CEST 2007
+========================================================================================

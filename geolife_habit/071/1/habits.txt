@@ -1,0 +1,20 @@
+User 071.
+
+Period: 7
+Reliability: 56.0
+Offset: Thu Jan 05 00:55:34 CET 2012
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 9
+Standard Deviation: 4976.24 min.
+ arrival time: Thu Jan 05 01:14:59 CET 2012
+========================================================================================
+Period: 7
+Reliability: 60.0
+Offset: Sat Dec 31 01:31:34 CET 2011
+First Location: [39.98;116.33]
+Last Location: [39.98;116.31]
+Number of occurrences: 3
+Standard Deviation: 29.17 min.
+ arrival time: Sat Dec 31 01:54:20 CET 2011
+========================================================================================

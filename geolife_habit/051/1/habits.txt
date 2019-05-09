@@ -1,0 +1,47 @@
+User 051.
+
+Period: 7
+Reliability: 66.0
+Offset: Mon Dec 31 10:03:09 CET 2007
+First Location: [39.99;116.3]
+Last Location: [40.01;116.28]
+Number of occurrences: 2
+Standard Deviation: 57.0 min.
+ arrival time: Mon Dec 31 21:30:42 CET 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Mon Feb 11 21:57:25 CET 2008
+First Location: [30.93;117.8]
+Last Location: [30.94;117.81]
+Number of occurrences: 2
+Standard Deviation: 78.5 min.
+ arrival time: Mon Feb 11 21:59:57 CET 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue Dec 18 17:56:38 CET 2007
+First Location: [39.99;116.3]
+Last Location: [39.99;116.3]
+Number of occurrences: 2
+Standard Deviation: 63.0 min.
+ arrival time: Tue Dec 18 21:13:19 CET 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Feb 08 13:53:43 CET 2008
+First Location: [30.94;117.81]
+Last Location: [30.92;117.82]
+Number of occurrences: 2
+Standard Deviation: 19.5 min.
+ arrival time: Fri Feb 08 14:32:52 CET 2008
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Sat Jan 12 08:52:36 CET 2008
+First Location: [39.99;116.3]
+Last Location: [39.98;116.31]
+Number of occurrences: 2
+Standard Deviation: 31.5 min.
+ arrival time: Sat Jan 12 09:26:00 CET 2008
+========================================================================================

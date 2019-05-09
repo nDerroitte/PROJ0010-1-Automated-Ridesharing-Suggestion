@@ -1,0 +1,11 @@
+User 063.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue Feb 01 14:36:01 CET 2011
+First Location: [36.58;116.24]
+Last Location: [36.58;116.24]
+Number of occurrences: 2
+Standard Deviation: 64.0 min.
+ arrival time: Tue Feb 01 18:02:07 CET 2011
+========================================================================================

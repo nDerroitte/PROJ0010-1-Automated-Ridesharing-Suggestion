@@ -1,0 +1,56 @@
+User 020.
+
+Period: 7
+Reliability: 75.0
+Offset: Sun Aug 28 04:39:07 CEST 2011
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 3
+Standard Deviation: 52.18 min.
+ arrival time: Sun Aug 28 07:31:57 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 75.0
+Offset: Sun Aug 28 14:33:40 CEST 2011
+First Location: [39.98;116.31]
+Last Location: [39.97;116.31]
+Number of occurrences: 3
+Standard Deviation: 40.31 min.
+ arrival time: Mon Aug 29 01:51:24 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 76.0
+Offset: Tue Aug 30 01:23:38 CEST 2011
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 10
+Standard Deviation: 36.86 min.
+ arrival time: Tue Aug 30 01:34:06 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 56.0
+Offset: Tue Aug 30 14:09:23 CEST 2011
+First Location: [39.97;116.3]
+Last Location: [39.98;116.33]
+Number of occurrences: 9
+Standard Deviation: 36.37 min.
+ arrival time: Tue Aug 30 14:24:12 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 68.0
+Offset: Thu Sep 01 01:48:31 CEST 2011
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 11
+Standard Deviation: 4983.86 min.
+ arrival time: Thu Sep 01 02:06:21 CEST 2011
+========================================================================================
+Period: 7
+Reliability: 58.0
+Offset: Fri Aug 26 01:19:26 CEST 2011
+First Location: [39.98;116.33]
+Last Location: [39.97;116.31]
+Number of occurrences: 10
+Standard Deviation: 45.72 min.
+ arrival time: Fri Aug 26 01:37:03 CEST 2011
+========================================================================================

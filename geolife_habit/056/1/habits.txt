@@ -1,0 +1,74 @@
+User 056.
+
+Period: 7
+Reliability: 100.0
+Offset: Mon Oct 15 01:18:22 CEST 2007
+First Location: [39.97;116.32]
+Last Location: [39.97;116.33]
+Number of occurrences: 2
+Standard Deviation: 20.5 min.
+ arrival time: Mon Oct 15 01:23:37 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue Oct 16 01:25:35 CEST 2007
+First Location: [39.97;116.32]
+Last Location: [39.98;116.33]
+Number of occurrences: 3
+Standard Deviation: 42.19 min.
+ arrival time: Tue Oct 16 01:31:22 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue Oct 23 15:21:35 CEST 2007
+First Location: [39.97;116.33]
+Last Location: [39.97;116.32]
+Number of occurrences: 2
+Standard Deviation: 21.5 min.
+ arrival time: Tue Oct 23 15:25:54 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 75.0
+Offset: Thu Oct 11 01:15:20 CEST 2007
+First Location: [39.97;116.33]
+Last Location: [39.98;116.33]
+Number of occurrences: 3
+Standard Deviation: 4727.24 min.
+ arrival time: Thu Oct 11 01:20:36 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Thu Oct 18 15:09:39 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.97;116.33]
+Number of occurrences: 2
+Standard Deviation: 23.5 min.
+ arrival time: Thu Oct 18 15:20:03 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Oct 12 00:55:37 CEST 2007
+First Location: [39.97;116.33]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 7.0 min.
+ arrival time: Fri Oct 12 01:00:53 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri Oct 26 15:06:17 CEST 2007
+First Location: [39.98;116.33]
+Last Location: [39.97;116.33]
+Number of occurrences: 2
+Standard Deviation: 33.5 min.
+ arrival time: Fri Oct 26 15:11:33 CEST 2007
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Sat Oct 13 07:49:15 CEST 2007
+First Location: [39.97;116.33]
+Last Location: [39.97;116.34]
+Number of occurrences: 3
+Standard Deviation: 59.95 min.
+ arrival time: Sat Oct 13 07:55:06 CEST 2007
+========================================================================================

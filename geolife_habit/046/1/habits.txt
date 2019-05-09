@@ -1,0 +1,74 @@
+User 046.
+
+Period: 7
+Reliability: 100.0
+Offset: Tue May 11 00:33:54 CEST 2010
+First Location: [40.03;116.33]
+Last Location: [39.97;116.34]
+Number of occurrences: 3
+Standard Deviation: 0.47 min.
+ arrival time: Tue May 11 01:15:24 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Tue May 11 10:13:25 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.03;116.34]
+Number of occurrences: 2
+Standard Deviation: 0.5 min.
+ arrival time: Tue May 11 11:07:05 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 12 00:32:59 CEST 2010
+First Location: [40.03;116.33]
+Last Location: [39.98;116.33]
+Number of occurrences: 4
+Standard Deviation: 19.1 min.
+ arrival time: Wed May 12 01:21:19 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Wed May 12 10:35:30 CEST 2010
+First Location: [39.97;116.33]
+Last Location: [40.03;116.34]
+Number of occurrences: 3
+Standard Deviation: 8.98 min.
+ arrival time: Wed May 12 11:30:45 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 13 00:55:25 CEST 2010
+First Location: [40.03;116.33]
+Last Location: [39.98;116.34]
+Number of occurrences: 3
+Standard Deviation: 11.43 min.
+ arrival time: Thu May 13 01:41:20 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Thu May 20 12:00:36 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.03;116.33]
+Number of occurrences: 2
+Standard Deviation: 50.5 min.
+ arrival time: Thu May 20 12:29:46 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 66.0
+Offset: Fri May 07 10:36:27 CEST 2010
+First Location: [39.98;116.33]
+Last Location: [40.03;116.33]
+Number of occurrences: 2
+Standard Deviation: 5.0 min.
+ arrival time: Fri May 07 11:36:07 CEST 2010
+========================================================================================
+Period: 7
+Reliability: 100.0
+Offset: Fri May 14 01:34:59 CEST 2010
+First Location: [40.03;116.33]
+Last Location: [39.98;116.33]
+Number of occurrences: 2
+Standard Deviation: 23.0 min.
+ arrival time: Fri May 14 02:01:04 CEST 2010
+========================================================================================
