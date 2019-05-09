@@ -32,38 +32,40 @@ class _CommonHabitsScreenState extends State<CommonHabitsScreen> {
     StringBuffer data = StringBuffer();
     Map<String, dynamic> location;
     for (Map<String, dynamic> habit in decodedJson) {
-      data.writeln("start :");
+      data.writeln("habitudes communes avec " + _otherUserController.text);
+      data.writeln();
+      data.writeln("départ :");
       location = habit["firstLocation"];
       data.write("    latitude : ");
       data.writeln(location["x"]);
       data.write("    longitude : ");
       data.writeln(location["y"]);
 
-      data.writeln("end :");
+      data.writeln("arrivée :");
       location = habit["lastLocation"];
       data.write("    latitude : ");
       data.writeln(location["x"]);
       data.write("    longitude : ");
       data.writeln(location["y"]);
 
-      data.write("period in days : ");
+      data.write("période en jours : ");
       data.writeln(habit["period"]);
 
-      data.write("offset date : ");
+      data.write("première occurence : ");
       int millisSince1970 = habit["offset"];
       data.writeln(DateFormat('yyyy-MM-dd HH-mm-ss').format(
           DateTime.fromMillisecondsSinceEpoch(millisSince1970, isUtc: true).toLocal()));
 
-      data.write("arrival time : ");
+      data.write("heure d'arrivée : ");
       data.writeln(habit["arrival_time"]);
 
-      data.write("reliability : ");
+      data.write("probabilité de l'habitude : ");
       data.writeln(habit["reliability"]);
 
-      data.write("number of points : ");
+      data.write("nombre d'occurences : ");
       data.writeln(habit["nbPoints"]);
 
-      data.write("standard deviation : ");
+      data.write("écart-type : ");
       data.writeln(habit["standardDeviation"]);
 
       data.writeln();
