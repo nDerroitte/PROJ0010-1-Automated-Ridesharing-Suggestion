@@ -90,7 +90,7 @@ public class AES {
         try {
             byte[] byteArray = new byte[arrayList.size()];
             int i = 0;
-            // Number because runtype type is Integer, guess why ?
+            // Number because runtype type is Integer
             for (Number b : arrayList) {
                 byteArray[i] = b.byteValue();
                 i++;

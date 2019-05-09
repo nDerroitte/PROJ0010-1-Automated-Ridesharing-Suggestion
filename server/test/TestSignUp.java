@@ -18,12 +18,12 @@ public class TestSignUp {
   public void SIGNUP() throws Exception {
     Application fakeApp = Helpers.fakeApplication();
 
-    RequestBuilder request = Helpers.fakeRequest("GET", "/remove_user?user=trouducul&password=minh")
+    RequestBuilder request = Helpers.fakeRequest("GET", "/remove_user?user=TestUserName&password=TestPassword")
         .header(Http.HeaderNames.HOST, "localhost:9000");
     Helpers.route(fakeApp, request);;
 
     // sign up new user
-    request = Helpers.fakeRequest("GET", "/sign_up?user=trouducul&password=minh&email=555ccc5@xx")
+    request = Helpers.fakeRequest("GET", "/sign_up?user=TestUserName&password=TestPassword&email=fsa@uliege.be")
         .header(Http.HeaderNames.HOST, "localhost:9000");
     Result result = Helpers.route(fakeApp, request);
     System.out.println(Helpers.contentAsString(result));

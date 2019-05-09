@@ -10,8 +10,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import services.Constants;
+//import services.Constants;
 import java.util.ArrayList;
+
 
 public class Decrypt {
     public static String decrypt(ArrayList<Byte> toDecrypt) throws EncryptionException {
@@ -42,12 +43,15 @@ public class Decrypt {
         //System.out.println("FILE EXIST : "+file.exists());
         //String k1 = readFile("k2.txt");
         //String k2 = readFile("k3.txt");
-        String k1xork2 = xor(Constants.k2, Constants.k3);
+        //Keystore.createKeystore();
+
+        String k1 = "3b924dc42d627a7113078580f8851f3594caa6fa83af0a4782e28271e43ea2c3a5a7ab514e899e0cfc7481fc08f40ddf54dad2dd8d3d83cb23a48b31d79fac05";
+        //String k1xork2 = xor(Constants.k2, Constants.k3);
         //String k3 = readFile("k6.txt");
-        String ke = xor(k1xork2, Constants.k6);
+        //String ke = xor(k1xork2, Constants.k6);
         //AES aes = getAES(ke); 
         //String k4 = Decrypt.decrypt(readFile("k7.txt"), ke);
-        return ke;
+        return k1;
     }
 
     private static String xor(String str1, String str2) {

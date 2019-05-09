@@ -25,7 +25,8 @@ import services.EncryptionException;
 import services.Decrypt;
 import services.Encrypt;
 import services.AES;
-
+import services.*;
+import java.text.ParseException;
 
 @Singleton
 public class GetData extends Controller {
@@ -37,17 +38,23 @@ public class GetData extends Controller {
 		this.database = db.get_database();
 	}
 
-	public Result get_data(String a_user, String a_password) throws EncryptionException{
+	public Result get_data(String a_user, String a_password) throws EncryptionException, ParseException{
 		MongoCollection<Document> users = database.getCollection("users");
 		//encrypt a_user et a_passward 
 		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
 		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
 		Document user = users.find(and(eq("user", a_user_E), eq("password", a_password_E))).first();
 		StringBuffer data = new StringBuffer();
+		Journey journey_object;
 		if(user != null) {
 			ArrayList<Document> journeys = (ArrayList<Document>)(user.get("journeys"));
 			for (Document journey : journeys) {
 				//TO DO changer ceci avec un getFromDoc
+				journey_object = Journey.fromDoc(journey);
+				ArrayList<Coordinate> meeting_poin = journey_object.getPath();
+				for (Coordinate c : meeting_poin){
+					System.out.println(c);
+				}
 				ArrayList<Document> doc_meeting_point = (ArrayList<Document>)journey.get("meeting_point");
 				for (Document doc_point : doc_meeting_point) {
 					data.append("datetime: ");
