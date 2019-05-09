@@ -4,12 +4,12 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+//import java.io.BufferedReader;
+//import java.io.File;
+//import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+//import java.io.FileInputStream;
+//import java.io.InputStreamReader;
 //import services.Constants;
 import java.util.ArrayList;
 
@@ -54,7 +54,7 @@ public class Decrypt {
         return k1;
     }
 
-    private static String xor(String str1, String str2) {
+    /*private static String xor(String str1, String str2) {
         if (str1.getBytes().length != str2.getBytes().length) {
             return null;
         }
@@ -74,5 +74,5 @@ public class Decrypt {
         InputStreamReader isr = new InputStreamReader(fis);
         BufferedReader br = new BufferedReader(isr);
         return br.readLine();
-    }
+    }*/
 }
