@@ -13,6 +13,7 @@ The different communication between a mobile phone using our application and the
 | Launch computation of the habit of one user | GET /compute_habit | `user` | **HTTP 200**, *"computing..."*; <br> **HTTP 200**, *"user doesn't exist"*|
 | Launch computation of the habit of all user | GET /compute_habit | `user` = all |**HTTP 200**, *"computing..."*;|
 | Send back habit of a user | GET /get_habit | `user`,`password`|**HTTP 200**, *"user doesn't exist or incorrect password"*| **HTTP 200**, *"JSON of HABIT see below"*|
+| Send back collected data of a user | GET /get_data | `user`,`password`|**HTTP 200**, *"user doesn't exist or incorrect password"*<br> **HTTP 200**, *"datetime: Wed Jan 09 18:33:49 CET 2019 \n GPS coordinate: [50.57;5.54] \n datetime: ..."*|
 ## Json format when pushing GPS coordinate to server
 The Json that is provide in the body of the POST request can be described as : 
 ```sh
