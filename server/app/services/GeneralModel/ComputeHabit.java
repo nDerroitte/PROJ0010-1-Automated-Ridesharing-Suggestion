@@ -206,14 +206,13 @@ public class ComputeHabit {
      * @return A score measuring the quality of a clustering.
      */
     private double partitionScore(List<Cluster<DoublePoint>> part, int period, int nb_point) {
-        PartitionStat stat = new PartitionStat(part, signal.length / period, period, nb_point);
+        PartitionStat stat = new PartitionStat(part, signal_length / period, period, nb_point);
         stat.compute();
-        double occ = (signal.length / period);
+        double occ = (signal_length / period);
         double reliability = Stat.mean(stat.getReliability());
         double std = Stat.mean(stat.getStd());
         double score = reliability /  std;
 
-        //Add some manual filter to favorise/penalize some habit
         if(period % 10080 == 0 && period < 10080*4){
             score *= occ;
         }
@@ -221,6 +220,9 @@ public class ComputeHabit {
             score *= occ;
         }
         if(std/period > 0.05){
+            return Double.NEGATIVE_INFINITY;
+        }
+        if(period > 1440*31){
             return Double.NEGATIVE_INFINITY;
         }
         return score;
