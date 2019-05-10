@@ -5,45 +5,67 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.KeyGenerator;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.util.*;
+import java.util.Random;
+import java.nio.charset.Charset;
 
 public class Keystore{
-    public static void createKeystore() throws EncryptionException{
+
+    public static KeyStore createKeystore() throws EncryptionException, Exception{
         try{
             //Loading the KeyStore
             KeyStore keyStore = KeyStore.getInstance("JCEKS");
-            char[] keyStorePassword = "9dh4gkd8".toCharArray();
-            //InputStream keyStoreData = new FileInputStream("keystore.ks");
-            keyStore.load(null, keyStorePassword);
+            char[] password = "9dh4gkd8".toCharArray();
+            keyStore.load(null, password);
             
             //Set key 
-            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(128);
-            SecretKey secretKey = keyGen.generateKey();
+            //Create key 
+            byte[] array = new byte[128];
+            new Random().nextBytes(array);
+            String generatedString = new String(array, Charset.forName("UTF-8"));
+            byte[] salt = generatedString.getBytes();
+            /*            
+            SecureRandom random = new SecureRandom();
+            byte[] salt = new byte[20];
+            random.nextBytes(salt);
+            */
+          
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            PBEKeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
+            SecretKey tmp = factory.generateSecret(spec);
+            SecretKey secretKey = new SecretKeySpec(tmp.getEncoded(), "AES");
+        
             KeyStore.SecretKeyEntry secretKeyEntry = new KeyStore.SecretKeyEntry(secretKey);
-            KeyStore.ProtectionParameter entryPassword = new KeyStore.PasswordProtection(keyStorePassword);
+            KeyStore.ProtectionParameter entryPassword = new KeyStore.PasswordProtection(password);
             
             keyStore.setEntry("keyAlias1", secretKeyEntry, entryPassword);
-
-            //Getting Keys
-            
-            KeyStore.Entry keyEntry = keyStore.getEntry("keyAlias1", entryPassword);
-            SecretKey key = (SecretKey) keyStore.getKey("keyAlias1", keyStorePassword);
-            //String key_str = key.toSting();
-            String key_str = Base64.getEncoder().encodeToString(key.getEncoded());
-            System.out.println(key_str);
+           
             //Storing the Keystore 
-            FileOutputStream keyStoreOutputStream = new FileOutputStream("keystore.ks");
-            keyStore.store(keyStoreOutputStream, keyStorePassword);
+            //FileOutputStream keyStoreOutputStream = new FileOutputStream("keystore.ks");
+            //keyStore.store(keyStoreOutputStream, keyStorePassword);
+            return keyStore;
         }
-        catch(KeyStoreException | NoSuchAlgorithmException | CertificateException | UnrecoverableEntryException | IOException  e){
+        catch(KeyStoreException | NoSuchAlgorithmException | CertificateException  | IOException  e){
             e.printStackTrace();
             throw new EncryptionException("Error during the creation of the keystore.");
         }
-    
+    }
+
+    static SecretKey gettingKey(KeyStore ks, String keyAlias, char[] keyStorePassword) throws KeyStoreException{
+        try {
+            SecretKey key = (SecretKey) ks.getKey(keyAlias, keyStorePassword);
+            return key;
+        }catch(KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e){
+            e.printStackTrace();
+            throw new KeyStoreException("Error to get the key from the keystore.");
+        }
+        
     }
 }

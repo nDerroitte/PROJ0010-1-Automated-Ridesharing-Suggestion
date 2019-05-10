@@ -14,7 +14,6 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception { 
         try{
-            Keystore.createKeystore();
         ArrayList<Byte> k4Encrypted = Encrypt.encrypt("Coucou");
         System.out.println(Decrypt.decrypt(k4Encrypted));
         /*FileOutputStream fos = new FileOutputStream("text8.txt");
