@@ -27,16 +27,18 @@ public class Keystore{
             
             //Set key 
             //Create key 
-            byte[] array = new byte[128];
+            /*byte[] array = new byte[128];
             new Random().nextBytes(array);
             String generatedString = new String(array, Charset.forName("UTF-8"));
             byte[] salt = generatedString.getBytes();
+            */
             /*            
             SecureRandom random = new SecureRandom();
             byte[] salt = new byte[20];
             random.nextBytes(salt);
             */
-          
+            String salt_str = "ULiège";
+            byte[] salt = salt_str.getBytes();
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
             PBEKeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
             SecretKey tmp = factory.generateSecret(spec);
