@@ -1,98 +1,114 @@
 User minh.
 
 Period: 7
-Reliability: 63.0
-Offset: Mon Jan 07 13:56:10 CET 2019
+Reliability: 69.0
+Offset: Tue Jan 15 13:54:34 CET 2019
 First Location: [50.57;5.54]
 Last Location: [50.59;5.56]
-Number of occurrences: 7
-Standard Deviation: 3.63min.
+Number of occurrences: 9
+Standard Deviation: 4.37min.
 ========================================================================================
 Period: 7
-Reliability: 76.0
-Offset: Tue Jan 08 14:06:03 CET 2019
-First Location: [50.57;5.54]
-Last Location: [50.59;5.56]
-Number of occurrences: 10
-Standard Deviation: 5.44min.
-========================================================================================
-Period: 7
-Reliability: 64.0
-Offset: Tue Jan 08 16:45:13 CET 2019
+Reliability: 85.0
+Offset: Tue Jan 08 16:15:19 CET 2019
 First Location: [50.58;5.56]
 Last Location: [50.57;5.54]
-Number of occurrences: 9
-Standard Deviation: 12.97min.
-========================================================================================
-Period: 7
-Reliability: 55.0
-Offset: Wed Jan 30 18:39:47 CET 2019
-First Location: [50.57;5.54]
-Last Location: [50.59;5.49]
-Number of occurrences: 5
-Standard Deviation: 3.38min.
-========================================================================================
-Period: 7
-Reliability: 64.0
-Offset: Wed Jan 09 19:39:56 CET 2019
-First Location: [50.59;5.5]
-Last Location: [50.57;5.54]
-Number of occurrences: 9
-Standard Deviation: 2.31min.
-========================================================================================
-Period: 7
-Reliability: 71.0
-Offset: Wed Jan 09 14:09:09 CET 2019
-First Location: [50.57;5.54]
-Last Location: [50.58;5.56]
-Number of occurrences: 10
-Standard Deviation: 4.12min.
-========================================================================================
-Period: 7
-Reliability: 76.0
-Offset: Thu Jan 10 18:17:53 CET 2019
-First Location: [50.58;5.54]
-Last Location: [50.59;5.49]
-Number of occurrences: 10
-Standard Deviation: 2.1min.
-========================================================================================
-Period: 7
-Reliability: 90.0
-Offset: Thu Jan 10 19:00:04 CET 2019
-First Location: [50.59;5.5]
-Last Location: [50.57;5.54]
-Number of occurrences: 10
-Standard Deviation: 4.83min.
+Number of occurrences: 12
+Standard Deviation: 13.43min.
 ========================================================================================
 Period: 7
 Reliability: 69.0
-Offset: Thu Jan 10 09:00:29 CET 2019
-First Location: [50.57;5.54]
-Last Location: [50.58;5.56]
+Offset: Wed Jan 09 18:37:59 CET 2019
+First Location: [50.58;5.54]
+Last Location: [50.59;5.5]
 Number of occurrences: 9
-Standard Deviation: 4.64min.
+Standard Deviation: 2.57min.
+========================================================================================
+Period: 7
+Reliability: 69.0
+Offset: Wed Jan 09 19:43:37 CET 2019
+First Location: [50.59;5.5]
+Last Location: [50.57;5.54]
+Number of occurrences: 9
+Standard Deviation: 3.33min.
+========================================================================================
+Period: 7
+Reliability: 70.0
+Offset: Wed Jan 23 14:08:00 CET 2019
+First Location: [50.57;5.54]
+Last Location: [50.59;5.56]
+Number of occurrences: 7
+Standard Deviation: 6.67min.
+========================================================================================
+Period: 7
+Reliability: 61.0
+Offset: Wed Jan 09 16:17:00 CET 2019
+First Location: [50.59;5.56]
+Last Location: [50.57;5.54]
+Number of occurrences: 8
+Standard Deviation: 19.37min.
+========================================================================================
+Period: 7
+Reliability: 91.0
+Offset: Thu Jan 17 18:12:15 CET 2019
+First Location: [50.57;5.54]
+Last Location: [50.59;5.5]
+Number of occurrences: 11
+Standard Deviation: 2.95min.
+========================================================================================
+Period: 7
+Reliability: 72.0
+Offset: Thu Jan 24 19:19:40 CET 2019
+First Location: [50.59;5.5]
+Last Location: [50.57;5.54]
+Number of occurrences: 8
+Standard Deviation: 5.13min.
+========================================================================================
+Period: 7
+Reliability: 75.0
+Offset: Thu Jan 24 09:06:30 CET 2019
+First Location: [50.57;5.54]
+Last Location: [50.59;5.56]
+Number of occurrences: 9
+Standard Deviation: 3.89min.
 ========================================================================================
 Period: 7
 Reliability: 64.0
-Offset: Thu Jan 10 16:51:05 CET 2019
+Offset: Thu Jan 10 16:20:16 CET 2019
 First Location: [50.59;5.56]
-Last Location: [50.58;5.54]
+Last Location: [50.57;5.54]
 Number of occurrences: 9
-Standard Deviation: 16.81min.
+Standard Deviation: 17.44min.
 ========================================================================================
 Period: 7
-Reliability: 100.0
-Offset: Fri Jan 18 18:41:28 CET 2019
+Reliability: 92.0
+Offset: Fri Jan 11 18:48:55 CET 2019
 First Location: [50.57;5.54]
 Last Location: [50.58;5.57]
-Number of occurrences: 11
-Standard Deviation: 2.49min.
+Number of occurrences: 13
+Standard Deviation: 2.99min.
 ========================================================================================
 Period: 7
 Reliability: 76.0
-Offset: Fri Jan 18 21:04:26 CET 2019
+Offset: Fri Jan 11 21:02:31 CET 2019
 First Location: [50.58;5.57]
 Last Location: [50.57;5.54]
 Number of occurrences: 10
-Standard Deviation: 3.43min.
+Standard Deviation: 3.14min.
+========================================================================================
+Period: 7
+Reliability: 57.0
+Offset: Fri Jan 11 09:09:18 CET 2019
+First Location: [50.57;5.54]
+Last Location: [50.58;5.56]
+Number of occurrences: 8
+Standard Deviation: 18.99min.
+========================================================================================
+Period: 7
+Reliability: 70.0
+Offset: Fri Jan 25 11:45:28 CET 2019
+First Location: [50.59;5.56]
+Last Location: [50.57;5.54]
+Number of occurrences: 7
+Standard Deviation: 16.3min.
 ========================================================================================

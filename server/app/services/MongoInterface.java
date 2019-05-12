@@ -27,7 +27,4 @@ import com.google.inject.ImplementedBy;
 public interface MongoInterface {
    
    MongoDatabase get_database();
-   //KeyStore get_keystore();
-   //SecretKey get_key();
-   //AES get_aes();
 }

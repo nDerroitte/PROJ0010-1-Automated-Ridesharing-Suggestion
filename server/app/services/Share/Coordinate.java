@@ -7,9 +7,6 @@ import java.util.Locale;
 import org.bson.Document;
 import java.util.ArrayList;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
 
 /**
  * Coordinate corresponds to the class representing the lattitude(x)

@@ -19,6 +19,7 @@ import java.util.List;
 import services.Keystore;
 import javax.inject.*;
 import java.security.KeyStore;
+import services.EncryptionException;
 import javax.crypto.SecretKey;
 /**
  * Entry point to the database.

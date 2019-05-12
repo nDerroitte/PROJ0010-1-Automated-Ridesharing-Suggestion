@@ -6,7 +6,6 @@ import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
 import java.text.ParseException;
 import services.EncryptionException;
-import services.AES;
 import java.io.UnsupportedEncodingException;
 import java.io.IOException;
 /**
@@ -46,7 +45,6 @@ public class UserSimpleModel
         this.db = database;
         
         // Get user journey from database
-        //Encrypt user id 
         ArrayList<Byte> user_id_E = MongoDB.aes.encrypt(user_id);
         Document user = database.find(eq("user", user_id_E)).first();
         if (user == null ) {
@@ -71,15 +69,13 @@ public class UserSimpleModel
         return unused_journeys = CreationHabitSM.unused_journeys;
     }
 
-    public void habitToDB(ArrayList<Habit> new_habits) throws EncryptionException, UnsupportedEncodingException{
-         //Encrypt user id 
+    public void habitToDB(ArrayList<Habit> new_habits) throws EncryptionException, UnsupportedEncodingException{ 
         ArrayList<Byte> user_id_E = MongoDB.aes.encrypt(user_id);
         Document user = db.find(eq("user", user_id_E)).first();
         ArrayList<Document> habits = new ArrayList<Document>();
         for(Habit h : new_habits){
             habits.add(h.toDoc());
         }
-         //Encrypt user id 
         db.updateOne(eq("user",user_id_E),set("habits", habits));
     }
 }

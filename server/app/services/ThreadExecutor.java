@@ -26,6 +26,7 @@ import java.io.*;
 import javax.json.*;
 import javax.inject.*;
 import com.google.common.util.concurrent.*;
+import services.MongoDB;
 
 /**
  * Implement the thread pool for computing the habits or storing the journey of an user
@@ -160,7 +161,7 @@ class StoreData implements Runnable {
                 reader = Json.createReader(new StringReader(jSonString));
                 dataUnit = reader.readObject();
                 reader.close();
-                user = database.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();
+                user = database.find(eq("user", MongoDB.aes.encrypt(dataUnit.getString("UserId")))).first();
                 ArrayList<Point> point_list = new ArrayList<>();
 
                 for (JsonValue point : dataUnit.getJsonArray("Points")) {
