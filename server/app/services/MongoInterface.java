@@ -16,7 +16,8 @@ import static com.mongodb.client.model.Updates.*;
 import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.security.KeyStore;
+import javax.crypto.SecretKey;
 import com.google.inject.ImplementedBy;
 
 /**
@@ -24,5 +25,9 @@ import com.google.inject.ImplementedBy;
  */
 
 public interface MongoInterface {
+   
    MongoDatabase get_database();
+   //KeyStore get_keystore();
+   //SecretKey get_key();
+   //AES get_aes();
 }

@@ -6,9 +6,9 @@ import org.bson.Document;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
 import services.AES;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 /**
  * Class correspinding to a Point of a journey in term of time and Coordinate
@@ -55,7 +55,7 @@ public class Point
      * Allow to transform this object to a Document. Used to store the point in the database
      * @return a Document object corresponding to this class
      */
-    public Document toDoc() throws EncryptionException
+    public Document toDoc() throws EncryptionException, UnsupportedEncodingException
     {
         Document doc = new Document();
 
@@ -63,12 +63,12 @@ public class Point
         String string_time = sdf.format(this.time.getTime());
 
         ArrayList<ArrayList<Byte> > coordinates = new ArrayList<>();
-        ArrayList<Byte> x_E = Encrypt.encrypt(Double.toString(position.getX()));
-        ArrayList<Byte> y_E = Encrypt.encrypt(Double.toString(position.getY()));
+        ArrayList<Byte> x_E = MongoDB.aes.encrypt(Double.toString(position.getX()));
+        ArrayList<Byte> y_E = MongoDB.aes.encrypt(Double.toString(position.getY()));
         coordinates.add(x_E);
         coordinates.add(y_E);
 
-        ArrayList<Byte> string_time_E = Encrypt.encrypt(string_time);
+        ArrayList<Byte> string_time_E = MongoDB.aes.encrypt(string_time);
 
         doc.put("time",string_time_E);
         doc.put("position",coordinates);
@@ -81,12 +81,12 @@ public class Point
      * @param doc: the Document object to read from
      * @return  a Point object corresponding to the Document.
      */
-    static public Point FromDoc(Document doc) throws ParseException, EncryptionException
+    static public Point FromDoc(Document doc) throws ParseException, EncryptionException, IOException
     {
-        String string_time_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("time"));
+        String string_time_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("time"));
         Calendar time = Constants.stringToCalendar(string_time_D);
         ArrayList<ArrayList<Byte> > coordinates = (ArrayList<ArrayList<Byte> >) doc.get("position");
-        Coordinate position = new Coordinate(Double.parseDouble(Decrypt.decrypt(coordinates.get(0))),Double.parseDouble(Decrypt.decrypt(coordinates.get(1))));
+        Coordinate position = new Coordinate(Double.parseDouble(MongoDB.aes.decrypt(coordinates.get(0))),Double.parseDouble(AES.decrypt(coordinates.get(1))));
 
         return new Point(time,position);
 

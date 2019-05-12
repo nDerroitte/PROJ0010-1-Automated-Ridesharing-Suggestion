@@ -27,10 +27,8 @@ import org.bson.Document;
 import java.text.ParseException;
 
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
 import services.AES;
-
+import java.io.UnsupportedEncodingException;
 /**
  * Compute all habit of an user
  */
@@ -64,7 +62,7 @@ public class UserGM {
     /**
      * Launch the computation of the habits.
      */
-    public void createHabits() throws EncryptionException{
+    public void createHabits() throws EncryptionException, UnsupportedEncodingException{
 
         // Compute habit on all data
         HashMap<JourneyPath, ArrayList<Journey>> sorted_journey = sortJourneyByPath();
@@ -170,9 +168,9 @@ public class UserGM {
      * @param new_habits List of habit to push into the DB
      * @throws EncryptionException encryotion goes wrong.
      */
-    public void habitToDB(LinkedList<Habit> new_habits) throws EncryptionException{
+    public void habitToDB(LinkedList<Habit> new_habits) throws EncryptionException, UnsupportedEncodingException{
         //Encrypt user id
-        ArrayList<Byte> user_id_E = Encrypt.encrypt(user_id);
+        ArrayList<Byte> user_id_E = MongoDB.aes.encrypt(user_id);
         Document user = db.find(eq("user", user_id_E)).first();
         ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
         if(habits == null){

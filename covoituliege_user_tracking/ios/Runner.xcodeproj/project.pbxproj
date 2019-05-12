@@ -253,10 +253,8 @@
 				"${PODS_ROOT}/../.symlinks/flutter/ios/Flutter.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/connectivity/connectivity.framework",
-				"${BUILT_PRODUCTS_DIR}/geolocator/geolocator.framework",
-				"${BUILT_PRODUCTS_DIR}/google_api_availability/google_api_availability.framework",
+				"${BUILT_PRODUCTS_DIR}/geofencing/geofencing.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider/path_provider.framework",
-				"${BUILT_PRODUCTS_DIR}/permission_handler/permission_handler.framework",
 				"${BUILT_PRODUCTS_DIR}/simple_permissions/simple_permissions.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -264,10 +262,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flutter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/connectivity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/geolocator.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/google_api_availability.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/geofencing.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/permission_handler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/simple_permissions.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

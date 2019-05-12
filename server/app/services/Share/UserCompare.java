@@ -12,6 +12,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import java.io.IOException;
 
 public class UserCompare {
     /**
@@ -38,12 +39,12 @@ public class UserCompare {
      * @throws EncryptionException In case of error during encryption
      */
     public UserCompare(String user1, String user2, MongoCollection<Document> database)
-            throws ParseException, EncryptionException {
+            throws ParseException, EncryptionException, IOException{
         this.db = database;
         this.habits1 = new ArrayList<>();
         this.habits2 = new ArrayList<>();
 
-        ArrayList<Byte> user_id_E1 = Encrypt.encrypt(user1);
+        ArrayList<Byte> user_id_E1 = MongoDB.aes.encrypt(user1);
         Document user_1 = db.find(eq("user", user_id_E1)).first();
         if (user_1 == null) {
             System.err.println("User: " + user1 + " not in DB");
@@ -54,7 +55,7 @@ public class UserCompare {
             }
         }
 
-        ArrayList<Byte> user_id_E2 = Encrypt.encrypt(user2);
+        ArrayList<Byte> user_id_E2 = MongoDB.aes.encrypt(user2);
         Document user_2 = db.find(eq("user", user_id_E2)).first();
         if (user_2 == null) {
             System.err.println("User: " + user2 + " not in DB");

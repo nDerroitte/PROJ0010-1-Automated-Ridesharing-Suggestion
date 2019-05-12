@@ -1,10 +1,12 @@
 import services.Habit;
+import services.Coordinate;
 import services.*;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 import org.bson.Document;
 import java.text.SimpleDateFormat;
+import services.MongoDB; 
 
 public class TestHabit {
 
@@ -18,6 +20,7 @@ public class TestHabit {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         h.offset = sdf.parse("2019-01-10 18-15-00").getTime();
         h.nbPoints = 7;
+        MongoDB db = new MongoDB();
         Document doc = h.toDoc();
         Habit h2 = Habit.fromDoc(doc);
         assertTrue(h2.equals(h));

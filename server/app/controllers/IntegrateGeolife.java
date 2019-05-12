@@ -47,7 +47,7 @@ public class IntegrateGeolife extends Controller {
      * answer. The code is kept for eventual re-use, but the corresponding route is
      * probably already deleted.
      */
-    public Result integrate_geolife() throws Exception {
+    public Result integrate_geolife() throws Exception,UnsupportedEncodingException {
         String username;
         String password = "geolife_1_3";
         String email = "hellogoodbye1853@gmail.com";
@@ -109,9 +109,9 @@ public class IntegrateGeolife extends Controller {
                 isr.close();
                 fis.close();
             }
-            ArrayList<Byte> a_user_E = Encrypt.encrypt(username);
-            ArrayList<Byte> a_password_E = Encrypt.encrypt(password);
-            ArrayList<Byte> email_E = Encrypt.encrypt(email);
+            ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(username);
+            ArrayList<Byte> a_password_E = MongoDB.aes.encrypt(password);
+            ArrayList<Byte> email_E = MongoDB.aes.encrypt(email);
 
             Document new_user = new Document("user", a_user_E).append("password", a_password_E).append("email", email_E)
                     .append("journeys", journey_list);

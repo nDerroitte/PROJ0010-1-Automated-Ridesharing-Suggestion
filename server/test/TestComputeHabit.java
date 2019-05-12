@@ -4,13 +4,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import services.ComputeHabit;
 import services.Habit;
-
+import services.Coordinate;
 import java.util.Arrays;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 
 import akka.dispatch.forkjoin.ThreadLocalRandom;
-//import jdk.jfr.Timestamp;
 
 import static org.junit.Assert.*;
 import services.CircularDist;
@@ -85,10 +84,15 @@ public class TestComputeHabit {
         expected_out.offset = data.get(0);
         expected_out.period = period/1440;
         expected_out.reliability = reliability;          
-
+        expected_out.nbPoints = 4;
+        //expected_out.firstLocation = null; //new Coordinate(48.5, 49.0);
+        //expected_out.lastLocation = null; //new Coordinate(49.0, 48.5);
+        //expected_out.arrival_time = 1000;
+        expected_out.standardDeviation = 0;
         ComputeHabit ch = new ComputeHabit(data,1440);
         LinkedList<Habit> habits = ch.getHabit(); 
         assertTrue(habits.size() == 1);
+        System.out.println(habits.getFirst().firstLocation);
         assertEquals(expected_out,habits.getFirst());
     }
 

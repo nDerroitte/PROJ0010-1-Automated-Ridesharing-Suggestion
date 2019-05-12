@@ -9,6 +9,9 @@ import java.util.Calendar;
 import org.bson.Document;
 import java.text.ParseException;
 import services.EncryptionException;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import services.MongoDB; 
 /**
  * Test the class Point
  * @see [[Point]]
@@ -20,7 +23,8 @@ public class TestPoint {
      * @throws ParseException
      */
     @Test
-    public void fromto_doc_and_equal() throws ParseException, EncryptionException{
+    public void fromto_doc_and_equal() throws ParseException, EncryptionException, UnsupportedEncodingException, Exception{
+        MongoDB db = new MongoDB(); 
         Calendar date = Calendar.getInstance();      
         Point p = new Point(date, new Coordinate(10,20));  
         Document doc = p.toDoc();       

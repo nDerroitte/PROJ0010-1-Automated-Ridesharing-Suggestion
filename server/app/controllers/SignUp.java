@@ -23,11 +23,8 @@ import java.util.List;
 
 import services.MongoInterface;
 import services.Journey;
- 
+import services.MongoDB;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
 
 public class SignUp extends Controller {
 	
@@ -38,12 +35,12 @@ public class SignUp extends Controller {
 		this.database = db.get_database();	
 	}
 	
-	public Result sign_up(String a_user, String a_password,String email) throws EncryptionException{
+	public Result sign_up(String a_user, String a_password,String email) throws EncryptionException, UnsupportedEncodingException{
 		MongoCollection<Document> users = database.getCollection("users");
 	
-		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
-		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
-		ArrayList<Byte> email_E = Encrypt.encrypt(email);
+		ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(a_user);
+		ArrayList<Byte> a_password_E = MongoDB.aes.encrypt(a_password);
+		ArrayList<Byte> email_E = MongoDB.aes.encrypt(email);
 		Document registred_user = users.find(eq("user", a_user_E)).first();
 		if (registred_user == null){
 			

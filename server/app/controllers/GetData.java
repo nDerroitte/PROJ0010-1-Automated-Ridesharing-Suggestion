@@ -22,9 +22,6 @@ import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
 import services.*;
 import java.text.ParseException;
 
@@ -38,11 +35,11 @@ public class GetData extends Controller {
 		this.database = db.get_database();
 	}
 
-	public Result get_data(String a_user, String a_password) throws EncryptionException, ParseException{
+	public Result get_data(String a_user, String a_password) throws EncryptionException, ParseException, UnsupportedEncodingException, IOException{
 		MongoCollection<Document> users = database.getCollection("users");
 		
-		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
-		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
+		ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(a_user);
+		ArrayList<Byte> a_password_E = MongoDB.aes.encrypt(a_password);
 		Document user = users.find(and(eq("user", a_user_E), eq("password", a_password_E))).first();
 		StringBuffer data = new StringBuffer();
 		Journey journey_object;

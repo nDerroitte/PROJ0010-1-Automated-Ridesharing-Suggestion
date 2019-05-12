@@ -6,9 +6,9 @@ import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
 import java.text.ParseException;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
 import services.AES;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 /**
  * User class for the Simple Model algorithm
  */
@@ -38,7 +38,7 @@ public class UserSimpleModel
      * @param database MongoDB database
      * @throws ParseException if the user doesnt exist u-in the database
      */
-    public UserSimpleModel(String user_id, MongoCollection<Document> database) throws ParseException, EncryptionException
+    public UserSimpleModel(String user_id, MongoCollection<Document> database) throws ParseException, EncryptionException, UnsupportedEncodingException, IOException
     {
         this.user_id = user_id;
         this.habits = new ArrayList<>();
@@ -47,7 +47,7 @@ public class UserSimpleModel
         
         // Get user journey from database
         //Encrypt user id 
-        ArrayList<Byte> user_id_E = Encrypt.encrypt(user_id);
+        ArrayList<Byte> user_id_E = MongoDB.aes.encrypt(user_id);
         Document user = database.find(eq("user", user_id_E)).first();
         if (user == null ) {
             System.err.println("User: " + user_id + " not in DB");
@@ -63,7 +63,7 @@ public class UserSimpleModel
     /**
      * Create habits for the user
      */
-    public ArrayList<Journey> createHabits() throws EncryptionException
+    public ArrayList<Journey> createHabits() throws EncryptionException, UnsupportedEncodingException
     {
         this.habits = CreationHabitSM.createHabitSM(unused_journeys, user_id);
 
@@ -71,9 +71,9 @@ public class UserSimpleModel
         return unused_journeys = CreationHabitSM.unused_journeys;
     }
 
-    public void habitToDB(ArrayList<Habit> new_habits) throws EncryptionException{
+    public void habitToDB(ArrayList<Habit> new_habits) throws EncryptionException, UnsupportedEncodingException{
          //Encrypt user id 
-        ArrayList<Byte> user_id_E = Encrypt.encrypt(user_id);
+        ArrayList<Byte> user_id_E = MongoDB.aes.encrypt(user_id);
         Document user = db.find(eq("user", user_id_E)).first();
         ArrayList<Document> habits = new ArrayList<Document>();
         for(Habit h : new_habits){

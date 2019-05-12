@@ -27,9 +27,9 @@ import services.MongoInterface;
 import services.Habit;
 import java.text.ParseException;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
+import services.MongoDB;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 @Singleton
 public class GetHabit extends Controller {
@@ -43,8 +43,8 @@ public class GetHabit extends Controller {
 		this.hb = habit_generator;
 	}
 
-	public Result compute_habit(String a_user) throws EncryptionException{
-		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
+	public Result compute_habit(String a_user) throws EncryptionException, UnsupportedEncodingException, IOException{
+		ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(a_user);
 		MongoCollection<Document> users = database.getCollection("users");
 		if(a_user.equals("all")){
 			System.out.println("Computing habit of all user");
@@ -52,7 +52,7 @@ public class GetHabit extends Controller {
 			while (cursor.hasNext()) {
 				Document user = cursor.next();
 					
-				String decrypted_user =  Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+				String decrypted_user =  MongoDB.aes.decrypt((ArrayList<Byte>)user.get("user"));
 				System.out.println("User: " + decrypted_user + " is submit");
 				hb.submitTask(decrypted_user);
 			}
@@ -70,10 +70,10 @@ public class GetHabit extends Controller {
 
 	}
 
-	public Result get_habit(String a_user,String a_password) throws ParseException, EncryptionException{
+	public Result get_habit(String a_user,String a_password) throws ParseException, EncryptionException, UnsupportedEncodingException, IOException{
 		
-		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
-		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
+		ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(a_user);
+		ArrayList<Byte> a_password_E = MongoDB.aes.encrypt(a_password);
 		Document user = database.getCollection("users").find(and(eq("user", a_user_E), eq("password", a_password_E))).first();
 		ArrayList<Document> habits = (ArrayList<Document>)(user.get("habits"));
 		String out = "";

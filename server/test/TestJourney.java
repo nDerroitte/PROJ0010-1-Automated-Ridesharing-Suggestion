@@ -11,11 +11,13 @@ import java.util.Calendar;
 import org.bson.Document;
 import java.text.ParseException;
 import services.EncryptionException;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 public class TestJourney {
 
 
-    public void fromto_doc_and_equal(Journey journey) throws ParseException, EncryptionException{
+    public void fromto_doc_and_equal(Journey journey) throws ParseException, EncryptionException, UnsupportedEncodingException, IOException{
         Journey unchanged = journey;             
         Document doc = journey.toDoc();       
         Journey changed = Journey.fromDoc(doc);

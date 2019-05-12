@@ -32,9 +32,6 @@ import java.util.Optional;
 import java.util.Calendar;
 import services.*;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
 
 @Singleton
 public class StoreData extends Controller {
@@ -63,7 +60,7 @@ public class StoreData extends Controller {
 	 * @throws EncryptionException
 	 */
 	@BodyParser.Of(BodyParser.TolerantText.class)
-	public Result store_data() throws Exception, EncryptionException{
+	public Result store_data() throws Exception, EncryptionException, UnsupportedEncodingException{
 		String out = "";
 		int nb_journey = 0;
 		String[] data = request().body().asText().split("data_splitter");
@@ -85,14 +82,14 @@ public class StoreData extends Controller {
 			}
 			reader.close();
 			MongoCollection<Document> users = database.getCollection("users");
-			user = users.find(eq("user", Encrypt.encrypt(dataUnit.getString("UserId")))).first();	
+			user = users.find(eq("user", MongoDB.aes.encrypt(dataUnit.getString("UserId")))).first();	
 			if (user == null || !user.get("key").equals(cookieValue)) {
 				out += "invalid cookie/user";
 				continue;
 			}
 		}
 		if(user != null){
-			String decrypted_user = Decrypt.decrypt((ArrayList<Byte>)user.get("user"));
+			String decrypted_user = MongoDB.aes.decrypt((ArrayList<Byte>)user.get("user"));
 			hb.store_data(decrypted_user,request().body().asText());
 		}		
 		return ok(out + " " + nb_journey + "data length: " + data.length);

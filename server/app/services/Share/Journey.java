@@ -5,9 +5,9 @@ import java.util.Calendar;
 import org.bson.Document;
 import java.text.ParseException;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
 import services.AES;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 /**
  * Journey class representing a journey of the habit (from a time and path perspective)
  */
@@ -64,7 +64,7 @@ public class Journey
      * Allow to transform this object to a Document. Used to store the Jounrey in the database
      * @return a Document object corresponding to this class
      */
-    public  Document toDoc() throws EncryptionException
+    public  Document toDoc() throws EncryptionException, UnsupportedEncodingException
     {
         Document doc = new Document();
         ArrayList<Document> doc_meeting_point = new ArrayList<>();
@@ -81,7 +81,7 @@ public class Journey
      * @param doc the Document object to read from
      * @return  a Jounrey object corresponding to the Document.
      */
-    public static Journey fromDoc(Document doc) throws ParseException, EncryptionException
+    public static Journey fromDoc(Document doc) throws ParseException, EncryptionException, UnsupportedEncodingException, IOException
     {
         ArrayList<Document> doc_meeting_point = (ArrayList<Document>)doc.get("meeting_point");
         ArrayList<Point> meeting_point = new ArrayList<>();

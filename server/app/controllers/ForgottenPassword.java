@@ -24,10 +24,9 @@ import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
-
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import services.MongoDB;
 
 @Singleton
 public class ForgottenPassword extends Controller {
@@ -43,19 +42,19 @@ public class ForgottenPassword extends Controller {
 	// This function is called when the server is ask to give a new password.
 	// It sends an email to the address given in argument, if and only if
 	// this email and the username corresponds to an existing user in the database.
-	public Result forgotten_password(String a_user, String a_email) throws EncryptionException{
+	public Result forgotten_password(String a_user, String a_email) throws EncryptionException, UnsupportedEncodingException, IOException{
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
 	
-		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
-		ArrayList<Byte> a_email_E = Encrypt.encrypt(a_email);
+		ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(a_user);
+		ArrayList<Byte> a_email_E = MongoDB.aes.encrypt(a_email);
 		UpdateResult updateresult = users.updateOne(eq("user", a_user_E),set("key",key));
 		
 		if(updateresult.getModifiedCount() == 1) {
 			response().setCookie(Cookie.builder("user",key).build());
 			if (users.find(and(eq("user", a_user_E), eq("email", a_email_E))).first() != null) {
 				ArrayList<Byte> arr = (ArrayList<Byte>)users.find(eq("user", a_user_E)).first().get("password");
-				String mdp = Decrypt.decrypt(arr);
+				String mdp = MongoDB.aes.decrypt(arr);
 
 				Email email = new Email()
 					.setSubject("Demande de récupération du mot de passe")

@@ -78,7 +78,7 @@ public class IntegrateTest {
                 .url("/sign_up?user=" + user + "&password=" + password + "&email=dd@pl").get();
         WSResponse result = completionstage.toCompletableFuture().get();
         assertEquals(OK, result.getStatus());
-        assertTrue(result.getBody().contains("success"));
+        assertTrue(result.getBody().contains("user successfully recorded"));
     }
 
     /**
@@ -88,7 +88,7 @@ public class IntegrateTest {
         CompletionStage<WSResponse> completionstage = ws.url("/sign_in?user=" + user + "&password=" + password).get();
         WSResponse result = completionstage.toCompletableFuture().get();
         assertEquals(OK, result.getStatus());
-        assertTrue(result.getBody().contains("success"));
+        assertTrue(result.getBody().contains("connection OK"));
         cookie = result.getCookie("user");
     }
 
@@ -101,7 +101,7 @@ public class IntegrateTest {
         WSResponse result = completionstage.toCompletableFuture().get();
         if (assertion) {
             assertEquals(OK, result.getStatus());
-            assertTrue(result.getBody().contains("succes"));
+            assertTrue(result.getBody().contains("user succesfully removed"));
         }
     }
 

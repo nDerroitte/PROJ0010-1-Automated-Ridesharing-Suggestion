@@ -7,9 +7,9 @@ import java.util.Date;
 import com.mongodb.client.*;
 import java.util.ArrayList;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
 import services.AES;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 /**
  * Parent class of the two habit class. Allow (mainly) to generate/get the doc for the database
@@ -56,14 +56,14 @@ public class Habit
      * Transform the habit to the Document format
      * @return the document correspondng to the habit
      */
-    public Document toDoc() throws EncryptionException
+    public Document toDoc() throws EncryptionException, UnsupportedEncodingException
     {
         Document doc = new Document();
-        ArrayList<Byte> period_E = Encrypt.encrypt(Long.toString(period));
-        ArrayList<Byte> offset_E = Encrypt.encrypt(Long.toString(offset));
-        ArrayList<Byte> reliability_E = Encrypt.encrypt(Double.toString(this.reliability));
-        ArrayList<Byte> nbPoints_E = Encrypt.encrypt(Integer.toString(nbPoints));
-        ArrayList<Byte> standardDeviation_E = Encrypt.encrypt(Double.toString(standardDeviation));
+        ArrayList<Byte> period_E = MongoDB.aes.encrypt(Long.toString(period));
+        ArrayList<Byte> offset_E = MongoDB.aes.encrypt(Long.toString(offset));
+        ArrayList<Byte> reliability_E = MongoDB.aes.encrypt(Double.toString(this.reliability));
+        ArrayList<Byte> nbPoints_E = MongoDB.aes.encrypt(Integer.toString(nbPoints));
+        ArrayList<Byte> standardDeviation_E = MongoDB.aes.encrypt(Double.toString(standardDeviation));
 
         doc.put("period",period_E); 
         doc.put("offset",offset_E); 
@@ -94,14 +94,14 @@ public class Habit
      * @return h the habit generated
      * @throws ParseException
      */
-    public static Habit fromDoc(Document doc)throws ParseException, EncryptionException
+    public static Habit fromDoc(Document doc)throws ParseException, EncryptionException, IOException
     {
         Habit h = new Habit();
-        String period_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("period"));
-        String offset_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("offset"));
-        String reliability_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("reliability"));
-        String nbPoints_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("nbPoints"));
-        String standardDeviation_D = Decrypt.decrypt((ArrayList<Byte>)doc.get("standardDeviation"));
+        String period_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("period"));
+        String offset_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("offset"));
+        String reliability_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("reliability"));
+        String nbPoints_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("nbPoints"));
+        String standardDeviation_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("standardDeviation"));
 
 	    h.period = Long.parseLong(period_D);
 	    h.offset = Long.parseLong(offset_D);

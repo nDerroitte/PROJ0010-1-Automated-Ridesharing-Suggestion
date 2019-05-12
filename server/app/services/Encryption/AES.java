@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.util.ArrayList;
-
+import javax.inject.*;
+@Singleton
 public class AES {
 
-     private Cipher ecipher;
-     private Cipher dcipher;
-     
+     private static Cipher ecipher;
+     private static Cipher dcipher;
+     @Inject
      public AES(SecretKey key) throws EncryptionException {
         try {
             
@@ -36,10 +37,11 @@ public class AES {
      * @param str the string to encrypt.
      * @return an ArrayList<Byte> containing the bytes of the corresponding encrypted string
      */
-    public ArrayList<Byte> encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
+    public static ArrayList<Byte> encrypt(String str) throws UnsupportedEncodingException, EncryptionException {
         try {
             StringBuilder SB = new StringBuilder();
             SB.append(str);
+            //Padding the obtain a multiple of 16, requesting by the method doFinal
             if (str.length()%16 == 0) {
                 if (str.substring(str.length() - 1).equals("0")) {
                     for(int i = 0; i < 16; i++) {
@@ -84,7 +86,7 @@ public class AES {
      *
      * @return the decrypted String
      */
-    public String decrypt(ArrayList<Byte> arrayList) throws IOException, EncryptionException {
+    public static String decrypt(ArrayList<Byte> arrayList) throws IOException, EncryptionException {
         try {
             byte[] byteArray = new byte[arrayList.size()];
             int i = 0;
@@ -93,7 +95,7 @@ public class AES {
                 byteArray[i] = b.byteValue();
                 i++;
             }
-
+            //All we get from the DB must be of lenght 16
             if(arrayList.size()%16!=0){
                 throw new EncryptionException("Argument should have a multiple of 16 as length.");
             }
@@ -102,6 +104,7 @@ public class AES {
             StringBuilder SB = new StringBuilder();
             SB.append(returned);
             int initLength = SB.length();
+            //Take out the padding 
             if(SB.substring(SB.length()-1).equals("0")){
                 while(SB.substring(SB.length()-1).equals("0")){
                     SB.setLength(--initLength);

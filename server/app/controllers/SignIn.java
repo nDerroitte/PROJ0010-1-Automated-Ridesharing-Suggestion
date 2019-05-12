@@ -22,9 +22,7 @@ import java.util.Date;
 import java.util.UUID;
 import services.MongoInterface;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
-import services.AES;
+import services.MongoDB;
 
 @Singleton
 public class SignIn extends Controller {
@@ -36,12 +34,12 @@ public class SignIn extends Controller {
 		this.database = db.get_database();
 	}
 
-	public Result sign_in(String a_user, String a_password) throws EncryptionException {
+	public Result sign_in(String a_user, String a_password) throws EncryptionException, UnsupportedEncodingException {
 		MongoCollection<Document> users = database.getCollection("users");
 		String key = UUID.randomUUID().toString();
 		
-		ArrayList<Byte> a_user_E = Encrypt.encrypt(a_user);
-		ArrayList<Byte> a_password_E = Encrypt.encrypt(a_password);
+		ArrayList<Byte> a_user_E = MongoDB.aes.encrypt(a_user);
+		ArrayList<Byte> a_password_E = MongoDB.aes.encrypt(a_password);
 		
 		UpdateResult updateresult = users.updateOne(and(eq("user", a_user_E),eq("password", a_password_E)),set("key",key));
 		if(updateresult.getModifiedCount() == 1) {
