@@ -55,7 +55,7 @@ public class Habit
      * Transform the habit to the Document format
      * @return the document correspondng to the habit
      */
-    public Document toDoc() throws EncryptionException, UnsupportedEncodingException
+    public Document toDoc() throws EncryptionException, UnsupportedEncodingException,IOException
     {
         Document doc = new Document();
         ArrayList<Byte> period_E = MongoDB.aes.encrypt(Long.toString(period));
@@ -128,13 +128,25 @@ public class Habit
      */
     @Override
     public boolean equals(Object o){
+        boolean out = true;
         if( o instanceof Habit){
             Habit h = (Habit) o;
-            return h.offset == offset && h.period == period && h.reliability == reliability 
-                && nbPoints == h.nbPoints && standardDeviation == h.standardDeviation
-                && firstLocation.isSame(h.firstLocation) && lastLocation.isSame(h.lastLocation);
+            out = h.offset == offset && h.period == period && h.reliability == reliability 
+                && nbPoints == h.nbPoints && standardDeviation == h.standardDeviation;
+            if(firstLocation != null){
+                out = out && firstLocation.isSame(h.firstLocation);
+            }
+            else{
+                out = out && h.firstLocation == null;
+            }
+            if(lastLocation != null){
+                out = out && lastLocation.isSame(h.lastLocation);
+            }
+            else{
+                out = out && h.lastLocation == null;
+            }
         }
-        return false;
+        return out;
     }
 
     /**
