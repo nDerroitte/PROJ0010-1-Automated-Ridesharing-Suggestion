@@ -56,8 +56,8 @@ public class IntegrateTest {
         sign_up();
         sign_in();
         store_data();
-        TimeUnit.SECONDS.sleep(5); // let the time to store data.
         get_habit();
+	TimeUnit.SECONDS.sleep(20); // let the time to store data.
         //erase_user(true);
     }
 
