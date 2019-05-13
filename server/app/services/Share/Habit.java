@@ -63,7 +63,7 @@ public class Habit
         ArrayList<Byte> reliability_E = MongoDB.aes.encrypt(Double.toString(this.reliability));
         ArrayList<Byte> nbPoints_E = MongoDB.aes.encrypt(Integer.toString(nbPoints));
         ArrayList<Byte> standardDeviation_E = MongoDB.aes.encrypt(Double.toString(standardDeviation));
-
+        ArrayList<Byte> arrival_time_E = MongoDB.aes.encrypt(Long.toString(arrival_time));
         doc.put("period",period_E); 
         doc.put("offset",offset_E); 
         doc.put("reliability",reliability_E); 
@@ -71,6 +71,8 @@ public class Habit
         doc.put("lastLocation",lastLocation.toDoc()); 
         doc.put("nbPoints",nbPoints_E); 
         doc.put("standardDeviation",standardDeviation_E);
+        doc.put("arrival_time",arrival_time_E);
+
         return doc;
     }
 
@@ -84,6 +86,7 @@ public class Habit
         doc.put("lastLocation",lastLocation.toDocNotEncrypted()); 
         doc.put("nbPoints",nbPoints);
         doc.put("standardDeviation",standardDeviation);
+        doc.put("arrival_time",arrival_time);
         return doc;
     }
 
@@ -101,7 +104,7 @@ public class Habit
         String reliability_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("reliability"));
         String nbPoints_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("nbPoints"));
         String standardDeviation_D = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("standardDeviation"));
-
+        String arrival_time = MongoDB.aes.decrypt((ArrayList<Byte>)doc.get("arrival_time"));
 	    h.period = Long.parseLong(period_D);
 	    h.offset = Long.parseLong(offset_D);
         h.reliability = Double.parseDouble(reliability_D) ;
@@ -109,6 +112,7 @@ public class Habit
         h.lastLocation = Coordinate.fromDoc( (Document) doc.get("lastLocation")) ;
         h.nbPoints = Integer.parseInt(nbPoints_D); 
         h.standardDeviation= Double.parseDouble(standardDeviation_D);
+        h.arrival_time = Long.parseLong(arrival_time);
 	    return h;
     }
 
