@@ -95,7 +95,11 @@ public class UserGM {
                 count ++;
             }
         }
-        avg_duration /= count;
+        if (count == 0) {
+            avg_duration = 0;
+        } else {
+            avg_duration /= count;
+        }
         return h.offset + avg_duration;
     }
         

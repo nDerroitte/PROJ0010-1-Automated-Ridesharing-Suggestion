@@ -30,10 +30,10 @@ class _CommonHabitsScreenState extends State<CommonHabitsScreen> {
     List<dynamic> decodedJson =
         await compareUsers(_connectedUser, _otherUserController.text);
     StringBuffer data = StringBuffer();
+    data.writeln("habitudes communes avec " + _otherUserController.text);
+    data.writeln();
     Map<String, dynamic> location;
     for (Map<String, dynamic> habit in decodedJson) {
-      data.writeln("habitudes communes avec " + _otherUserController.text);
-      data.writeln();
       data.writeln("départ :");
       location = habit["firstLocation"];
       data.write("    latitude : ");
@@ -57,7 +57,9 @@ class _CommonHabitsScreenState extends State<CommonHabitsScreen> {
           DateTime.fromMillisecondsSinceEpoch(millisSince1970, isUtc: true).toLocal()));
 
       data.write("heure d'arrivée : ");
-      data.writeln(habit["arrival_time"]);
+      millisSince1970 = habit["arrival_time"];
+      data.writeln(DateFormat('yyyy-MM-dd HH-mm-ss').format(
+          DateTime.fromMillisecondsSinceEpoch(millisSince1970, isUtc: true).toLocal()));
 
       data.write("probabilité de l'habitude : ");
       data.writeln(habit["reliability"]);

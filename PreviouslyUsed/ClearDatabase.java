@@ -22,8 +22,6 @@ import java.util.List;
 
 import services.MongoInterface;
 import services.EncryptionException;
-import services.Decrypt;
-import services.Encrypt;
 import services.AES;
 
 public class ClearDatabase extends Controller {
